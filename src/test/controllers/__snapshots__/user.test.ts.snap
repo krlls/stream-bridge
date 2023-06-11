@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User tests Create user with not valid 1`] = `"{"message":"Validation error","details":[{"message":"\\"login\\" must be a string","path":["login"],"type":"string.base","context":{"label":"login","value":1234,"key":"login"}}]}"`;
+
+exports[`User tests Create user works 1`] = `"{"id":1,"login":"Ksmi"}"`;
