@@ -1,23 +1,35 @@
-# Nodejs-TypeScript-starter
+# Stream Bridge
+[![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-This is a boilerplate project for building a Node.js application using TypeScript and Koa framework.
+>⚠️ Project is currently under development and **does not have a working version yet**. However, we welcome your contributions to the development process. We appreciate any input and support as we work towards creating a functional version of the project. Stay tuned for updates and opportunities to get involved in the development of StreamBridge. Thank you for your interest!
 
-## Features
+StreamBridge is a versatile and customizable music synchronization tool that allows users to sync music from various streaming services. With StreamBridge, you can create your own self-hosted solution for syncing music across multiple streaming platforms, providing a personalized and unified listening experience.
 
-- Integration of Node.js, TypeScript, and Koa.
-- Docker support for containerization.
-- Database integration using TypeORM.
-- API routing with Koa Router.
-- User creation functionality with validation.
-- Test framework setup using Jest.
-- ESLint and Prettier for code formatting and linting.
-- Configuration management with dotenv.
+## Key Features
 
-## Prerequisites
+- **Self-Hosted Solution**: StreamBridge allows you to deploy and manage your own instance of the synchronization tool, giving you full control over your music library and data.
 
-- Node.js (v12 or higher)
-- Yarn package manager
-- Docker (optional)
+- **Cross-Streaming Sync**: Sync music seamlessly from different streaming services, enabling access to your favorite tracks from various platforms in one centralized location.
+by-nc-sa
+- **Unified Library**: StreamBridge brings together your preferred songs, playlists, and albums from different streaming services into a single, cohesive library, eliminating the need to switch between multiple apps or accounts.
+
+- **Real-Time Updates**: Changes made to your music library, such as adding new tracks or creating playlists, are instantly synchronized across all connected streaming services, ensuring you have the most up-to-date collection at all times.
+
+- **Customizable Sync Settings**: Tailor the synchronization process to your preferences. Choose specific playlists, artists, or albums to sync, or enable automatic synchronization based on your listening history.
+
+- **API Integrations**: StreamBridge supports integrating with popular streaming platforms' APIs, such as Spotify, Apple Music, Amazon Music, YouTube Music, and more, making it flexible and adaptable to different services.
+
+- **Cross-Device Compatibility**: Access your synchronized music library across all your devices, including desktop computers, smartphones, and tablets, ensuring a consistent experience wherever you go.
+
+## How it Works
+
+1. **Deploy**: Set up and deploy your self-hosted instance of StreamBridge using the provided deployment guide or Docker image.
+
+2. **API Integration**: Connect StreamBridge to the APIs of your preferred streaming services, authorizing the necessary permissions to access your music library.
+
+3. **Choose Sync Options**: Customize the synchronization settings based on your preferences. Select playlists, artists, albums, or any other music content you want to sync across platforms. Alternatively, enable automatic synchronization based on your listening history.
+
+4. **Sync and Enjoy**: StreamBridge will start synchronizing your chosen content across all connected streaming services. Your music library will be updated in real-time, providing a seamless and unified music streaming experience.
 
 ## Getting Started
 
@@ -25,12 +37,12 @@ This is a boilerplate project for building a Node.js application using TypeScrip
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/krlls/Nodejs-TypeScript-starter
+git clone https://github.com/krlls/StreamBridge.git
 ```
 2. Install dependencies:
 ```bash
-cd Nodejs-TypeScript-starter
-yarn install
+cd StreamBridge
+yarn
 ```
 ### Development
 
@@ -71,17 +83,13 @@ yarn build:docker
 
 The application uses environment variables for configuration. Create a `.env` file in the root directory and provide the required environment variables.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
 ## Contributing
 
-Contributions are welcome! Feel free to open an issue or submit a pull request.
+We welcome contributions from the community to enhance StreamBridge. If you're interested in contributing, please follow the guidelines outlined in the project's `CONTRIBUTING.md` file.
 
-## Acknowledgments
+## License
 
-This boilerplate is based on the work of [ksmi](https://github.com/krlls) and the [Nodejs-TypeScript-Koa-boilerplate](https://github.com/krlls/Nodejs-TypeScript-Koa-boilerplate) repository.
+StreamBridge is released under the [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode). Please refer to the `LICENSE` file for more information.
 
 ## Contact
 
