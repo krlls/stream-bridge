@@ -7,15 +7,12 @@ import { IAuthService } from '../../modules/auth/interfaces/IAuthService'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
 import { LoginDTO } from '../../modules/auth/dtos/LoginDTO'
+import { testUserData } from '../helpers/test.helpers'
 
 const authService = fakeControllerContainer.get<IAuthService>(TYPES.AuthService)
 const userService = fakeControllerContainer.get<IUserService>(TYPES.UserService)
 describe('Auth service tests', () => {
-  const user = new CreateUserDTO({
-    login: 'Ksmi',
-    name: 'Kirill',
-    pass: '123',
-  })
+  const user = new CreateUserDTO(testUserData)
 
   beforeEach(async () => {
     await SqliteDB.instance.setupTestDB()

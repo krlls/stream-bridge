@@ -5,14 +5,11 @@ import { fakeControllerContainer } from '../helpers/inversify.test.config'
 import { TYPES } from '../../types/const'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
+import { testUserData } from '../helpers/test.helpers'
 
 const userService = fakeControllerContainer.get<IUserService>(TYPES.UserService)
 describe('User service tests', () => {
-  const user = new CreateUserDTO({
-    login: 'Ksmi',
-    name: 'Kirill',
-    pass: '123',
-  })
+  const user = new CreateUserDTO(testUserData)
 
   beforeEach(async () => {
     await SqliteDB.instance.setupTestDB()
