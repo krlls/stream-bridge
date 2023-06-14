@@ -11,7 +11,11 @@ import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
 export class UserController {
   @inject(TYPES.UserService) private userService!: IUserService
   async createUser(ctx: RouterContext, params: Api.User.Create.Req) {
-    const createUser = new CreateUserDTO(params.login, params.pass)
+    const createUser = new CreateUserDTO({
+      login: params.login,
+      pass: params.pass,
+      name: params.name,
+    })
     const newUser = await this.userService.createUser(createUser)
 
     if (newUser) {

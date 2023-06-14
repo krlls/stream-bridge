@@ -5,20 +5,27 @@ import { CreateUserDTO } from '../dtos/CreateUserDTO'
 import { IUserRepository } from '../interfaces/IUserRepository'
 import { TYPES } from '../../../types/const'
 import { UserDTO } from '../dtos/UserDTO'
+import { hashPass } from '../../../utils/crypto'
 
 @injectable()
 export class UserService implements IUserService {
   @inject(TYPES.UserRepository) private userRepository!: IUserRepository
   async createUser(createUser: CreateUserDTO) {
-    const createUserData = {
-      login: createUser.login,
-      pass: createUser.pass,
+    const existUser = await this.userRepository.findUserByLogin(createUser.login)
+
+    if (existUser) {
+      return
     }
 
-    const newUser = await this.userRepository.createUser(createUserData)
+    const hash = await hashPass(createUser.pass)
+
+    const newUser = await this.userRepository.createUser({
+      login: createUser.login,
+      name: createUser.name,
+      hash,
+    })
 
     if (!newUser) {
-      new Error('User not created!')
       return
     }
 

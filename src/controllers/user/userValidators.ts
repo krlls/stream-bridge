@@ -5,6 +5,7 @@ import { validatorFactory } from '../../utils/validate'
 const createUser = validatorFactory(
   Joi.object({
     login: Joi.string().required(),
+    name: Joi.string().required(),
     pass: Joi.string().required(),
   }),
 )

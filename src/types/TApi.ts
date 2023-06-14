@@ -7,6 +7,7 @@ export namespace Api {
 
       export type Req = {
         login: string,
+        name: string,
         pass: string,
       }
     }

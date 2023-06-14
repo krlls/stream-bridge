@@ -1,6 +1,13 @@
-import { IUser } from '../entities/IUser'
+import { User } from '../entities/User'
 
 export interface IUserRepository {
-  createUser: (createUser: { login: string, pass: string }) => Promise<IUser | undefined>,
-  findUserById: (userId: number) => Promise<IUser | undefined>,
+  createUser: (createUser: CreateUser) => Promise<User | null>,
+  findUserById: (userId: number) => Promise<User | null>,
+  findUserByLogin: (userlogin: string) => Promise<User | null>,
+}
+
+export type CreateUser = {
+  login: string,
+  name: string,
+  hash: string,
 }

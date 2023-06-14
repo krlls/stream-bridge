@@ -8,3 +8,5 @@ export enum E_NODE_ENV {
   DEV = 'development',
   PROD = 'production',
 }
+
+export type toCreate<T extends { id: number }> = Omit<T, 'id'> & Partial<Pick<T, 'id'>>
