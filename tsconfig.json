@@ -10,6 +10,7 @@
     "removeComments": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "importHelpers": true,
     "strict": true,
     "noUnusedLocals": true,
