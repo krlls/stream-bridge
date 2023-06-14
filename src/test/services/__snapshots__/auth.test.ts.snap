@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Auth tests Auth wrong credentials 1`] = `
+exports[`Auth service tests Auth wrong credentials 1`] = `
 ErrorDTO {
   "error": "Inkorrect credentials",
 }

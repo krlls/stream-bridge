@@ -10,7 +10,7 @@ import { LoginDTO } from '../../modules/auth/dtos/LoginDTO'
 
 const authService = fakeControllerContainer.get<IAuthService>(TYPES.AuthService)
 const userService = fakeControllerContainer.get<IUserService>(TYPES.UserService)
-describe('Auth tests', () => {
+describe('Auth service tests', () => {
   const user = new CreateUserDTO({
     login: 'Ksmi',
     name: 'Kirill',

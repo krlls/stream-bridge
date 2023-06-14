@@ -7,7 +7,7 @@ import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
 
 const userService = fakeControllerContainer.get<IUserService>(TYPES.UserService)
-describe('Auth tests', () => {
+describe('User service tests', () => {
   const user = new CreateUserDTO({
     login: 'Ksmi',
     name: 'Kirill',

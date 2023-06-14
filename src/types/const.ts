@@ -1,5 +1,6 @@
 const TYPES = {
   UserController: Symbol.for('UserController'),
+  AuthController: Symbol.for('AuthController'),
 
   UserService: Symbol.for('UserService'),
   AuthService: Symbol.for('AuthService'),
