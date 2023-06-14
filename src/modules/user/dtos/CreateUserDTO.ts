@@ -1,9 +1,11 @@
 export class CreateUserDTO {
   login: string
+  name: string
   pass: string
 
-  constructor(login: string, pass: string) {
-    this.login = login
-    this.pass = pass
+  constructor(user: { login: string, pass: string, name: string }) {
+    this.login = user.login
+    this.pass = user.pass
+    this.name = user.name
   }
 }

@@ -21,6 +21,7 @@
     "run:docker": "docker run -p 3000:3000 testnodeproject"
   },
   "dependencies": {
+    "argon2": "^0.30.3",
     "axios": "^1.4.0",
     "better-sqlite3": "^8.4.0",
     "cli-color": "^2.0.3",

@@ -19,6 +19,7 @@ describe('User tests', () => {
   test('Create user works', async () => {
     const validUserData = {
       login: 'Ksmi',
+      name: 'Kirill',
       pass: '123',
     }
 
