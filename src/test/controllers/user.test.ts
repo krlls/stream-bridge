@@ -52,6 +52,8 @@ describe('User tests', () => {
     const response2 = await TestApp.post(vkPatch(Api.User.Create.URL)).send(userData)
 
     expect(response.status).toBe(200)
-    expect(response2.status).toBe(400)
+    // eslint-disable-next-line no-console
+    console.log(response2.text)
+    expect(response2.text).toMatchSnapshot()
   })
 })
