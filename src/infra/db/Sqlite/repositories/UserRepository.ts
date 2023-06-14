@@ -26,13 +26,21 @@ export class UserRepository implements IUserRepository {
     const newUser = await this.repository.save(user)
 
     if (!newUser) {
-      return
+      return null
     }
 
     return this.userEntityConverter.from(newUser)
   }
 
+  async findUserByLogin(userLogin: string) {
+    const user = await this.repository.findOneBy({
+      login: userLogin,
+    })
+
+    return user
+  }
+
   async findUserById(_userId: number) {
-    return undefined
+    return null
   }
 }

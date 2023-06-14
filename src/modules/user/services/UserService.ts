@@ -11,6 +11,12 @@ import { hashPass } from '../../../utils/crypto'
 export class UserService implements IUserService {
   @inject(TYPES.UserRepository) private userRepository!: IUserRepository
   async createUser(createUser: CreateUserDTO) {
+    const existUser = await this.userRepository.findUserByLogin(createUser.login)
+
+    if (existUser) {
+      return
+    }
+
     const hash = await hashPass(createUser.pass)
 
     const newUser = await this.userRepository.createUser({
@@ -20,7 +26,6 @@ export class UserService implements IUserService {
     })
 
     if (!newUser) {
-      new Error('User not created!')
       return
     }
 

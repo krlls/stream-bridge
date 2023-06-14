@@ -40,4 +40,18 @@ describe('User tests', () => {
     expect(response.status).toBe(400)
     expect(response.text).toMatchSnapshot()
   })
+
+  test('Create exist user', async () => {
+    const userData = {
+      login: 'Ksmi',
+      name: 'Kirill',
+      pass: '123',
+    }
+
+    const response = await TestApp.post(vkPatch(Api.User.Create.URL)).send(userData)
+    const response2 = await TestApp.post(vkPatch(Api.User.Create.URL)).send(userData)
+
+    expect(response.status).toBe(200)
+    expect(response2.status).toBe(400)
+  })
 })

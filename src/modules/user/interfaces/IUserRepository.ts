@@ -1,8 +1,9 @@
 import { User } from '../entities/User'
 
 export interface IUserRepository {
-  createUser: (createUser: CreateUser) => Promise<User | undefined>,
-  findUserById: (userId: number) => Promise<User | undefined>,
+  createUser: (createUser: CreateUser) => Promise<User | null>,
+  findUserById: (userId: number) => Promise<User | null>,
+  findUserByLogin: (userlogin: string) => Promise<User | null>,
 }
 
 export type CreateUser = {
