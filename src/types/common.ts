@@ -9,4 +9,15 @@ export enum E_NODE_ENV {
   PROD = 'production',
 }
 
-export type toCreate<T extends { id: number }> = Omit<T, 'id'> & Partial<Pick<T, 'id'>>
+export interface ServiceError {
+  error: Errors,
+}
+
+export type ServiceResultDTO<T> = T | ServiceError
+export enum Errors {
+  AUTH_INCORRECT = 'Inkorrect credentials',
+
+  USER_EXSIT = 'User already exist',
+  USER_CREATE_ERROR = 'User not created',
+  USER_NOT_FOUND = 'user not found',
+}

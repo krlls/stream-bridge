@@ -1,9 +1,9 @@
 import { expect, test, describe, beforeEach, afterEach } from '@jest/globals'
 
 import { Api } from '../../types/TApi'
-import { createPatch } from '../../utils/links'
 import { TestApp } from '../index.test'
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
+import { testUserData, userUrl } from '../helpers/test.helpers'
 
 describe('User tests', () => {
   beforeEach(async () => {
@@ -14,16 +14,8 @@ describe('User tests', () => {
     await SqliteDB.instance.teardownTestDB()
   })
 
-  const vkPatch: (...args: string[]) => string = createPatch.bind(null, Api.User.PREFIX)
-
   test('Create user works', async () => {
-    const validUserData = {
-      login: 'Ksmi',
-      name: 'Kirill',
-      pass: '123',
-    }
-
-    const response = await TestApp.post(vkPatch(Api.User.Create.URL)).send(validUserData)
+    const response = await TestApp.post(userUrl(Api.User.Create.URL)).send(testUserData)
 
     expect(response.status).toBe(200)
     expect(response.text).toMatchSnapshot()
@@ -35,23 +27,17 @@ describe('User tests', () => {
       pass: 123,
     }
 
-    const response = await TestApp.post(vkPatch(Api.User.Create.URL)).send(notValidUserData)
+    const response = await TestApp.post(userUrl(Api.User.Create.URL)).send(notValidUserData)
 
     expect(response.status).toBe(400)
     expect(response.text).toMatchSnapshot()
   })
 
   test('Create exist user', async () => {
-    const userData = {
-      login: 'Ksmi',
-      name: 'Kirill',
-      pass: '123',
-    }
-
-    const response = await TestApp.post(vkPatch(Api.User.Create.URL)).send(userData)
-    const response2 = await TestApp.post(vkPatch(Api.User.Create.URL)).send(userData)
+    const response = await TestApp.post(userUrl(Api.User.Create.URL)).send(testUserData)
+    const response2 = await TestApp.post(userUrl(Api.User.Create.URL)).send(testUserData)
 
     expect(response.status).toBe(200)
-    expect(response2.status).toBe(400)
+    expect(response2.text).toMatchSnapshot()
   })
 })

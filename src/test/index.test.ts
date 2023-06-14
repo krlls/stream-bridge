@@ -1,5 +1,7 @@
 import 'reflect-metadata'
 import { describe, test, expect } from '@jest/globals'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import request from 'supertest'
 
 import { App } from '../infra/App'

@@ -6,6 +6,8 @@ import { IUserRepository } from '../interfaces/IUserRepository'
 import { TYPES } from '../../../types/const'
 import { UserDTO } from '../dtos/UserDTO'
 import { hashPass } from '../../../utils/crypto'
+import { ErrorDTO } from '../../common/dtos/errorDTO'
+import { Errors } from '../../../types/common'
 
 @injectable()
 export class UserService implements IUserService {
@@ -14,7 +16,7 @@ export class UserService implements IUserService {
     const existUser = await this.userRepository.findUserByLogin(createUser.login)
 
     if (existUser) {
-      return
+      return new ErrorDTO(Errors.USER_EXSIT)
     }
 
     const hash = await hashPass(createUser.pass)
@@ -26,7 +28,7 @@ export class UserService implements IUserService {
     })
 
     if (!newUser) {
-      return
+      return new ErrorDTO(Errors.USER_CREATE_ERROR)
     }
 
     return new UserDTO(newUser)
@@ -36,7 +38,7 @@ export class UserService implements IUserService {
     const user = await this.userRepository.findUserById(userId)
 
     if (!user) {
-      return
+      return new ErrorDTO(Errors.USER_NOT_FOUND)
     }
 
     return new UserDTO(user)
