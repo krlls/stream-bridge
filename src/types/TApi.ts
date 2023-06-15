@@ -20,6 +20,16 @@ export namespace Api {
         name: string,
       }>
     }
+
+    export namespace GetProfile {
+      export const URL = '/profile'
+
+      export type Resp = Response<{
+        id: string,
+        login: string,
+        name: string,
+      }>
+    }
   }
 
   export namespace Auth {

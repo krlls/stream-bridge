@@ -10,6 +10,9 @@ const createUser = validatorFactory(
   }),
 )
 
+const getProfile = validatorFactory(Joi.object().required().max(0))
+
 export const userValidators = {
   createUser,
+  getProfile,
 }

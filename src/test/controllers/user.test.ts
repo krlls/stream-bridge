@@ -61,14 +61,18 @@ describe('With auth controllers', () => {
   })
 
   test('Get Profile with wrong token', async () => {
-    const response = await TestApp.get(userUrl('/profile')).set({ Authorization: `Bearer ${testToken}randomstring` })
+    const response = await TestApp.get(userUrl(Api.User.GetProfile.URL)).set({
+      Authorization: `Bearer ${testToken}randomstring`,
+    })
 
     expect(response.status).toBe(401)
   })
 
   test('Get Profile', async () => {
-    const response = await TestApp.get(userUrl('/profile')).set({ Authorization: `Bearer ${testToken}` })
+    const response = await TestApp.get(userUrl(Api.User.GetProfile.URL)).set({ Authorization: `Bearer ${testToken}` })
 
     expect(response.status).toBe(200)
+    expect(JSON.parse(response.text)).toHaveProperty('name', testUserData.name)
+    expect(response.text).toMatchSnapshot()
   })
 })

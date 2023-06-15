@@ -6,6 +6,7 @@ import { TYPES } from '../../types/const'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
 import { testUserData } from '../helpers/test.helpers'
+import { UserDTO } from '../../modules/user/dtos/UserDTO'
 
 const userService = fakeControllerContainer.get<IUserService>(TYPES.UserService)
 describe('User service tests', () => {
@@ -31,5 +32,12 @@ describe('User service tests', () => {
     const errorResult = await userService.createUser(user)
 
     expect(errorResult).toHaveProperty('error')
+  })
+
+  test('Find user by id', async () => {
+    const newUser = await userService.createUser(user)
+    const result = await userService.findUserById((newUser as any as UserDTO).id)
+
+    expect(result).toHaveProperty('name', user.name)
   })
 })

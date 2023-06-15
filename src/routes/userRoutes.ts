@@ -11,6 +11,6 @@ const router = new Router()
 const userController = controllerContainer.get<UserController>(TYPES.UserController)
 
 router.post(Api.User.Create.URL, userValidators.createUser, (ctx) => userController.createUser(ctx, ctx.request.body))
-router.get('/profile', checkAuth, (ctx) => userController.profile(ctx))
+router.get(Api.User.GetProfile.URL, userValidators.getProfile, checkAuth, (ctx) => userController.profile(ctx))
 
 export const userRouter = router

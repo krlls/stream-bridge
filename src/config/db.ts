@@ -17,7 +17,7 @@ export const sqlLite: Record<E_NODE_ENV, DataSourceOptions> = {
     entities: [entitiesPatch],
     synchronize: true,
     migrationsRun: false,
-    logging: true,
+    logging: false,
     enableWAL: true,
   },
   [E_NODE_ENV.PROD]: {
