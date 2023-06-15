@@ -8,6 +8,7 @@ import { UserDTO } from '../dtos/UserDTO'
 import { hashPass } from '../../../utils/crypto'
 import { ErrorDTO } from '../../common/dtos/errorDTO'
 import { Errors } from '../../../types/common'
+import { UpadteUserDTO } from '../dtos/UpdateUserDTO'
 
 @injectable()
 export class UserService implements IUserService {
@@ -42,5 +43,21 @@ export class UserService implements IUserService {
     }
 
     return new UserDTO(user)
+  }
+
+  async updateUser(update: UpadteUserDTO) {
+    const user = await this.findUserById(update.id)
+
+    if (!user) {
+      return new ErrorDTO(Errors.USER_NOT_FOUND)
+    }
+
+    const updatedUser = await this.userRepository.updateUser(update)
+
+    if (!updatedUser) {
+      return new ErrorDTO(Errors.USER_UPDATE_ERROR)
+    }
+
+    return new UserDTO(updatedUser)
   }
 }
