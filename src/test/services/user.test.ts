@@ -36,8 +36,8 @@ describe('User service tests', () => {
   })
 
   test('Find user by id', async () => {
-    const newUser = await userService.createUser(user)
-    const result = await userService.findUserById((newUser as any as UserDTO).id)
+    const newUser = (await userService.createUser(user)) as UserDTO
+    const result = await userService.findUserById(newUser.id)
 
     expect(result).toHaveProperty('name', user.name)
   })
