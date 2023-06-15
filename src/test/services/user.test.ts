@@ -7,6 +7,7 @@ import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
 import { testUserData } from '../helpers/test.helpers'
 import { UserDTO } from '../../modules/user/dtos/UserDTO'
+import { UpadteUserDTO } from '../../modules/user/dtos/UpdateUserDTO'
 
 const userService = fakeControllerContainer.get<IUserService>(TYPES.UserService)
 describe('User service tests', () => {
@@ -39,5 +40,21 @@ describe('User service tests', () => {
     const result = await userService.findUserById((newUser as any as UserDTO).id)
 
     expect(result).toHaveProperty('name', user.name)
+  })
+
+  test('Update user works', async () => {
+    const newUser = (await userService.createUser(user)) as UserDTO
+    const toUpdate = new UpadteUserDTO({ id: newUser.id, login: 'ksmi2' })
+    const result = await userService.updateUser(toUpdate)
+
+    expect(result).toHaveProperty('login', toUpdate.login)
+    expect(result).toHaveProperty('name', user.name)
+  })
+
+  test('Update none exist user', async () => {
+    const toUpdate = new UpadteUserDTO({ id: 10, login: 'ksmi2' })
+    const result = await userService.updateUser(toUpdate)
+
+    expect(result).toHaveProperty('error')
   })
 })

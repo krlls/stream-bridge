@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify'
 import { Repository } from 'typeorm'
 
-import { CreateUser, IUserRepository } from '../../../../modules/user/interfaces/IUserRepository'
+import { CreateUser, IUserRepository, UpdateUser } from '../../../../modules/user/interfaces/IUserRepository'
 import { UserEntity } from '../entities/UserEntity'
 import { TYPES } from '../../../../types/const'
 import { Converter } from '../../../../types/common'
@@ -54,5 +54,21 @@ export class UserRepository implements IUserRepository {
     }
 
     return this.userEntityConverter.from(user)
+  }
+
+  async updateUser({ id, login, name }: UpdateUser) {
+    const updatedUser = await this.repository.update({ id }, { login, name })
+
+    if (!updatedUser.affected) {
+      return null
+    }
+
+    const newUser = await this.findUserById(id)
+
+    if (!newUser) {
+      return null
+    }
+
+    return newUser
   }
 }

@@ -20,4 +20,5 @@ export enum Errors {
   USER_EXSIT = 'User already exist',
   USER_CREATE_ERROR = 'User not created',
   USER_NOT_FOUND = 'user not found',
+  USER_UPDATE_ERROR = 'User update error',
 }
