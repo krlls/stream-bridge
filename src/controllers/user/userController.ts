@@ -2,7 +2,7 @@ import { RouterContext } from 'koa-router'
 import { inject, injectable } from 'inversify'
 
 import { Api } from '../../types/TApi'
-import { respond200json, respond400 } from '../../utils/response'
+import { respond200, respond200json, respond400 } from '../../utils/response'
 import { TYPES } from '../../types/const'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
@@ -25,5 +25,9 @@ export class UserController {
     }
 
     return respond200json(ctx, createUserResult)
+  }
+
+  async profile(ctx: RouterContext) {
+    respond200(ctx)
   }
 }
