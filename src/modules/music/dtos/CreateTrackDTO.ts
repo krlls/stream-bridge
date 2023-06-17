@@ -1,4 +1,4 @@
-export class CreateTrack {
+export class CreateTrackDTO {
   userId: string
   playlistId: string
   externalId: string
