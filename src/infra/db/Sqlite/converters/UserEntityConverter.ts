@@ -12,6 +12,7 @@ export class UserEntityConverter implements Converter<UserEntity, User> {
       login: from.login,
       name: from.name,
       hash: from.hash,
+      playlists: from.playlists,
     }
   }
 

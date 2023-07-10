@@ -8,3 +8,9 @@ export const testUserData = {
   name: 'Kirill',
   pass: '123',
 }
+
+export const testPlaylistData = (userId: number) => ({
+  userId,
+  name: 'Test playlist',
+  externalId: '65FD4G65SF',
+})

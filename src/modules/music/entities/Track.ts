@@ -1,8 +1,9 @@
+import { PlaylistEntity } from '../../../infra/db/Sqlite/entities/PlaylistEntity'
+
 export interface Track {
   id: number,
-  userId: string,
-  playlistId: string,
-  externalId: string,
+  playlist: PlaylistEntity,
+  external_id: string,
   name: string,
   artist: string,
   album: string,

@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from 'typeorm'
 
 import { User } from '../../../../modules/user/entities/User'
+import { PlaylistEntity } from './PlaylistEntity'
 
 @Entity()
 export class UserEntity extends BaseEntity implements User {
@@ -15,4 +16,7 @@ export class UserEntity extends BaseEntity implements User {
 
   @Column({ type: 'text' })
   hash: string
+
+  @OneToMany(() => PlaylistEntity, (playlist) => playlist.user)
+  playlists: PlaylistEntity[]
 }

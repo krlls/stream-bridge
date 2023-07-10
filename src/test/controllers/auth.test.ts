@@ -1,7 +1,7 @@
 import { expect, test, describe, beforeEach, afterEach } from '@jest/globals'
 
 import { Api } from '../../types/TApi'
-import { TestApp } from '../index.test'
+import { TestApp } from '../main.test'
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
 import { authUrl, testUserData, userUrl } from '../helpers/test.helpers'
 
