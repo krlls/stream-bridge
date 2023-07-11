@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "ES2022",
     "module": "commonjs",
-    "lib": ["es2022"],
+    "lib": ["ES2022"],
     "moduleResolution": "node",
+    "rootDir": "./src",
     "outDir": "./dist",
-    "baseUrl": "./src",
     "sourceMap": true,
     "removeComments": true,
     "resolveJsonModule": true,

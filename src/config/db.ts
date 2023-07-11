@@ -2,7 +2,9 @@ import { DataSourceOptions } from 'typeorm/data-source/DataSourceOptions'
 
 import { E_NODE_ENV } from '../types/common'
 
-const entitiesPatch = 'src/infra/db/Sqlite/entities/**/*.ts'
+import { join } from 'path'
+
+const entitiesPatch = join(__dirname, '../infra/db/Sqlite/entities/**/*.{ts,js}')
 const dbPatch = 'data/db.sqlite3'
 export const sqlLite: Record<E_NODE_ENV, DataSourceOptions> = {
   [E_NODE_ENV.TEST]: {
