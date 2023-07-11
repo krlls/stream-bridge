@@ -36,6 +36,7 @@ export class TrackRepository implements ITracksRepository {
     track.name = trackData.name
     track.artist = trackData.artist
     track.album = trackData.album
+    track.playlist = playlist
 
     playlist.tracks.push(track)
 
@@ -46,5 +47,15 @@ export class TrackRepository implements ITracksRepository {
     }
 
     return this.trackEntityConverter.from(newtrack)
+  }
+
+  async getTracksByPlaylistId(playlistId: number) {
+    const tracks = await this.repository.findBy({ playlist: { id: playlistId } })
+
+    if (!tracks) {
+      return []
+    }
+
+    return tracks.map(this.trackEntityConverter.from)
   }
 }

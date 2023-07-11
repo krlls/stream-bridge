@@ -9,6 +9,7 @@
   "node": ">=18.0.0",
   "scripts": {
     "test": "NODE_ENV=test jest --maxWorkers 2  src/test",
+    "test-watch": "NODE_ENV=test jest --maxWorkers 2  --watch src/test",
     "jest-update": "jest --updateSnapshot",
     "prepare": "husky install",
     "dev": "ts-node-dev src/index.ts",
@@ -40,6 +41,7 @@
     "typeorm": "^0.3.16"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@types/better-sqlite3": "^7.6.4",
     "@types/cli-color": "^2.0.2",
     "@types/jest": "^29.5.2",

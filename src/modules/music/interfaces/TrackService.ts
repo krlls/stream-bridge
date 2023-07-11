@@ -6,4 +6,5 @@ export interface ITrackService {
   // saveTracks(tracks: CreateTrackDTO[]): Promise<boolean>,
   // getTracks(playlistId?: string): Promise<TrackDTO[]>,
   saveTrack(trackData: CreateTrackDTO): Promise<ServiceResultDTO<Track>>,
+  getTracksByPlayist(playlistId: number): Promise<ServiceResultDTO<Track[]>>,
 }
