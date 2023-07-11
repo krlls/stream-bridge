@@ -12,7 +12,6 @@ export class TrackDTO {
     this.album = track.album
     this.artist = track.artist
     this.name = track.name
-    this.playlistId = track.playlist.id
     this.externalId = track.external_id
   }
 }
