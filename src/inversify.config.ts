@@ -15,6 +15,10 @@ import { IPlaylistRepository } from './modules/music/interfaces/IPlaylistReposit
 import { PlaylistRepository } from './infra/db/Sqlite/repositories/PlaylistRepository'
 import { IPlaylistService } from './modules/music/interfaces/IPlaylistService'
 import { PlaylistService } from './modules/music/services/PlaylistService'
+import { TrackEntityConverter } from './infra/db/Sqlite/converters/TrackEntityConverter.ts'
+import { TrackRepository } from './infra/db/Sqlite/repositories/TrackRepository'
+import { ITrackService } from './modules/music/interfaces/TrackService'
+import { TrackService } from './modules/music/services/TrackService'
 const controllerContainer = new Container()
 
 controllerContainer.bind<UserController>(TYPES.UserController).to(UserController)
@@ -23,11 +27,14 @@ controllerContainer.bind<AuthController>(TYPES.AuthController).to(AuthController
 controllerContainer.bind<IUserService>(TYPES.UserService).to(UserService)
 controllerContainer.bind<IAuthService>(TYPES.AuthService).to(AuthService)
 controllerContainer.bind<IPlaylistService>(TYPES.PlaylistService).to(PlaylistService)
+controllerContainer.bind<ITrackService>(TYPES.TrackService).to(TrackService)
 
 controllerContainer.bind<IUserRepository>(TYPES.UserRepository).to(UserRepository)
 controllerContainer.bind<IPlaylistRepository>(TYPES.PlaylistRepository).to(PlaylistRepository)
+controllerContainer.bind<TrackRepository>(TYPES.TrackRepository).to(TrackRepository)
 
 controllerContainer.bind<UserEntityConverter>(TYPES.UserEntityConverter).to(UserEntityConverter)
 controllerContainer.bind<PlaylistEntityConverter>(TYPES.PlaylistEntityConverter).to(PlaylistEntityConverter)
+controllerContainer.bind<TrackEntityConverter>(TYPES.TrackEntityConverter).to(TrackEntityConverter)
 
 export { controllerContainer }

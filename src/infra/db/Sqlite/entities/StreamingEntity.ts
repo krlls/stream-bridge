@@ -1,9 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm'
 
-import { Streaming } from '../../../../modules/sreaming/entities/Streaming'
-
 @Entity()
-export class StreamingEntity extends BaseEntity implements Streaming {
+export class StreamingEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
   @Column({ type: 'text' })

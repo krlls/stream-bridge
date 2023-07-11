@@ -1,21 +1,21 @@
 export class CreateTrackDTO {
-  userId: string
-  playlistId: string
+  userId: number
+  playlistId: number
   externalId: string
   name: string
   artist: string
   album: string
   constructor(track: {
-    userId: string,
-    playlistId: string,
+    userId: number,
+    playlistId: number,
     externalId: string,
     name: string,
     artist: string,
     album: string,
   }) {
+    this.externalId = track.externalId
     this.userId = track.userId
     this.album = track.album
-    this.userId = track.userId
     this.artist = track.artist
     this.name = track.name
     this.playlistId = track.playlistId

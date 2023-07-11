@@ -23,4 +23,6 @@ export enum Errors {
   USER_UPDATE_ERROR = 'User update error',
 
   PLAYLIST_CREATE_ERROR = 'Playlist not created',
+
+  TRACK_CREATE_ERROR = 'Track not created',
 }

@@ -5,7 +5,7 @@ import { fakeControllerContainer } from '../helpers/inversify.test.config'
 import { TYPES } from '../../types/const'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
-import { testPlaylistData, testUserData } from '../helpers/test.helpers'
+import { testPlaylistDTO, testUserData } from '../helpers/test.helpers'
 import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistService'
 import { CreatePlaylistDTO } from '../../modules/music/dtos/CreatePlaylistDTO'
 import { UserDTO } from '../../modules/user/dtos/UserDTO'
@@ -48,7 +48,7 @@ describe('Playlist service tests', () => {
       throw Error('User not created')
     }
 
-    const playlistData = new CreatePlaylistDTO(testPlaylistData(currentUser.id))
+    const playlistData = new CreatePlaylistDTO(testPlaylistDTO(currentUser.id))
 
     const playlist = await playlistService.createPlayList(playlistData)
 
@@ -66,7 +66,7 @@ describe('Playlist service tests', () => {
       throw Error('User not created')
     }
 
-    const playlistData = new CreatePlaylistDTO(testPlaylistData(currentUser.id))
+    const playlistData = new CreatePlaylistDTO(testPlaylistDTO(currentUser.id))
 
     await playlistService.createPlayList(playlistData)
 
@@ -80,7 +80,7 @@ describe('Playlist service tests', () => {
       throw Error('User not created')
     }
 
-    const testData = testPlaylistData(currentUser.id)
+    const testData = testPlaylistDTO(currentUser.id)
     const playlistData = new CreatePlaylistDTO(testData)
 
     await playlistService.createPlayList(playlistData)
