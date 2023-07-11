@@ -31,6 +31,10 @@ export class PlaylistService implements IPlaylistService {
     return playlist
   }
 
+  async getPlaylistByExternalId(extenalId: string) {
+    return await this.playlistRrpository.getPlaylistByExternalId(extenalId)
+  }
+
   async getUserPlaylists(userId: number) {
     return (await this.playlistRrpository.getPlaylistsByUserId(userId)) || []
   }

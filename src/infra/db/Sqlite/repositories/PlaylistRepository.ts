@@ -59,4 +59,14 @@ export class PlaylistRepository implements IPlaylistRepository {
 
     return playlists.map(this.entityConverter.from)
   }
+
+  async getPlaylistByExternalId(externalId: string): Promise<Playlist | null> {
+    const playlist = await this.repository.findOneBy({ external_id: externalId })
+
+    if (!playlist) {
+      return null
+    }
+
+    return this.entityConverter.from(playlist)
+  }
 }

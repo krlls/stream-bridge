@@ -74,4 +74,19 @@ describe('Playlist service tests', () => {
 
     expect(findPlaylist).toHaveLength(1)
   })
+
+  test('Find playlist by external id works', async () => {
+    if (isServiceError(currentUser)) {
+      throw Error('User not created')
+    }
+
+    const testData = testPlaylistData(currentUser.id)
+    const playlistData = new CreatePlaylistDTO(testData)
+
+    await playlistService.createPlayList(playlistData)
+
+    const findPlaylist = await playlistService.getPlaylistByExternalId(testData.externalId)
+
+    expect(findPlaylist).toHaveProperty('external_id', testData.externalId)
+  })
 })
