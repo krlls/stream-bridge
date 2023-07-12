@@ -25,4 +25,10 @@ export enum Errors {
   PLAYLIST_CREATE_ERROR = 'Playlist not created',
 
   TRACK_CREATE_ERROR = 'Track not created',
+
+  STREAMING_CREATE_ERROR = 'Streaming create error',
+}
+
+export enum EStreamingType {
+  SPOTIFY = 'SPOTIFY',
 }

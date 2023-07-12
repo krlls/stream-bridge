@@ -3,6 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, OneToMan
 import { Playlist } from '../../../../modules/music/entities/Playlist'
 import { UserEntity } from './UserEntity'
 import { TrackEntity } from './TrackEntity'
+import { StreamingEntity } from './StreamingEntity'
 
 @Entity()
 export class PlaylistEntity extends BaseEntity implements Playlist {
@@ -18,4 +19,7 @@ export class PlaylistEntity extends BaseEntity implements Playlist {
 
   @OneToMany(() => TrackEntity, (track) => track.playlist)
   tracks: TrackEntity[]
+
+  @ManyToOne(() => StreamingEntity, (streaming) => streaming.playlists)
+  streaming: StreamingEntity
 }

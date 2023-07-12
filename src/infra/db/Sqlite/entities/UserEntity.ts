@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from 't
 
 import { User } from '../../../../modules/user/entities/User'
 import { PlaylistEntity } from './PlaylistEntity'
+import { StreamingEntity } from './StreamingEntity'
 
 @Entity()
 export class UserEntity extends BaseEntity implements User {
@@ -19,4 +20,7 @@ export class UserEntity extends BaseEntity implements User {
 
   @OneToMany(() => PlaylistEntity, (playlist) => playlist.user)
   playlists: PlaylistEntity[]
+
+  @OneToMany(() => StreamingEntity, (streaming) => streaming.user)
+  streamings: StreamingEntity[]
 }

@@ -4,6 +4,8 @@ import { createPatch } from '../../utils/links'
 import { Api } from '../../types/TApi'
 import { CreateTrackDTO } from '../../modules/music/dtos/CreateTrackDTO'
 import { CreatePlaylistDTO } from '../../modules/music/dtos/CreatePlaylistDTO'
+import { EStreamingType } from '../../types/common'
+import { CreateStreamingDTO } from '../../modules/streaming/dtos/CreateStreamingDTO'
 
 export const userUrl: (...args: string[]) => string = createPatch.bind(null, Api.User.PREFIX)
 
@@ -29,6 +31,14 @@ export const testTrackDTO = (userId: number, playlistId: number) =>
     name: 'Test track',
     artist: 'Test artist',
     album: 'Test album',
+  })
+
+export const testStreamingDTO = (userId: number) =>
+  new CreateStreamingDTO({
+    userId,
+    token: faker.string.uuid(),
+    refreshToken: faker.string.uuid(),
+    type: EStreamingType.SPOTIFY,
   })
 
 export const getRandomTracks = ({ userId, playlistId }: { userId: number, playlistId: number }, size: number) =>

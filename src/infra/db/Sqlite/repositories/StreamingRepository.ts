@@ -1,0 +1,47 @@
+import { inject, injectable } from 'inversify'
+import { Repository } from 'typeorm'
+
+import { TYPES } from '../../../../types/const'
+import { Converter } from '../../../../types/common'
+import { getRepository } from '../SetupConnection'
+import { IStreamingRepository } from '../../../../modules/streaming/interfaces/IStreamingRepository'
+import { StreamingEntity } from '../entities/StreamingEntity'
+import { UserEntity } from '../entities/UserEntity'
+import { Streaming } from '../../../../modules/streaming/entities/Streaming'
+import { CreateStreamingDTO } from '../../../../modules/streaming/dtos/CreateStreamingDTO'
+
+@injectable()
+export class StreamingRepository implements IStreamingRepository {
+  @inject(TYPES.StreamingEntityConverter) private streamingEntityConverter: Converter<StreamingEntity, Streaming>
+  private repository: Repository<StreamingEntity>
+  userRepository: Repository<UserEntity>
+  constructor() {
+    this.repository = getRepository(StreamingEntity)
+    this.userRepository = getRepository(UserEntity)
+  }
+
+  async createSreaming(steamingData: CreateStreamingDTO): Promise<Streaming | null> {
+    const user = await this.userRepository.findOneBy({ id: steamingData.userId })
+
+    if (!user) {
+      return null
+    }
+
+    const streamingToSave = new StreamingEntity()
+
+    streamingToSave.type = steamingData.type
+    streamingToSave.token = steamingData.token
+    streamingToSave.reefresh_token = steamingData.reefreshToken
+    streamingToSave.user = user
+
+    // user.streamings.push(streamingToSave)
+
+    const streaming = await this.repository.save(streamingToSave)
+
+    if (!streaming) {
+      return null
+    }
+
+    return this.streamingEntityConverter.from(streaming)
+  }
+}
