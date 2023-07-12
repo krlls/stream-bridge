@@ -19,6 +19,10 @@ import { TrackRepository } from '../../infra/db/Sqlite/repositories/TrackReposit
 import { TrackEntityConverter } from '../../infra/db/Sqlite/converters/TrackEntityConverter.ts'
 import { ITrackService } from '../../modules/music/interfaces/TrackService'
 import { TrackService } from '../../modules/music/services/TrackService'
+import { StreamingRepository } from '../../infra/db/Sqlite/repositories/StreamingRepository'
+import { StreamingEntityConverter } from '../../infra/db/Sqlite/converters/StreamingEntityConverter.ts'
+import { StreamingService } from '../../modules/streaming/services/StreamingService'
+import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
 
 const fakeControllerContainer = new Container()
 fakeControllerContainer.bind<UserController>(TYPES.UserController).to(UserController)
@@ -28,13 +32,16 @@ fakeControllerContainer.bind<IUserService>(TYPES.UserService).to(UserService)
 fakeControllerContainer.bind<IAuthService>(TYPES.AuthService).to(AuthService)
 fakeControllerContainer.bind<IPlaylistService>(TYPES.PlaylistService).to(PlaylistService)
 fakeControllerContainer.bind<ITrackService>(TYPES.TrackService).to(TrackService)
+fakeControllerContainer.bind<IStreamingService>(TYPES.StreamingService).to(StreamingService)
 
 fakeControllerContainer.bind<IUserRepository>(TYPES.UserRepository).to(UserRepository)
 fakeControllerContainer.bind<IPlaylistRepository>(TYPES.PlaylistRepository).to(PlaylistRepository)
 fakeControllerContainer.bind<TrackRepository>(TYPES.TrackRepository).to(TrackRepository)
+fakeControllerContainer.bind<StreamingRepository>(TYPES.StreamingRepository).to(StreamingRepository)
 
 fakeControllerContainer.bind<UserEntityConverter>(TYPES.UserEntityConverter).to(UserEntityConverter)
 fakeControllerContainer.bind<PlaylistEntityConverter>(TYPES.PlaylistEntityConverter).to(PlaylistEntityConverter)
 fakeControllerContainer.bind<TrackEntityConverter>(TYPES.TrackEntityConverter).to(TrackEntityConverter)
+fakeControllerContainer.bind<StreamingEntityConverter>(TYPES.StreamingEntityConverter).to(StreamingEntityConverter)
 
 export { fakeControllerContainer }

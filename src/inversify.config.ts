@@ -19,6 +19,10 @@ import { TrackEntityConverter } from './infra/db/Sqlite/converters/TrackEntityCo
 import { TrackRepository } from './infra/db/Sqlite/repositories/TrackRepository'
 import { ITrackService } from './modules/music/interfaces/TrackService'
 import { TrackService } from './modules/music/services/TrackService'
+import { StreamingRepository } from './infra/db/Sqlite/repositories/StreamingRepository'
+import { StreamingEntityConverter } from './infra/db/Sqlite/converters/StreamingEntityConverter.ts'
+import { IStreamingService } from './modules/streaming/interfaces/IStreamingService'
+import { StreamingService } from './modules/streaming/services/StreamingService'
 const controllerContainer = new Container()
 
 controllerContainer.bind<UserController>(TYPES.UserController).to(UserController)
@@ -28,13 +32,16 @@ controllerContainer.bind<IUserService>(TYPES.UserService).to(UserService)
 controllerContainer.bind<IAuthService>(TYPES.AuthService).to(AuthService)
 controllerContainer.bind<IPlaylistService>(TYPES.PlaylistService).to(PlaylistService)
 controllerContainer.bind<ITrackService>(TYPES.TrackService).to(TrackService)
+controllerContainer.bind<IStreamingService>(TYPES.StreamingService).to(StreamingService)
 
 controllerContainer.bind<IUserRepository>(TYPES.UserRepository).to(UserRepository)
 controllerContainer.bind<IPlaylistRepository>(TYPES.PlaylistRepository).to(PlaylistRepository)
 controllerContainer.bind<TrackRepository>(TYPES.TrackRepository).to(TrackRepository)
+controllerContainer.bind<StreamingRepository>(TYPES.StreamingRepository).to(StreamingRepository)
 
 controllerContainer.bind<UserEntityConverter>(TYPES.UserEntityConverter).to(UserEntityConverter)
 controllerContainer.bind<PlaylistEntityConverter>(TYPES.PlaylistEntityConverter).to(PlaylistEntityConverter)
 controllerContainer.bind<TrackEntityConverter>(TYPES.TrackEntityConverter).to(TrackEntityConverter)
+controllerContainer.bind<StreamingEntityConverter>(TYPES.StreamingEntityConverter).to(StreamingEntityConverter)
 
 export { controllerContainer }
