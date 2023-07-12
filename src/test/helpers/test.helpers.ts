@@ -16,11 +16,12 @@ export const testUserData = {
   pass: '123',
 }
 
-export const testPlaylistDTO = (userId: number) =>
+export const testPlaylistDTO = (userId: number, streamingId: number) =>
   new CreatePlaylistDTO({
     userId,
     name: 'Test playlist',
     externalId: '65FD4G65SF',
+    streamingId,
   })
 
 export const testTrackDTO = (userId: number, playlistId: number) =>

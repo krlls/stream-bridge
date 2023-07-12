@@ -9,21 +9,27 @@ import { IPlaylistRepository } from '../../../../modules/music/interfaces/IPlayl
 import { CreatePlaylistDTO } from '../../../../modules/music/dtos/CreatePlaylistDTO'
 import { PlaylistEntity } from '../entities/PlaylistEntity'
 import { Playlist } from '../../../../modules/music/entities/Playlist'
+import { StreamingEntity } from '../entities/StreamingEntity'
 
 @injectable()
 export class PlaylistRepository implements IPlaylistRepository {
   @inject(TYPES.PlaylistEntityConverter) private entityConverter: Converter<PlaylistEntity, Playlist>
   repository: Repository<PlaylistEntity>
   userRepository: Repository<UserEntity>
+  streamingRepository: Repository<StreamingEntity>
   constructor() {
     this.repository = getRepository(PlaylistEntity)
     this.userRepository = getRepository(UserEntity)
+    this.streamingRepository = getRepository(StreamingEntity)
   }
 
   async createPlaylist(playlistData: CreatePlaylistDTO) {
-    const user = await this.userRepository.findOneBy({ id: playlistData.userId })
+    const [user, streaming] = await Promise.all([
+      this.userRepository.findOneBy({ id: playlistData.userId }),
+      this.streamingRepository.findOneBy({ id: playlistData.streamingId }),
+    ])
 
-    if (!user) {
+    if (!user || !streaming) {
       return null
     }
 
@@ -31,6 +37,7 @@ export class PlaylistRepository implements IPlaylistRepository {
     playlist.name = playlistData.name
     playlist.external_id = playlistData.externalId
     playlist.user = user
+    playlist.streaming = streaming
 
     const newPlaylist = await this.repository.save(playlist)
 

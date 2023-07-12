@@ -14,12 +14,12 @@ export class PlaylistEntity extends BaseEntity implements Playlist {
   @Column()
   name: string
 
-  @ManyToOne(() => UserEntity, (user) => user.playlists)
+  @ManyToOne(() => UserEntity, (user) => user.playlists, { nullable: false })
   user: UserEntity
 
   @OneToMany(() => TrackEntity, (track) => track.playlist)
   tracks: TrackEntity[]
 
-  @ManyToOne(() => StreamingEntity, (streaming) => streaming.playlists)
+  @ManyToOne(() => StreamingEntity, (streaming) => streaming.playlists, { nullable: false })
   streaming: StreamingEntity
 }
