@@ -1,6 +1,6 @@
 # Stream Bridge
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
-[![Node.js](https://img.shields.io/badge/Node.js-v14.17.0-green.svg)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-v18.0.0-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-v17.0.2-blue.svg)](https://reactjs.org/)
 [![Yarn](https://img.shields.io/badge/Package%20Manager-Yarn-2C8EBB.svg)](https://yarnpkg.com/)
 
