@@ -5,16 +5,18 @@ import { fakeControllerContainer } from '../helpers/inversify.test.config'
 import { TYPES } from '../../types/const'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
-import { getRandomTracks, testPlaylistDTO, testTrackDTO, testUserData } from '../helpers/test.helpers'
+import { getRandomTracks, testPlaylistDTO, testStreamingDTO, testTrackDTO, testUserData } from '../helpers/test.helpers'
 import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistService'
 import { UserDTO } from '../../modules/user/dtos/UserDTO'
 import { ServiceResultDTO } from '../../types/common'
 import { isServiceError } from '../../utils/errors'
 import { ITrackService } from '../../modules/music/interfaces/TrackService'
+import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
 
 const playlistService = fakeControllerContainer.get<IPlaylistService>(TYPES.PlaylistService)
 const userService = fakeControllerContainer.get<IUserService>(TYPES.UserService)
 const trackService = fakeControllerContainer.get<ITrackService>(TYPES.TrackService)
+const streamingService = fakeControllerContainer.get<IStreamingService>(TYPES.StreamingService)
 describe('Track service tests', () => {
   let currentUser: ServiceResultDTO<UserDTO>
 
@@ -33,7 +35,13 @@ describe('Track service tests', () => {
       throw Error('User not created')
     }
 
-    const playlist = await playlistService.createPlayList(testPlaylistDTO(currentUser.id))
+    const streaming = await streamingService.createSreaming(testStreamingDTO(currentUser.id))
+
+    if (isServiceError(streaming)) {
+      throw Error('Streaming not created')
+    }
+
+    const playlist = await playlistService.createPlayList(testPlaylistDTO(currentUser.id, streaming.id))
 
     if (isServiceError(playlist)) {
       throw Error('Playlist not created')
@@ -51,7 +59,13 @@ describe('Track service tests', () => {
       throw Error('User not created')
     }
 
-    const playlist = await playlistService.createPlayList(testPlaylistDTO(currentUser.id))
+    const streaming = await streamingService.createSreaming(testStreamingDTO(currentUser.id))
+
+    if (isServiceError(streaming)) {
+      throw Error('Streaming not created')
+    }
+
+    const playlist = await playlistService.createPlayList(testPlaylistDTO(currentUser.id, streaming.id))
 
     if (isServiceError(playlist)) {
       throw Error('Playlist not created')

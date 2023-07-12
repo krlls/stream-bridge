@@ -22,7 +22,7 @@ export class TrackRepository implements ITracksRepository {
 
   async createTrack(trackData: CreateTrackDTO): Promise<Track | null> {
     const playlist = await this.playlistRepository.findOne({
-      relations: ['tracks'],
+      relations: ['streaming'],
       where: { id: trackData.playlistId },
     })
 
@@ -37,8 +37,7 @@ export class TrackRepository implements ITracksRepository {
     track.artist = trackData.artist
     track.album = trackData.album
     track.playlist = playlist
-
-    playlist.tracks.push(track)
+    track.streaming = playlist.streaming
 
     const newtrack = await this.repository.save(track)
 
