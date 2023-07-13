@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify'
 import { Repository } from 'typeorm'
 
 import { TYPES } from '../../../../types/const'
-import { Converter } from '../../../../types/common'
+import { Converter, EStreamingType } from '../../../../types/common'
 import { getRepository } from '../SetupConnection'
 import { IStreamingRepository } from '../../../../modules/streaming/interfaces/IStreamingRepository'
 import { StreamingEntity } from '../entities/StreamingEntity'
@@ -37,6 +37,16 @@ export class StreamingRepository implements IStreamingRepository {
     // user.streamings.push(streamingToSave)
 
     const streaming = await this.repository.save(streamingToSave)
+
+    if (!streaming) {
+      return null
+    }
+
+    return this.streamingEntityConverter.from(streaming)
+  }
+
+  async getStreaming(userId: number, type: EStreamingType): Promise<Streaming | null> {
+    const streaming = await this.repository.findOneBy({ user: { id: userId }, type })
 
     if (!streaming) {
       return null

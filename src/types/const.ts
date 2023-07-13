@@ -1,4 +1,4 @@
-const TYPES = {
+export const TYPES = {
   UserController: Symbol.for('UserController'),
   AuthController: Symbol.for('AuthController'),
 
@@ -17,6 +17,8 @@ const TYPES = {
   PlaylistEntityConverter: Symbol.for('PlaylistEntityConverter'),
   TrackEntityConverter: Symbol.for('TrackEntityConverter'),
   StreamingEntityConverter: Symbol.for('StreamingEntityConverter'),
-}
 
-export { TYPES }
+  Client: Symbol.for('Client'),
+  ClientApiFactory: Symbol.for('ClientApiFactory'),
+  ClientApi: Symbol.for('ClientApi'),
+}

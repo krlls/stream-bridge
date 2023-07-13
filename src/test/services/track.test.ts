@@ -1,8 +1,8 @@
 import { expect, test, describe, beforeEach, afterEach } from '@jest/globals'
 
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
-import { fakeControllerContainer } from '../helpers/inversify.test.config'
 import { TYPES } from '../../types/const'
+import { controllerContainer } from '../../inversify.config'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
 import { getRandomTracks, testPlaylistDTO, testStreamingDTO, testTrackDTO, testUserData } from '../helpers/test.helpers'
@@ -13,10 +13,10 @@ import { isServiceError } from '../../utils/errors'
 import { ITrackService } from '../../modules/music/interfaces/TrackService'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
 
-const playlistService = fakeControllerContainer.get<IPlaylistService>(TYPES.PlaylistService)
-const userService = fakeControllerContainer.get<IUserService>(TYPES.UserService)
-const trackService = fakeControllerContainer.get<ITrackService>(TYPES.TrackService)
-const streamingService = fakeControllerContainer.get<IStreamingService>(TYPES.StreamingService)
+const playlistService = controllerContainer.get<IPlaylistService>(TYPES.PlaylistService)
+const userService = controllerContainer.get<IUserService>(TYPES.UserService)
+const trackService = controllerContainer.get<ITrackService>(TYPES.TrackService)
+const streamingService = controllerContainer.get<IStreamingService>(TYPES.StreamingService)
 describe('Track service tests', () => {
   let currentUser: ServiceResultDTO<UserDTO>
 

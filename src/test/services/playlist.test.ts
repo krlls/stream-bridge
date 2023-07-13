@@ -1,7 +1,7 @@
-import { expect, test, describe, beforeEach, afterEach } from '@jest/globals'
+import { afterEach, beforeEach, describe, expect, test } from '@jest/globals'
 
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
-import { fakeControllerContainer } from '../helpers/inversify.test.config'
+import { controllerContainer } from '../../inversify.config'
 import { TYPES } from '../../types/const'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
@@ -9,13 +9,14 @@ import { testPlaylistDTO, testStreamingDTO, testUserData } from '../helpers/test
 import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistService'
 import { CreatePlaylistDTO } from '../../modules/music/dtos/CreatePlaylistDTO'
 import { UserDTO } from '../../modules/user/dtos/UserDTO'
-import { ServiceResultDTO } from '../../types/common'
+import { EStreamingType, ServiceResultDTO } from '../../types/common'
 import { isServiceError } from '../../utils/errors'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
+import { ExporlPlaylistsDTO } from '../../modules/music/dtos/ExporlPlaylistsDTO'
 
-const playlistService = fakeControllerContainer.get<IPlaylistService>(TYPES.PlaylistService)
-const userService = fakeControllerContainer.get<IUserService>(TYPES.UserService)
-const streamingService = fakeControllerContainer.get<IStreamingService>(TYPES.StreamingService)
+const playlistService = controllerContainer.get<IPlaylistService>(TYPES.PlaylistService)
+const userService = controllerContainer.get<IUserService>(TYPES.UserService)
+const streamingService = controllerContainer.get<IStreamingService>(TYPES.StreamingService)
 describe('Playlist service tests', () => {
   let currentUser: ServiceResultDTO<UserDTO>
 
@@ -110,5 +111,29 @@ describe('Playlist service tests', () => {
     const findPlaylist = await playlistService.getPlaylistByExternalId(testData.externalId)
 
     expect(findPlaylist).toHaveProperty('external_id', testData.externalId)
+  })
+
+  test('Export playlist works', async () => {
+    if (isServiceError(currentUser)) {
+      throw Error('User not created')
+    }
+
+    const streaming = await streamingService.createSreaming(testStreamingDTO(currentUser.id))
+
+    if (isServiceError(streaming)) {
+      throw Error('Streaming not created')
+    }
+
+    const exportData = new ExporlPlaylistsDTO({
+      streamingType: EStreamingType.SPOTIFY,
+      userId: currentUser.id,
+    })
+
+    const count = await playlistService.exportPlaylists(exportData)
+
+    const playists = (await playlistService.getUserPlaylists(currentUser.id)) || []
+
+    expect(count).toBe(15)
+    expect(playists).toHaveLength(15)
   })
 })

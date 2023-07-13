@@ -1,7 +1,7 @@
 import { expect, test, describe, beforeEach, afterEach } from '@jest/globals'
 
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
-import { fakeControllerContainer } from '../helpers/inversify.test.config'
+import { controllerContainer } from '../../inversify.config'
 import { TYPES } from '../../types/const'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
@@ -9,7 +9,7 @@ import { testUserData } from '../helpers/test.helpers'
 import { UserDTO } from '../../modules/user/dtos/UserDTO'
 import { UpadteUserDTO } from '../../modules/user/dtos/UpdateUserDTO'
 
-const userService = fakeControllerContainer.get<IUserService>(TYPES.UserService)
+const userService = controllerContainer.get<IUserService>(TYPES.UserService)
 describe('User service tests', () => {
   const user = new CreateUserDTO(testUserData)
 

@@ -1,6 +1,6 @@
 export interface Converter<F, T> {
   from(from: F): T,
-  to(to: T): F,
+  to?(to: T): F,
 }
 
 export enum E_NODE_ENV {
@@ -27,8 +27,14 @@ export enum Errors {
   TRACK_CREATE_ERROR = 'Track not created',
 
   STREAMING_CREATE_ERROR = 'Streaming create error',
+  STREAMING_NOT_FOUND = 'Streaming not found',
 }
 
 export enum EStreamingType {
   SPOTIFY = 'SPOTIFY',
+}
+
+export type Factory<A, B extends unknown[]> = (...args: B) => A
+export interface ContextStrategy<T> {
+  set(strategy: T): void,
 }

@@ -23,6 +23,11 @@ import { StreamingRepository } from './infra/db/Sqlite/repositories/StreamingRep
 import { StreamingEntityConverter } from './infra/db/Sqlite/converters/StreamingEntityConverter.ts'
 import { IStreamingService } from './modules/streaming/interfaces/IStreamingService'
 import { StreamingService } from './modules/streaming/services/StreamingService'
+import { IStreamingClient } from './modules/music/clients/IStreamingClient'
+import { StreamingClient } from './infra/clients/StreamingClient/StreamingClient'
+import { SpotifyClient } from './infra/clients/StreamingClient/Spotify/adapters/SpotifyClient'
+import { Factory, EStreamingType } from './types/common'
+import { IClient } from './infra/clients/StreamingClient/IClient'
 const controllerContainer = new Container()
 
 controllerContainer.bind<UserController>(TYPES.UserController).to(UserController)
@@ -43,5 +48,13 @@ controllerContainer.bind<UserEntityConverter>(TYPES.UserEntityConverter).to(User
 controllerContainer.bind<PlaylistEntityConverter>(TYPES.PlaylistEntityConverter).to(PlaylistEntityConverter)
 controllerContainer.bind<TrackEntityConverter>(TYPES.TrackEntityConverter).to(TrackEntityConverter)
 controllerContainer.bind<StreamingEntityConverter>(TYPES.StreamingEntityConverter).to(StreamingEntityConverter)
+
+controllerContainer.bind<IStreamingClient>(TYPES.Client).to(StreamingClient)
+controllerContainer.bind<IClient>(TYPES.ClientApi).to(SpotifyClient).whenTargetNamed(EStreamingType.SPOTIFY)
+controllerContainer
+  .bind<Factory<IClient, [EStreamingType]>>(TYPES.ClientApiFactory)
+  .toFactory<IClient, [EStreamingType]>(
+    (ctx) => (type: EStreamingType) => ctx.container.getNamed<IClient>(TYPES.ClientApi, type),
+  )
 
 export { controllerContainer }
