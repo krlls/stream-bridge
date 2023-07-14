@@ -1,6 +1,6 @@
 import { EStreamingType } from '../../../types/common'
 
-export class ExporlPlaylistsDTO {
+export class ExportPlaylistsDTO {
   streamingType: EStreamingType
   userId: number
   sync: boolean = false

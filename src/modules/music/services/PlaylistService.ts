@@ -6,10 +6,13 @@ import { TYPES } from '../../../types/const'
 import { CreatePlaylistDTO } from '../dtos/CreatePlaylistDTO'
 import { ErrorDTO } from '../../common/dtos/errorDTO'
 import { Errors } from '../../../types/common'
-import { ExporlPlaylistsDTO } from '../dtos/ExporlPlaylistsDTO'
+import { ExportPlaylistsDTO } from '../dtos/ExportPlaylistsDTO'
 import { IStreamingClient } from '../clients/IStreamingClient'
 import { GetPlaylistsDTO } from '../dtos/GetPlaylistsDTO'
 import { IStreamingRepository } from '../../streaming/interfaces/IStreamingRepository'
+import { ExportResultDTO } from '../dtos/ExportResultDTO'
+
+const STEP = 50
 
 @injectable()
 export class PlaylistService implements IPlaylistService {
@@ -45,7 +48,8 @@ export class PlaylistService implements IPlaylistService {
     return (await this.playlistRrpository.getPlaylistsByUserId(userId)) || []
   }
 
-  async exportPlaylists(toExport: ExporlPlaylistsDTO) {
+  async exportPlaylists(toExport: ExportPlaylistsDTO) {
+    const { userId } = toExport
     this.streamingClient.set(toExport.streamingType)
 
     const streaming = await this.streamingRepository.getStreaming(toExport.userId, toExport.streamingType)
@@ -54,23 +58,33 @@ export class PlaylistService implements IPlaylistService {
       return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
     }
 
-    const getPlaylists = new GetPlaylistsDTO({
-      tocken: streaming.token || '',
-      refreshToken: streaming.reefresh_token || '',
-    })
-    const playlists = (await this.streamingClient.getPlaylists(getPlaylists)) || []
+    const counter = {
+      exported: 0,
+      saved: 0,
+      offset: 0,
+    }
 
-    await Promise.all(
-      playlists.map((p) =>
-        this.playlistRrpository.createPlaylist(
-          p.toCreate({
-            userId: toExport.userId,
-            streamingId: streaming.id,
-          }),
-        ),
-      ),
-    )
+    while (!counter.exported || !(counter.exported % STEP)) {
+      const getPlaylists = new GetPlaylistsDTO({
+        offset: counter.offset,
+        token: streaming.token || '',
+        refreshToken: streaming.reefresh_token || '',
+      })
 
-    return playlists.length
+      const chunk = (await this.streamingClient.getPlaylists(getPlaylists)) || []
+
+      if (chunk.length === 0) {
+        break
+      }
+
+      const playlistsData = chunk.map((p) => p.toCreate({ userId, streamingId: streaming.id }))
+      const savedPlaylists = await this.playlistRrpository.createPlaylists(playlistsData)
+
+      counter.saved += savedPlaylists.length
+      counter.exported += chunk.length
+      counter.offset += STEP
+    }
+
+    return new ExportResultDTO({ ...counter })
   }
 }
