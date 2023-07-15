@@ -12,7 +12,7 @@ import { UserDTO } from '../../modules/user/dtos/UserDTO'
 import { EStreamingType, ServiceResultDTO } from '../../types/common'
 import { isServiceError } from '../../utils/errors'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
-import { ExportPlaylistsDTO } from '../../modules/music/dtos/ExportPlaylistsDTO'
+import { ImportPlaylistsDTO } from '../../modules/music/dtos/ImportPlaylistsDTO'
 import { PLAYLISTS } from '../../infra/clients/StreamingClient/Spotify/adapters/SpotifyClient'
 
 const playlistService = controllerContainer.get<IPlaylistService>(TYPES.PlaylistService)
@@ -125,12 +125,12 @@ describe('Playlist service tests', () => {
       throw Error('Streaming not created')
     }
 
-    const exportData = new ExportPlaylistsDTO({
+    const exportData = new ImportPlaylistsDTO({
       streamingType: EStreamingType.SPOTIFY,
       userId: currentUser.id,
     })
 
-    const exportResult = (await playlistService.exportPlaylists(exportData)) as any
+    const exportResult = (await playlistService.importPlaylists(exportData)) as any
 
     expect(exportResult).toEqual({ exported: PLAYLISTS, saved: PLAYLISTS })
     expect(exportResult.exported).toBe(exportResult.saved)

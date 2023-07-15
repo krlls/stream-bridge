@@ -4,6 +4,7 @@ import { faker } from '@faker-js/faker'
 import { GetPlaylistsDTO } from '../../../../../modules/music/dtos/GetPlaylistsDTO'
 import { PlaylistApiConverter } from '../converters/PlaylistApiConverter'
 import { IClient } from '../../IClient'
+import { StreamingClientConfig } from '../../../../../modules/music/clients/IStreamingClient'
 export const PLAYLISTS = 1000
 
 const mockPlaylists = Array(PLAYLISTS)
@@ -22,8 +23,15 @@ const fakeApi = (offset: number) =>
 @injectable()
 export class SpotifyClient implements IClient {
   playlistConverter = new PlaylistApiConverter()
-  async getPlaylists(data: GetPlaylistsDTO) {
-    const playlists = await fakeApi(data.offset)
+
+  getConfig(): StreamingClientConfig {
+    return {
+      playlistsLimit: 50,
+    }
+  }
+
+  async getPlaylists(_credentials: GetPlaylistsDTO, offset: number) {
+    const playlists = await fakeApi(offset)
 
     return playlists.map(this.playlistConverter.from)
   }
