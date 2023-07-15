@@ -1,4 +1,4 @@
-export class ExportResultDTO {
+export class ImportResultDTO {
   exported: number
   saved: number
 

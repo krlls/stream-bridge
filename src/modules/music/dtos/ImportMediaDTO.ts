@@ -1,6 +1,6 @@
 import { EStreamingType } from '../../../types/common'
 
-export class ImportPlaylistsDTO {
+export class ImportMediaDTO {
   streamingType: EStreamingType
   userId: number
   constructor({ streamingType, userId }: { streamingType: EStreamingType, userId: number }) {
