@@ -5,7 +5,7 @@ import { GetPlaylistsDTO } from '../../../../../modules/music/dtos/GetPlaylistsD
 import { PlaylistApiConverter } from '../converters/PlaylistApiConverter'
 import { IClient } from '../../IClient'
 import { StreamingClientConfig } from '../../../../../modules/music/clients/IStreamingClient'
-export const PLAYLISTS = 1000
+export const PLAYLISTS = 100
 
 const mockPlaylists = Array(PLAYLISTS)
   .fill(null)
