@@ -1,4 +1,4 @@
-export class GetPlaylistsDTO {
+export class StreamingCredentialsDTO {
   token: string
   refreshToken: string
 

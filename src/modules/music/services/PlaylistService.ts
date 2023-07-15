@@ -6,10 +6,10 @@ import { TYPES } from '../../../types/const'
 import { CreatePlaylistDTO } from '../dtos/CreatePlaylistDTO'
 import { ErrorDTO } from '../../common/dtos/errorDTO'
 import { Errors } from '../../../types/common'
-import { ImportPlaylistsDTO } from '../dtos/ImportPlaylistsDTO'
-import { GetPlaylistsDTO } from '../dtos/GetPlaylistsDTO'
+import { ImportMediaDTO } from '../dtos/ImportMediaDTO'
+import { StreamingCredentialsDTO } from '../dtos/StreamingCredentialsDTO'
 import { IStreamingRepository } from '../../streaming/interfaces/IStreamingRepository'
-import { ExportResultDTO } from '../dtos/ExportResultDTO'
+import { ImportResultDTO } from '../dtos/ImportResultDTO'
 import { IMusicImporter } from '../interfaces/IMusicImporter'
 
 @injectable()
@@ -46,7 +46,7 @@ export class PlaylistService implements IPlaylistService {
     return (await this.playlistRepository.getPlaylistsByUserId(userId)) || []
   }
 
-  async importPlaylists(toExport: ImportPlaylistsDTO) {
+  async importPlaylists(toExport: ImportMediaDTO) {
     const { userId } = toExport
 
     const streaming = await this.streamingRepository.getStreaming(toExport.userId, toExport.streamingType)
@@ -55,7 +55,7 @@ export class PlaylistService implements IPlaylistService {
       return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
     }
 
-    const credentials = new GetPlaylistsDTO({
+    const credentials = new StreamingCredentialsDTO({
       token: streaming.token || '',
       refreshToken: streaming.reefresh_token || '',
     })
@@ -67,6 +67,6 @@ export class PlaylistService implements IPlaylistService {
       streamingType: streaming.type,
     })
 
-    return new ExportResultDTO(result)
+    return new ImportResultDTO(result)
   }
 }

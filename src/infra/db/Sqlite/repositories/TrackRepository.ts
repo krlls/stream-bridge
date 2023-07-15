@@ -30,22 +30,38 @@ export class TrackRepository implements ITracksRepository {
       return null
     }
 
-    const track = new TrackEntity()
+    const track = this._createTrack(trackData, playlist)
+    const newTrack = await this.repository.save(track)
 
-    track.external_id = trackData.externalId
-    track.name = trackData.name
-    track.artist = trackData.artist
-    track.album = trackData.album
-    track.playlist = playlist
-    track.streaming = playlist.streaming
-
-    const newtrack = await this.repository.save(track)
-
-    if (!newtrack) {
+    if (!newTrack) {
       return null
     }
 
-    return this.trackEntityConverter.from(newtrack)
+    return this.trackEntityConverter.from(newTrack)
+  }
+
+  async createTracks(trackData: CreateTrackDTO[]): Promise<Track[]> {
+    if (!trackData.length) {
+      return []
+    }
+
+    const playlist = await this.playlistRepository.findOne({
+      relations: ['streaming'],
+      where: { id: trackData[0].playlistId },
+    })
+
+    if (!playlist) {
+      return []
+    }
+
+    const tracks = trackData.map((dto) => this._createTrack(dto, playlist))
+    const newTracks = await this.repository.save(tracks)
+
+    if (!newTracks) {
+      return []
+    }
+
+    return newTracks.map(this.trackEntityConverter.from)
   }
 
   async getTracksByPlaylistId(playlistId: number) {
@@ -56,5 +72,18 @@ export class TrackRepository implements ITracksRepository {
     }
 
     return tracks.map(this.trackEntityConverter.from)
+  }
+
+  private _createTrack(trackData: CreateTrackDTO, playlist: PlaylistEntity): TrackEntity {
+    const track = new TrackEntity()
+
+    track.external_id = trackData.externalId
+    track.name = trackData.name
+    track.artist = trackData.artist
+    track.album = trackData.album
+    track.playlist = playlist
+    track.streaming = playlist.streaming
+
+    return track
   }
 }

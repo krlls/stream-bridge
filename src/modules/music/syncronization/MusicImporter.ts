@@ -4,12 +4,15 @@ import { TYPES } from '../../../types/const'
 import { IPlaylistRepository } from '../interfaces/IPlaylistRepository'
 import { IStreamingClient } from '../clients/IStreamingClient'
 import { IMusicImporter } from '../interfaces/IMusicImporter'
-import { GetPlaylistsDTO } from '../dtos/GetPlaylistsDTO'
+import { StreamingCredentialsDTO } from '../dtos/StreamingCredentialsDTO'
 import { EStreamingType } from '../../../types/common'
+import { GetTracksByPlaylistDTO } from '../dtos/GetTracksByPlaylistDTO'
+import { ITracksRepository } from '../interfaces/ITracksRepository'
 
 @injectable()
 export class MusicImporter implements IMusicImporter {
   @inject(TYPES.PlaylistRepository) private playlistRepository: IPlaylistRepository
+  @inject(TYPES.TrackRepository) private trackRepository: ITracksRepository
   @inject(TYPES.Client) private streamingClient: IStreamingClient
 
   async importPlaylists({
@@ -21,7 +24,7 @@ export class MusicImporter implements IMusicImporter {
     userId: number,
     streamingId: number,
     streamingType: EStreamingType,
-    credentials: GetPlaylistsDTO,
+    credentials: StreamingCredentialsDTO,
   }) {
     this.streamingClient.set(streamingType, credentials)
 
@@ -40,6 +43,36 @@ export class MusicImporter implements IMusicImporter {
       const savedPlaylists = await this.playlistRepository.createPlaylists(playlistsData)
 
       counter.saved += savedPlaylists.length
+      counter.exported += chunk.length
+      offset += step
+    }
+
+    return counter
+  }
+
+  async importTracksByPlaylist(
+    credentials: StreamingCredentialsDTO,
+    data: GetTracksByPlaylistDTO,
+  ): Promise<{ exported: number, saved: number }> {
+    const { streamingType, playlistId, playlistExternalId, userId } = data
+    this.streamingClient.set(streamingType, credentials)
+
+    const counter = { exported: 0, saved: 0 }
+    const step = this.streamingClient.getConfig().playlistsLimit
+    let offset = 0
+
+    while (!counter.exported || !(counter.exported % step)) {
+      const chunk =
+        (await this.streamingClient.getTracksByPlaylist(credentials, { playlistId: playlistExternalId, offset })) || []
+
+      if (chunk.length === 0) {
+        break
+      }
+
+      const tracksData = chunk.map((t) => t.toCreate({ userId, playlistId }))
+      const savedTracks = await this.trackRepository.createTracks(tracksData)
+
+      counter.saved += savedTracks.length
       counter.exported += chunk.length
       offset += step
     }

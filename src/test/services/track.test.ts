@@ -1,4 +1,4 @@
-import { expect, test, describe, beforeEach, afterEach } from '@jest/globals'
+import { afterEach, beforeEach, describe, expect, test } from '@jest/globals'
 
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
 import { TYPES } from '../../types/const'
@@ -8,10 +8,12 @@ import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
 import { getRandomTracks, testPlaylistDTO, testStreamingDTO, testTrackDTO, testUserData } from '../helpers/test.helpers'
 import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistService'
 import { UserDTO } from '../../modules/user/dtos/UserDTO'
-import { ServiceResultDTO } from '../../types/common'
+import { EStreamingType, ServiceResultDTO } from '../../types/common'
 import { isServiceError } from '../../utils/errors'
 import { ITrackService } from '../../modules/music/interfaces/TrackService'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
+import { ImportMediaDTO } from '../../modules/music/dtos/ImportMediaDTO'
+import { PLAYLISTS, TRACKS } from '../../infra/clients/StreamingClient/Spotify/adapters/SpotifyClient'
 
 const playlistService = controllerContainer.get<IPlaylistService>(TYPES.PlaylistService)
 const userService = controllerContainer.get<IUserService>(TYPES.UserService)
@@ -79,7 +81,7 @@ describe('Track service tests', () => {
 
     await Promise.all(createTracks)
 
-    const tracks = (await trackService.getTracksByPlayist(playlist.id)) || []
+    const tracks = (await trackService.getTracksByPlaylist(playlist.id)) || []
 
     expect(tracks).toHaveLength(tracksSize)
 
@@ -90,5 +92,57 @@ describe('Track service tests', () => {
     for (const track of tracks) {
       expect(track).toHaveProperty('id')
     }
+  })
+
+  test('Import tracks by playlists', async () => {
+    if (isServiceError(currentUser)) {
+      throw Error('User not created')
+    }
+
+    await streamingService.createSreaming(testStreamingDTO(currentUser.id))
+
+    const exportData = new ImportMediaDTO({
+      streamingType: EStreamingType.SPOTIFY,
+      userId: currentUser.id,
+    })
+
+    await playlistService.importPlaylists(exportData)
+
+    const dto = new ImportMediaDTO({ streamingType: EStreamingType.SPOTIFY, userId: currentUser.id })
+    const exportCount = await trackService.importTracks(dto)
+
+    if (isServiceError(exportCount)) {
+      throw Error('User not created')
+    }
+
+    expect(exportCount.saved).toBe(TRACKS * PLAYLISTS)
+    expect(exportCount.exported).toBe(exportCount.saved)
+  })
+
+  test('Import tracks by playlist', async () => {
+    if (isServiceError(currentUser)) {
+      throw Error('User not created')
+    }
+
+    await streamingService.createSreaming(testStreamingDTO(currentUser.id))
+
+    const exportData = new ImportMediaDTO({
+      streamingType: EStreamingType.SPOTIFY,
+      userId: currentUser.id,
+    })
+
+    await playlistService.importPlaylists(exportData)
+
+    const playlists = await playlistService.getUserPlaylists(currentUser.id)
+
+    if (isServiceError(playlists)) {
+      throw Error('No playlists')
+    }
+
+    const dto = new ImportMediaDTO({ streamingType: EStreamingType.SPOTIFY, userId: currentUser.id })
+    const exportCount = (await trackService.importTracksByPlaylist(playlists[0].id, dto)) as any
+
+    expect(exportCount?.saved).toBe(TRACKS)
+    expect(exportCount?.exported).toBe(exportCount?.saved)
   })
 })
