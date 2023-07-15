@@ -28,6 +28,8 @@ import { StreamingClient } from './infra/clients/StreamingClient/StreamingClient
 import { SpotifyClient } from './infra/clients/StreamingClient/Spotify/adapters/SpotifyClient'
 import { Factory, EStreamingType } from './types/common'
 import { IClient } from './infra/clients/StreamingClient/IClient'
+import { MusicImporter } from './modules/music/syncronization/MusicImporter'
+import { IMusicImporter } from './modules/music/interfaces/IMusicImporter'
 const controllerContainer = new Container()
 
 controllerContainer.bind<UserController>(TYPES.UserController).to(UserController)
@@ -48,6 +50,8 @@ controllerContainer.bind<UserEntityConverter>(TYPES.UserEntityConverter).to(User
 controllerContainer.bind<PlaylistEntityConverter>(TYPES.PlaylistEntityConverter).to(PlaylistEntityConverter)
 controllerContainer.bind<TrackEntityConverter>(TYPES.TrackEntityConverter).to(TrackEntityConverter)
 controllerContainer.bind<StreamingEntityConverter>(TYPES.StreamingEntityConverter).to(StreamingEntityConverter)
+
+controllerContainer.bind<IMusicImporter>(TYPES.MusicImporter).to(MusicImporter)
 
 controllerContainer.bind<IStreamingClient>(TYPES.Client).to(StreamingClient)
 controllerContainer.bind<IClient>(TYPES.ClientApi).to(SpotifyClient).whenTargetNamed(EStreamingType.SPOTIFY)

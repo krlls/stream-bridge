@@ -23,6 +23,56 @@ export class PlaylistRepository implements IPlaylistRepository {
     this.streamingRepository = getRepository(StreamingEntity)
   }
 
+  private _createPlaylist({
+    user,
+    streaming,
+    playlistData,
+  }: {
+    user: UserEntity,
+    streaming: StreamingEntity,
+    playlistData: CreatePlaylistDTO,
+  }) {
+    const playlist = new PlaylistEntity()
+
+    playlist.user = user
+    playlist.streaming = streaming
+    playlist.name = playlistData.name
+    playlist.external_id = playlistData.externalId
+
+    return playlist
+  }
+
+  async createPlaylists(playlistData: CreatePlaylistDTO[]) {
+    if (!playlistData.length) {
+      return []
+    }
+
+    const [user, streaming] = await Promise.all([
+      this.userRepository.findOneBy({ id: playlistData[0]?.userId }),
+      this.streamingRepository.findOneBy({ id: playlistData[0]?.streamingId }),
+    ])
+
+    if (!user || !streaming) {
+      return []
+    }
+
+    const playlists = playlistData.map((playlist) =>
+      this._createPlaylist({
+        user,
+        streaming,
+        playlistData: playlist,
+      }),
+    )
+
+    const newPlaylists = await this.repository.save(playlists)
+
+    if (!newPlaylists) {
+      return []
+    }
+
+    return newPlaylists.map(this.entityConverter.from)
+  }
+
   async createPlaylist(playlistData: CreatePlaylistDTO) {
     const [user, streaming] = await Promise.all([
       this.userRepository.findOneBy({ id: playlistData.userId }),

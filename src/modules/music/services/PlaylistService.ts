@@ -6,19 +6,19 @@ import { TYPES } from '../../../types/const'
 import { CreatePlaylistDTO } from '../dtos/CreatePlaylistDTO'
 import { ErrorDTO } from '../../common/dtos/errorDTO'
 import { Errors } from '../../../types/common'
-import { ExporlPlaylistsDTO } from '../dtos/ExporlPlaylistsDTO'
-import { IStreamingClient } from '../clients/IStreamingClient'
+import { ImportPlaylistsDTO } from '../dtos/ImportPlaylistsDTO'
 import { GetPlaylistsDTO } from '../dtos/GetPlaylistsDTO'
 import { IStreamingRepository } from '../../streaming/interfaces/IStreamingRepository'
-
+import { ExportResultDTO } from '../dtos/ExportResultDTO'
+import { IMusicImporter } from '../interfaces/IMusicImporter'
 @injectable()
 export class PlaylistService implements IPlaylistService {
-  @inject(TYPES.PlaylistRepository) private playlistRrpository: IPlaylistRepository
-  @inject(TYPES.Client) private streamingClient: IStreamingClient
+  @inject(TYPES.PlaylistRepository) private playlistRepository: IPlaylistRepository
   @inject(TYPES.StreamingRepository) private streamingRepository: IStreamingRepository
+  @inject(TYPES.MusicImporter) private musicImporter: IMusicImporter
 
   async createPlayList(playlist: CreatePlaylistDTO) {
-    const newPlaylist = await this.playlistRrpository.createPlaylist(playlist)
+    const newPlaylist = await this.playlistRepository.createPlaylist(playlist)
 
     if (!newPlaylist) {
       return new ErrorDTO(Errors.PLAYLIST_CREATE_ERROR)
@@ -28,7 +28,7 @@ export class PlaylistService implements IPlaylistService {
   }
 
   async getPlaylistById(id: number) {
-    const playlist = await this.playlistRrpository.getPlaylistById(id)
+    const playlist = await this.playlistRepository.getPlaylistById(id)
 
     if (!playlist) {
       return null
@@ -37,16 +37,16 @@ export class PlaylistService implements IPlaylistService {
     return playlist
   }
 
-  async getPlaylistByExternalId(extenalId: string) {
-    return await this.playlistRrpository.getPlaylistByExternalId(extenalId)
+  async getPlaylistByExternalId(externalId: string) {
+    return await this.playlistRepository.getPlaylistByExternalId(externalId)
   }
 
   async getUserPlaylists(userId: number) {
-    return (await this.playlistRrpository.getPlaylistsByUserId(userId)) || []
+    return (await this.playlistRepository.getPlaylistsByUserId(userId)) || []
   }
 
-  async exportPlaylists(toExport: ExporlPlaylistsDTO) {
-    this.streamingClient.set(toExport.streamingType)
+  async importPlaylists(toExport: ImportPlaylistsDTO) {
+    const { userId } = toExport
 
     const streaming = await this.streamingRepository.getStreaming(toExport.userId, toExport.streamingType)
 
@@ -54,23 +54,18 @@ export class PlaylistService implements IPlaylistService {
       return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
     }
 
-    const getPlaylists = new GetPlaylistsDTO({
-      tocken: streaming.token || '',
+    const credentials = new GetPlaylistsDTO({
+      token: streaming.token || '',
       refreshToken: streaming.reefresh_token || '',
     })
-    const playlists = (await this.streamingClient.getPlaylists(getPlaylists)) || []
 
-    await Promise.all(
-      playlists.map((p) =>
-        this.playlistRrpository.createPlaylist(
-          p.toCreate({
-            userId: toExport.userId,
-            streamingId: streaming.id,
-          }),
-        ),
-      ),
-    )
+    const result = await this.musicImporter.importPlaylists({
+      userId,
+      credentials,
+      streamingId: streaming.id,
+      streamingType: streaming.type,
+    })
 
-    return playlists.length
+    return new ExportResultDTO(result)
   }
 }

@@ -12,13 +12,19 @@ import { strategy } from '../../../utils/decorators'
 @strategy('client', 'set')
 export class StreamingClient implements IStreamingClient {
   private client: IClient
+  private credentials: GetPlaylistsDTO
   @inject(TYPES.ClientApiFactory) private apiFactory: Factory<IClient, [EStreamingType]>
 
-  set(type: EStreamingType) {
+  set(type: EStreamingType, data: GetPlaylistsDTO) {
     this.client = this.apiFactory(type)
+    this.credentials = data
   }
 
-  async getPlaylists(data: GetPlaylistsDTO): Promise<ExternalPlaylistDTO[]> {
-    return this.client.getPlaylists(data)
+  getConfig() {
+    return this.client.getConfig()
+  }
+
+  async getPlaylists(offset: number): Promise<ExternalPlaylistDTO[]> {
+    return this.client.getPlaylists(this.credentials, offset)
   }
 }

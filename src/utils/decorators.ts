@@ -1,7 +1,7 @@
 import { get, isFunction } from 'lodash'
 
 export const strategy =
-  <T extends { prototype: any }>(checkProp: string, method: string) =>
+  <T extends { prototype: any }>(required: string, method: string) =>
   ({ prototype }: T) => {
     const propertyDescriptors = Object.getOwnPropertyDescriptors(prototype)
 
@@ -15,8 +15,8 @@ export const strategy =
       const originalMethod = descriptor.value
 
       descriptor.value = function <T extends []>(...args: T) {
-        if (!get(this, checkProp)) {
-          throw new Error(`You must call the ${method}()`)
+        if (!get(this, required)) {
+          throw new Error(`Before calling ${propertyName}() instance must be initialized with ${method}()`)
         }
 
         return originalMethod.apply(this, args)

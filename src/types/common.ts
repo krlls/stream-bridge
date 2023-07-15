@@ -35,6 +35,6 @@ export enum EStreamingType {
 }
 
 export type Factory<A, B extends unknown[]> = (...args: B) => A
-export interface ContextStrategy<T> {
-  set(strategy: T): void,
+export interface ContextStrategy<A, B extends unknown[]> {
+  set(strategy: A, ...args: B): void,
 }

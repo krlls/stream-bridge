@@ -17,6 +17,7 @@ export const TYPES = {
   PlaylistEntityConverter: Symbol.for('PlaylistEntityConverter'),
   TrackEntityConverter: Symbol.for('TrackEntityConverter'),
   StreamingEntityConverter: Symbol.for('StreamingEntityConverter'),
+  MusicImporter: Symbol.for('MusicImporter'),
 
   Client: Symbol.for('Client'),
   ClientApiFactory: Symbol.for('ClientApiFactory'),
