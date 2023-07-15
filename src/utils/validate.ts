@@ -8,6 +8,7 @@ export const validatorFactory = (scheme: AnySchema) => async (ctx: RouterContext
 
   if (validator.error) {
     ApiLogger.error(ctx, 'Validation error')
+
     return respond400(ctx, {
       message: 'Validation error',
       details: validator?.error?.details,

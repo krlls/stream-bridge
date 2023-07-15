@@ -13,8 +13,10 @@ import { CreateStreamingDTO } from '../../../../modules/streaming/dtos/CreateStr
 @injectable()
 export class StreamingRepository implements IStreamingRepository {
   @inject(TYPES.StreamingEntityConverter) private streamingEntityConverter: Converter<StreamingEntity, Streaming>
-  private repository: Repository<StreamingEntity>
   userRepository: Repository<UserEntity>
+
+  private repository: Repository<StreamingEntity>
+
   constructor() {
     this.repository = getRepository(StreamingEntity)
     this.userRepository = getRepository(UserEntity)

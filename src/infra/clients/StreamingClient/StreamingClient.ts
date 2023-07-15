@@ -11,9 +11,10 @@ import { strategy } from '../../../utils/decorators'
 @injectable()
 @strategy('client', 'set')
 export class StreamingClient implements IStreamingClient {
+  @inject(TYPES.ClientApiFactory) private apiFactory: Factory<IClient, [EStreamingType]>
+
   private client: IClient
   private credentials: GetPlaylistsDTO
-  @inject(TYPES.ClientApiFactory) private apiFactory: Factory<IClient, [EStreamingType]>
 
   set(type: EStreamingType, data: GetPlaylistsDTO) {
     this.client = this.apiFactory(type)

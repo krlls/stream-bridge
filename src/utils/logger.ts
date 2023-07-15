@@ -17,6 +17,18 @@ enum ELogger {
 }
 
 abstract class Logger {
+  protected static logInfo(name: string, ...args: any) {
+    return this.log(ELogType.INFO, clc.green(name), ...args)
+  }
+
+  protected static logWarn(name: string, ...args: any) {
+    return this.log(ELogType.WARN, clc.green(name), ...args)
+  }
+
+  protected static logError(name: string, ...args: any) {
+    return this.log(ELogType.ERROR, clc.green(name), ...args)
+  }
+
   private static log(type: ELogType, name: string, ...args: any) {
     if (serverConfig.silent) {
       return
@@ -29,18 +41,6 @@ abstract class Logger {
     }[type]
 
     return console.log(`[${moment().format('YY-MM-DD hh:mm:ss:SS')}] ${color(type)} [${name}]`, ...args)
-  }
-
-  protected static logInfo(name: string, ...args: any) {
-    return this.log(ELogType.INFO, clc.green(name), ...args)
-  }
-
-  protected static logWarn(name: string, ...args: any) {
-    return this.log(ELogType.WARN, clc.green(name), ...args)
-  }
-
-  protected static logError(name: string, ...args: any) {
-    return this.log(ELogType.ERROR, clc.green(name), ...args)
   }
 }
 

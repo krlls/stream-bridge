@@ -7,15 +7,14 @@ export const dataSource = new DataSource(sqlLite[NODE_ENV])
 
 export class SqliteDB {
   private static _instance: SqliteDB
+  private dbConnect!: DataSource
+  private testdb!: any
 
   public static get instance(): SqliteDB {
     if (!this._instance) this._instance = new SqliteDB()
 
     return this._instance
   }
-
-  private dbConnect!: DataSource
-  private testdb!: any
 
   async setupTestDB() {
     this.testdb = new Database('')

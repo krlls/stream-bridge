@@ -23,25 +23,6 @@ export class PlaylistRepository implements IPlaylistRepository {
     this.streamingRepository = getRepository(StreamingEntity)
   }
 
-  private _createPlaylist({
-    user,
-    streaming,
-    playlistData,
-  }: {
-    user: UserEntity,
-    streaming: StreamingEntity,
-    playlistData: CreatePlaylistDTO,
-  }) {
-    const playlist = new PlaylistEntity()
-
-    playlist.user = user
-    playlist.streaming = streaming
-    playlist.name = playlistData.name
-    playlist.external_id = playlistData.externalId
-
-    return playlist
-  }
-
   async createPlaylists(playlistData: CreatePlaylistDTO[]) {
     if (!playlistData.length) {
       return []
@@ -125,5 +106,24 @@ export class PlaylistRepository implements IPlaylistRepository {
     }
 
     return this.entityConverter.from(playlist)
+  }
+
+  private _createPlaylist({
+    user,
+    streaming,
+    playlistData,
+  }: {
+    user: UserEntity,
+    streaming: StreamingEntity,
+    playlistData: CreatePlaylistDTO,
+  }) {
+    const playlist = new PlaylistEntity()
+
+    playlist.user = user
+    playlist.streaming = streaming
+    playlist.name = playlistData.name
+    playlist.external_id = playlistData.externalId
+
+    return playlist
   }
 }

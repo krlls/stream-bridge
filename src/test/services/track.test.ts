@@ -22,6 +22,7 @@ describe('Track service tests', () => {
 
   beforeEach(async () => {
     await SqliteDB.instance.setupTestDB()
+
     const user = new CreateUserDTO(testUserData)
     currentUser = await userService.createUser(user)
   })
