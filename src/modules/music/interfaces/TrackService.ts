@@ -10,4 +10,5 @@ export interface ITrackService {
   saveTrack(trackData: CreateTrackDTO): Promise<ServiceResultDTO<Track>>,
   getTracksByPlaylist(playlistId: number): Promise<ServiceResultDTO<Track[]>>,
   importTracks(toImport: ImportMediaDTO): Promise<ServiceResultDTO<ImportResultDTO>>,
+  importTracksByPlaylist(playlistId: number, toImport: ImportMediaDTO): Promise<ServiceResultDTO<ImportResultDTO>>,
 }

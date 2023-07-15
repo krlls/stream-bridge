@@ -94,7 +94,7 @@ describe('Track service tests', () => {
     }
   })
 
-  test('Export tracks by playlists', async () => {
+  test('Import tracks by playlists', async () => {
     if (isServiceError(currentUser)) {
       throw Error('User not created')
     }
@@ -117,5 +117,32 @@ describe('Track service tests', () => {
 
     expect(exportCount.saved).toBe(TRACKS * PLAYLISTS)
     expect(exportCount.exported).toBe(exportCount.saved)
+  })
+
+  test('Import tracks by playlist', async () => {
+    if (isServiceError(currentUser)) {
+      throw Error('User not created')
+    }
+
+    await streamingService.createSreaming(testStreamingDTO(currentUser.id))
+
+    const exportData = new ImportMediaDTO({
+      streamingType: EStreamingType.SPOTIFY,
+      userId: currentUser.id,
+    })
+
+    await playlistService.importPlaylists(exportData)
+
+    const playlists = await playlistService.getUserPlaylists(currentUser.id)
+
+    if (isServiceError(playlists)) {
+      throw Error('No playlists')
+    }
+
+    const dto = new ImportMediaDTO({ streamingType: EStreamingType.SPOTIFY, userId: currentUser.id })
+    const exportCount = (await trackService.importTracksByPlaylist(playlists[0].id, dto)) as any
+
+    expect(exportCount?.saved).toBe(TRACKS)
+    expect(exportCount?.exported).toBe(exportCount?.saved)
   })
 })

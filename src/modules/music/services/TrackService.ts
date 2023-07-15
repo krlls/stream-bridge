@@ -12,6 +12,7 @@ import { IMusicImporter } from '../interfaces/IMusicImporter'
 import { StreamingCredentialsDTO } from '../dtos/StreamingCredentialsDTO'
 import { IStreamingRepository } from '../../streaming/interfaces/IStreamingRepository'
 import { GetTracksByPlaylistDTO } from '../dtos/GetTracksByPlaylistDTO'
+import { ImportResultDTO } from '../dtos/ImportResultDTO'
 
 @injectable()
 export class TrackService implements ITrackService {
@@ -70,5 +71,36 @@ export class TrackService implements ITrackService {
       },
       { exported: 0, saved: 0 },
     )
+  }
+
+  async importTracksByPlaylist(playlistId: number, toImport: ImportMediaDTO) {
+    const [streaming, playlist] = await Promise.all([
+      this.streamingRepository.getStreaming(toImport.userId, toImport.streamingType),
+      this.playlistRepository.getPlaylistById(playlistId),
+    ])
+
+    if (!streaming) {
+      return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
+    }
+
+    if (!playlist) {
+      return new ErrorDTO(Errors.PLAYLIST_NOT_FOUND)
+    }
+
+    const data = new GetTracksByPlaylistDTO({
+      streamingType: streaming.type,
+      userId: toImport.userId,
+      playlistId: playlist.id,
+      playlistExternalId: playlist.external_id,
+    })
+
+    const credentials = new StreamingCredentialsDTO({
+      token: streaming.token || '',
+      refreshToken: streaming.reefresh_token || '',
+    })
+
+    const exportResult = await this.musicImporter.importTracksByPlaylist(credentials, data)
+
+    return new ImportResultDTO(exportResult)
   }
 }
