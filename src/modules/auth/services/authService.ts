@@ -1,5 +1,4 @@
 import { inject, injectable } from 'inversify'
-// import jwt from 'jsonwebtoken'
 import jwt from 'jsonwebtoken'
 
 import { IAuthService } from '../interfaces/IAuthService'
