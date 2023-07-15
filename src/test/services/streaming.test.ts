@@ -29,6 +29,7 @@ describe('Track service tests', () => {
     if (isServiceError(currentUser)) {
       throw Error('User not created')
     }
+
     const streamingDTO = testStreamingDTO(currentUser.id)
     const streaming = await streamingService.createSreaming(streamingDTO)
 

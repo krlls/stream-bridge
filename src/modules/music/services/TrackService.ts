@@ -20,7 +20,6 @@ export class TrackService implements ITrackService {
 
     return track
   }
-
   async getTracksByPlayist(playlistId: number) {
     return await this.trackRepository.getTracksByPlaylistId(playlistId)
   }

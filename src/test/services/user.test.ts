@@ -30,6 +30,7 @@ describe('User service tests', () => {
 
   test('Create user not work', async () => {
     await userService.createUser(user)
+
     const errorResult = await userService.createUser(user)
 
     expect(errorResult).toHaveProperty('error')

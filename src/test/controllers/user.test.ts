@@ -49,6 +49,7 @@ describe('With auth controllers', () => {
     await SqliteDB.instance.setupTestDB()
 
     await TestApp.post(userUrl(Api.User.Create.URL)).send(testUserData)
+
     const resp = await TestApp.post(authUrl(Api.Auth.Login.URL)).send({
       login: testUserData.login,
       pass: testUserData.pass,

@@ -42,6 +42,18 @@ module.exports = {
         },
       },
     ],
+    'padding-line-between-statements': [
+      'warn',
+      { blankLine: 'always', prev: 'import', next: '*' },
+      { blankLine: 'any', prev: 'import', next: 'import' },
+      { blankLine: 'always', prev: 'class', next: '*' },
+      { blankLine: 'always', prev: 'expression', next: '*' },
+      { blankLine: 'any', prev: 'expression', next: 'expression' },
+      { blankLine: 'always', prev: '*', next: 'return' },
+      { blankLine: 'always', prev: 'block-like', next: '*' },
+      { blankLine: 'always', prev: '*', next: 'block-like' },
+    ],
+    '@typescript-eslint/member-ordering': 'error',
     'import/order': [
       'error',
       {
