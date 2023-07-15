@@ -49,6 +49,7 @@ module.exports = {
       { blankLine: 'any', prev: 'expression', next: 'expression' },
       { blankLine: 'always', prev: '*', next: 'return' },
       { blankLine: 'always', prev: 'block-like', next: '*' },
+      { blankLine: 'always', prev: '*', next: 'block-like' },
     ],
     '@typescript-eslint/member-ordering': 'error',
     'import/order': [
