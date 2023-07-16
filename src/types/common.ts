@@ -29,6 +29,8 @@ export enum Errors {
 
   STREAMING_CREATE_ERROR = 'Streaming create error',
   STREAMING_NOT_FOUND = 'Streaming not found',
+
+  CREATE_URL_ERROR = 'Create streaming url error',
 }
 
 export enum EStreamingType {

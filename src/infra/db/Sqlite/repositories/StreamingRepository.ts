@@ -33,7 +33,7 @@ export class StreamingRepository implements IStreamingRepository {
 
     streamingToSave.type = steamingData.type
     streamingToSave.token = steamingData.token
-    streamingToSave.reefresh_token = steamingData.reefreshToken
+    streamingToSave.reefresh_token = steamingData.refreshToken
     streamingToSave.user = user
 
     // user.streamings.push(streamingToSave)

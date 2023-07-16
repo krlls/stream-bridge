@@ -8,8 +8,8 @@ import { EStreamingType } from '../../types/common'
 import { CreateStreamingDTO } from '../../modules/streaming/dtos/CreateStreamingDTO'
 
 export const userUrl: (...args: string[]) => string = createPatch.bind(null, Api.User.PREFIX)
-
 export const authUrl: (...args: string[]) => string = createPatch.bind(null, Api.Auth.PREFIX)
+export const streamingUrl: (...args: string[]) => string = createPatch.bind(null, Api.Streaming.PREFIX)
 export const testUserData = {
   login: 'Ksmi',
   name: 'Kirill',

@@ -769,6 +769,11 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
+"@spotify/web-api-ts-sdk@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@spotify/web-api-ts-sdk/-/web-api-ts-sdk-1.0.0.tgz#959dc7c3e3ac3b17f55f23b1461fb9d3e9b56929"
+  integrity sha512-mFvCSdoprHBK0itg0g1Tl2/0Wcm9huIOpfU8QkPW5tvbaaMzQsNHFvPp2Qx+xw5miRFWYkF+G8Q0cNYYmCB1oA==
+
 "@sqltools/formatter@^1.2.5":
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/@sqltools/formatter/-/formatter-1.2.5.tgz#3abc203c79b8c3e90fd6c156a0c62d5403520e12"

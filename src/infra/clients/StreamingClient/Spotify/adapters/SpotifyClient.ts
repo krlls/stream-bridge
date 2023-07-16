@@ -8,6 +8,9 @@ import { StreamingClientConfig } from '../../../../../modules/music/clients/IStr
 import { ITrackApi } from '../interfaces/ISpotifyApi'
 import { ExternalTrackDTO } from '../../../../../modules/music/dtos/TrackPlaylistDTO'
 import { TrackApiConverter } from '../converters/TrackApiConverter'
+import { serverConfig } from '../../../../../config'
+
+import * as querystring from 'querystring'
 
 export const PLAYLISTS = 10
 export const TRACKS = 150
@@ -53,7 +56,6 @@ const fakeApi = {
 export class SpotifyClient implements IClient {
   playlistConverter = new PlaylistApiConverter()
   trackConverter = new TrackApiConverter()
-
   getConfig(): StreamingClientConfig {
     return {
       playlistsLimit: 50,
@@ -76,5 +78,19 @@ export class SpotifyClient implements IClient {
     const tracks = await fakeApi.getTracks(data.playlistId, data.offset)
 
     return tracks.map(this.trackConverter.from)
+  }
+
+  async getLoginUrl(): Promise<string | null> {
+    const scope = ['user-read-private', 'user-read-email']
+
+    const query = querystring.stringify({
+      response_type: 'code',
+      client_id: serverConfig.spotifyClientId,
+      scope: scope.join(' '),
+      redirect_uri: 'http://localhost:3000/streaming/token/spotify',
+      state: 1234,
+    })
+
+    return 'https://accounts.spotify.com/authorize?' + query
   }
 }

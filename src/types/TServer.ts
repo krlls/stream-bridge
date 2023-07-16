@@ -3,4 +3,7 @@ export type ServerConfig = {
   silent: boolean,
   expiresSessionIn: number | string,
   jwtSecret: string,
+
+  spotifyClientId: string,
+  spotifyClientSecret: string,
 }

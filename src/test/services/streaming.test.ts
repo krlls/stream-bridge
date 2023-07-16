@@ -31,7 +31,7 @@ describe('Track service tests', () => {
     }
 
     const streamingDTO = testStreamingDTO(currentUser.id)
-    const streaming = await streamingService.createSreaming(streamingDTO)
+    const streaming = await streamingService.createStreaming(streamingDTO)
 
     expect(streaming).toHaveProperty('id')
     expect(streaming).toHaveProperty('token', streamingDTO.token)
