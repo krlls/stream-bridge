@@ -57,7 +57,9 @@ export namespace Api {
     }
 
     export namespace Token {
-      export const URL = '/token/:type'
+      export const PATCH = '/token'
+      export const STREAMING_TYPE = '/:type'
+      export const URL = PATCH + STREAMING_TYPE
 
       export type Resp = Response<{
         result: string,

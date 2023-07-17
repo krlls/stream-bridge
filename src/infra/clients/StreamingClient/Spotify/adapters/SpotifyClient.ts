@@ -10,6 +10,7 @@ import { ExternalTrackDTO } from '../../../../../modules/music/dtos/TrackPlaylis
 import { TrackApiConverter } from '../converters/TrackApiConverter'
 import { serverConfig } from '../../../../../config'
 import { apiLink } from '../../../../../utils/links'
+import { Api } from '../../../../../types/TApi'
 
 import * as querystring from 'querystring'
 
@@ -55,14 +56,20 @@ const fakeApi = {
 
 @injectable()
 export class SpotifyClient implements IClient {
-  playlistConverter = new PlaylistApiConverter()
-  trackConverter = new TrackApiConverter()
-  redirectLink = apiLink('/streaming/token/spotify')
-
+  private playlistConverter = new PlaylistApiConverter()
+  private trackConverter = new TrackApiConverter()
+  private redirectLink = apiLink(
+    Api.Streaming.PREFIX,
+    Api.Streaming.Token.PATCH,
+    '/' + Api.Streaming.EApiStreamingType.SPOTIFY,
+  )
   private _scope: string[] = ['user-read-private', 'user-read-email']
-  get scope(): string {
+  private spotifyAuthUrl = 'https://accounts.spotify.com/authorize?'
+
+  private get scope(): string {
     return this._scope.join(' ')
   }
+
   getConfig(): StreamingClientConfig {
     return {
       playlistsLimit: 50,
@@ -96,6 +103,6 @@ export class SpotifyClient implements IClient {
       state: 1234,
     })
 
-    return 'https://accounts.spotify.com/authorize?' + query
+    return this.spotifyAuthUrl + query
   }
 }
