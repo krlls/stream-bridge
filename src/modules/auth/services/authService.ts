@@ -8,7 +8,7 @@ import { IUserRepository } from '../../user/interfaces/IUserRepository'
 import { ErrorDTO } from '../../common/dtos/errorDTO'
 import { Errors } from '../../../types/common'
 import { LoginSuccessDTO } from '../dtos/loginSuccessDTO'
-import { verifyPass } from '../../../utils/crypto'
+import { ALGORITHM, verifyPass } from '../../../utils/crypto'
 import { Jwt } from '../entities/Jwt'
 import { serverConfig } from '../../../config'
 
@@ -33,7 +33,10 @@ export class AuthService implements IAuthService {
     }
 
     try {
-      const token = jwt.sign(data, serverConfig.jwtSecret, { expiresIn: serverConfig.expiresSessionIn })
+      const token = jwt.sign(data, serverConfig.jwtSecret, {
+        expiresIn: serverConfig.expiresSessionIn,
+        algorithm: ALGORITHM,
+      })
 
       return new LoginSuccessDTO(token)
     } catch (_e) {

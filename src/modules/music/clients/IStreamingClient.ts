@@ -10,7 +10,7 @@ export interface IStreamingClient extends ContextStrategy<EStreamingType, Partia
     credentials: StreamingCredentialsDTO,
     data: { playlistId: string, offset: number },
   ): Promise<ExternalTrackDTO[]>,
-  getLoginUrl(): Promise<string | null>,
+  getLoginUrl(state: string): Promise<string | null>,
 }
 
 export type StreamingClientConfig = {

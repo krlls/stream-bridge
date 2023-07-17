@@ -94,13 +94,13 @@ export class SpotifyClient implements IClient {
     return tracks.map(this.trackConverter.from)
   }
 
-  async getLoginUrl(): Promise<string | null> {
+  async getLoginUrl(state: string): Promise<string | null> {
     const query = querystring.stringify({
       response_type: 'code',
       client_id: serverConfig.spotifyClientId,
       scope: this.scope,
       redirect_uri: this.redirectLink,
-      state: 1234,
+      state,
     })
 
     return this.spotifyAuthUrl + query

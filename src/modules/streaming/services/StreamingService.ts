@@ -5,9 +5,10 @@ import { CreateStreamingDTO } from '../dtos/CreateStreamingDTO'
 import { TYPES } from '../../../types/const'
 import { IStreamingRepository } from '../interfaces/IStreamingRepository'
 import { ErrorDTO } from '../../common/dtos/errorDTO'
-import { Errors, EStreamingType } from '../../../types/common'
+import { Errors } from '../../../types/common'
 import { IStreamingClient } from '../../music/clients/IStreamingClient'
 import { LoginUrlDTO } from '../dtos/LoginUrlDTO'
+import { CreateLoginUrlDTO } from '../dtos/createLoginUrlDTO'
 
 @injectable()
 export class StreamingService implements IStreamingService {
@@ -24,10 +25,10 @@ export class StreamingService implements IStreamingService {
     return streaming
   }
 
-  async getLoginUrl(streamingType: EStreamingType) {
-    await this.streamingClient.set(streamingType)
+  async getLoginUrl(data: CreateLoginUrlDTO) {
+    await this.streamingClient.set(data.streamingType)
 
-    const url = await this.streamingClient.getLoginUrl()
+    const url = await this.streamingClient.getLoginUrl(data.token)
 
     if (!url) {
       return new ErrorDTO(Errors.CREATE_URL_ERROR)

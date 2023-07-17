@@ -22,6 +22,8 @@ export enum Errors {
   USER_NOT_FOUND = 'user not found',
   USER_UPDATE_ERROR = 'User update error',
 
+  TOKEN_NOT_VALID = 'Token not valid',
+
   PLAYLIST_CREATE_ERROR = 'Playlist not created',
   PLAYLIST_NOT_FOUND = 'Playlist not found',
 
