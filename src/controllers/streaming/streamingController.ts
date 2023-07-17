@@ -11,12 +11,13 @@ import { isServiceError } from '../../utils/errors'
 import { checkStreamingToken } from '../../utils/crypto'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateLoginUrlDTO } from '../../modules/streaming/dtos/createLoginUrlDTO'
+import { Api } from '../../types/TApi'
 
 @injectable()
 export class StreamingController {
   @inject(TYPES.StreamingService) private streamingService: IStreamingService
   @inject(TYPES.UserService) private userService: IUserService
-  async token(ctx: RouterContext, params: { code: string, state: string }) {
+  async token(ctx: RouterContext, params: Api.Streaming.Token.Req) {
     const isValidToken = await checkStreamingToken(params.state)
 
     if (!isValidToken) {

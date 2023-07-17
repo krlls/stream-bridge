@@ -24,7 +24,7 @@
     "run:docker": "docker run -p 3000:3000 testnodeproject"
   },
   "dependencies": {
-    "@spotify/web-api-ts-sdk": "^1.0.0",
+    "@spotify/web-api-ts-sdk": "^1.0.1",
     "argon2": "^0.30.3",
     "axios": "^1.4.0",
     "better-sqlite3": "^8.4.0",

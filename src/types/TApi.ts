@@ -61,6 +61,8 @@ export namespace Api {
       export const STREAMING_TYPE = '/:type'
       export const URL = PATCH + STREAMING_TYPE
 
+      export type Req = { code: string, state: string }
+
       export type Resp = Response<{
         result: string,
       }>
