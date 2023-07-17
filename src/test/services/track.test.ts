@@ -38,7 +38,7 @@ describe('Track service tests', () => {
       throw Error('User not created')
     }
 
-    const streaming = await streamingService.createSreaming(testStreamingDTO(currentUser.id))
+    const streaming = await streamingService.createStreaming(testStreamingDTO(currentUser.id))
 
     if (isServiceError(streaming)) {
       throw Error('Streaming not created')
@@ -62,7 +62,7 @@ describe('Track service tests', () => {
       throw Error('User not created')
     }
 
-    const streaming = await streamingService.createSreaming(testStreamingDTO(currentUser.id))
+    const streaming = await streamingService.createStreaming(testStreamingDTO(currentUser.id))
 
     if (isServiceError(streaming)) {
       throw Error('Streaming not created')
@@ -99,7 +99,7 @@ describe('Track service tests', () => {
       throw Error('User not created')
     }
 
-    await streamingService.createSreaming(testStreamingDTO(currentUser.id))
+    await streamingService.createStreaming(testStreamingDTO(currentUser.id))
 
     const exportData = new ImportMediaDTO({
       streamingType: EStreamingType.SPOTIFY,
@@ -124,7 +124,7 @@ describe('Track service tests', () => {
       throw Error('User not created')
     }
 
-    await streamingService.createSreaming(testStreamingDTO(currentUser.id))
+    await streamingService.createStreaming(testStreamingDTO(currentUser.id))
 
     const exportData = new ImportMediaDTO({
       streamingType: EStreamingType.SPOTIFY,

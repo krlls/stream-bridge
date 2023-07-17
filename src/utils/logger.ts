@@ -14,6 +14,7 @@ enum ELogType {
 
 enum ELogger {
   API = 'API',
+  STREAMING = 'STREAMING CLIENT',
 }
 
 abstract class Logger {
@@ -55,6 +56,20 @@ export class ApiLogger extends Logger {
 
   static error(ctx: RouterContext, ...args: any) {
     return this.logError(ELogger.API, ctx.req.method, ctx.request.url, ...args)
+  }
+}
+
+export class StreamingLogger extends Logger {
+  static info(...args: any) {
+    return this.logInfo(ELogger.STREAMING, ...args)
+  }
+
+  static warn(...args: any) {
+    return this.logWarn(ELogger.STREAMING, ...args)
+  }
+
+  static error(...args: any) {
+    return this.logError(ELogger.STREAMING, ...args)
   }
 }
 

@@ -7,4 +7,5 @@ export interface IUserService {
   createUser: (createUser: CreateUserDTO) => Promise<ServiceResultDTO<UserDTO>>,
   findUserById: (userId: number) => Promise<ServiceResultDTO<UserDTO>>,
   updateUser: (update: UpadteUserDTO) => Promise<ServiceResultDTO<UserDTO>>,
+  getSignedToken: (userId: number) => Promise<ServiceResultDTO<{ token: string }>>,
 }

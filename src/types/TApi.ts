@@ -48,4 +48,35 @@ export namespace Api {
       }>
     }
   }
+
+  export namespace Streaming {
+    export const PREFIX = '/streaming'
+
+    export enum EApiStreamingType {
+      SPOTIFY = 'spotify',
+    }
+
+    export namespace Token {
+      export const PATCH = '/token'
+      export const STREAMING_TYPE = '/:type'
+      export const URL = PATCH + STREAMING_TYPE
+
+      export type SuccessReq = { code: string, state: string }
+      export type ErrorReq = { error: string, state: string }
+
+      export type Req = SuccessReq | ErrorReq
+
+      export type Resp = Response<{
+        result: string,
+      }>
+    }
+
+    export namespace Auth {
+      export const URL = '/auth/:type'
+
+      export type Resp = Response<{
+        url: string,
+      }>
+    }
+  }
 }

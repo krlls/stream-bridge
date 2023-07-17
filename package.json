@@ -1,9 +1,9 @@
 {
-  "name": "nodejs-typescript-koa",
-  "version": "1.0.0",
-  "description": "NodejsTypeScriptKoa",
+  "name": "stream-bridge",
+  "version": "0.0.1",
+  "description": "Music synchronization tool that allows users to sync music from various streaming services.",
   "main": "dist/index.js",
-  "repository": "https://github.com/krlls/Nodejs-TypeScript-Koa-boilerplate.git",
+  "repository": "https://github.com/krlls/stream-bridge.git",
   "author": "ksmi",
   "license": "CC-BY-NC-SA-4.0",
   "node": ">=18.0.0",
@@ -24,8 +24,10 @@
     "run:docker": "docker run -p 3000:3000 testnodeproject"
   },
   "dependencies": {
+    "@spotify/web-api-ts-sdk": "^1.0.1",
     "argon2": "^0.30.3",
     "axios": "^1.4.0",
+    "base64url": "^3.0.1",
     "better-sqlite3": "^8.4.0",
     "cli-color": "^2.0.3",
     "dotenv": "^16.3.1",
@@ -78,6 +80,9 @@
     ]
   },
   "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/test/helpers/setup-jest.ts"
+    ],
     "moduleFileExtensions": [
       "js",
       "jsx",

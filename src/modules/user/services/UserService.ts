@@ -5,7 +5,7 @@ import { CreateUserDTO } from '../dtos/CreateUserDTO'
 import { IUserRepository } from '../interfaces/IUserRepository'
 import { TYPES } from '../../../types/const'
 import { UserDTO } from '../dtos/UserDTO'
-import { hashPass } from '../../../utils/crypto'
+import { createSignedJwt, hashPass } from '../../../utils/crypto'
 import { ErrorDTO } from '../../common/dtos/errorDTO'
 import { Errors } from '../../../types/common'
 import { UpadteUserDTO } from '../dtos/UpdateUserDTO'
@@ -59,5 +59,21 @@ export class UserService implements IUserService {
     }
 
     return new UserDTO(updatedUser)
+  }
+
+  async getSignedToken(userId: number) {
+    const user = await this.findUserById(userId)
+
+    if (!user) {
+      return new ErrorDTO(Errors.USER_NOT_FOUND)
+    }
+
+    const token = await createSignedJwt({ userId })
+
+    if (!token) {
+      return new ErrorDTO(Errors.TOKEN_NOT_VALID)
+    }
+
+    return { token }
   }
 }

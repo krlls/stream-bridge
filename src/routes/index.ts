@@ -6,6 +6,7 @@ import { ApiLogger, showNotEmpty } from '../utils/logger'
 import { Api } from '../types/TApi'
 import { authRouter } from './authRoutes'
 import { userRouter } from './userRoutes'
+import { streamingRouter } from './streamingRoutes'
 
 const rootRouter = new Router()
 
@@ -17,6 +18,7 @@ export const routers = (app: any) => {
   rootRouter.get('/', (ctx) => respond200plain(ctx, '🔥 Hello world!'))
   rootRouter.use(Api.User.PREFIX, userRouter.routes())
   rootRouter.use(Api.Auth.PREFIX, authRouter.routes())
+  rootRouter.use(Api.Streaming.PREFIX, streamingRouter.routes())
 
   app.use(rootRouter.routes())
 }
