@@ -23,6 +23,7 @@ export enum Errors {
   USER_UPDATE_ERROR = 'User update error',
 
   TOKEN_NOT_VALID = 'Token not valid',
+  CREATE_TOKEN_ERROR = 'create token error',
 
   PLAYLIST_CREATE_ERROR = 'Playlist not created',
   PLAYLIST_NOT_FOUND = 'Playlist not found',
@@ -30,6 +31,7 @@ export enum Errors {
   TRACK_CREATE_ERROR = 'Track not created',
 
   STREAMING_CREATE_ERROR = 'Streaming create error',
+  STREAMING_UPDATE_ERROR = 'Streaming update error',
   STREAMING_NOT_FOUND = 'Streaming not found',
 
   CREATE_URL_ERROR = 'Create streaming url error',

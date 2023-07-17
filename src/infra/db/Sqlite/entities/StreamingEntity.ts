@@ -20,6 +20,9 @@ export class StreamingEntity extends BaseEntity implements Streaming {
   @Column({ type: 'text', nullable: true, enum: EStreamingType })
   type: EStreamingType
 
+  @Column({ type: 'int', nullable: true })
+  expiresIn?: number
+
   @ManyToOne(() => UserEntity, (user) => user.streamings, { nullable: false })
   user: UserEntity
 

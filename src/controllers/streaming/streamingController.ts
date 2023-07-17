@@ -7,17 +7,24 @@ import { TYPES } from '../../types/const'
 import { convertStreamingName } from '../../utils/transform'
 import { ErrorDTO } from '../../modules/common/dtos/errorDTO'
 import { Errors } from '../../types/common'
-import { isServiceError } from '../../utils/errors'
+import { isServiceError, isSpotifyAuthError } from '../../utils/errors'
 import { checkStreamingToken } from '../../utils/crypto'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateLoginUrlDTO } from '../../modules/streaming/dtos/createLoginUrlDTO'
 import { Api } from '../../types/TApi'
+import { SaveStreamingTokenDTO } from '../../modules/streaming/dtos/SaveStreamingTokenDTO'
 
 @injectable()
 export class StreamingController {
   @inject(TYPES.StreamingService) private streamingService: IStreamingService
   @inject(TYPES.UserService) private userService: IUserService
   async token(ctx: RouterContext, params: Api.Streaming.Token.Req) {
+    const streamingType = convertStreamingName(ctx.params?.type || '')
+
+    if (!streamingType) {
+      return respond400(ctx, new ErrorDTO(Errors.STREAMING_NOT_FOUND))
+    }
+
     const isValidToken = await checkStreamingToken(params.state)
 
     if (!isValidToken) {
@@ -26,7 +33,23 @@ export class StreamingController {
       return respond403(ctx, err)
     }
 
-    return respond200json(ctx, { ...params })
+    if (isSpotifyAuthError(params)) {
+      return respond403(ctx, { error: params.error })
+    }
+
+    const saveTokenData = new SaveStreamingTokenDTO({
+      streamingType,
+      code: params.code,
+      userId: ctx.state.userId,
+    })
+
+    const result = await this.streamingService.saveToken(saveTokenData)
+
+    if (isServiceError(result)) {
+      return respond400(ctx, result)
+    }
+
+    return respond200json(ctx, result)
   }
 
   async getAuthUrl(ctx: RouterContext) {

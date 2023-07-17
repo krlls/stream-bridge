@@ -8,6 +8,7 @@ import { EStreamingType, Factory } from '../../../types/common'
 import { IClient } from './IClient'
 import { strategy } from '../../../utils/decorators'
 import { ExternalTrackDTO } from '../../../modules/music/dtos/TrackPlaylistDTO'
+import { CreateStreamingTokenDTO } from '../../../modules/streaming/dtos/CreateStreamingTokenDTO'
 
 @injectable()
 @strategy('client', 'set')
@@ -39,5 +40,9 @@ export class StreamingClient implements IStreamingClient {
 
   async getLoginUrl(state: string): Promise<string | null> {
     return this.client.getLoginUrl(state)
+  }
+
+  async getToken(code: string): Promise<CreateStreamingTokenDTO | null> {
+    return this.client.getToken(code)
   }
 }
