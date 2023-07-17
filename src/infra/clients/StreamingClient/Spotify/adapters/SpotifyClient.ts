@@ -9,6 +9,7 @@ import { ITrackApi } from '../interfaces/ISpotifyApi'
 import { ExternalTrackDTO } from '../../../../../modules/music/dtos/TrackPlaylistDTO'
 import { TrackApiConverter } from '../converters/TrackApiConverter'
 import { serverConfig } from '../../../../../config'
+import { apiLink } from '../../../../../utils/links'
 
 import * as querystring from 'querystring'
 
@@ -56,6 +57,12 @@ const fakeApi = {
 export class SpotifyClient implements IClient {
   playlistConverter = new PlaylistApiConverter()
   trackConverter = new TrackApiConverter()
+  redirectLink = apiLink('/streaming/token/spotify')
+
+  private _scope: string[] = ['user-read-private', 'user-read-email']
+  get scope(): string {
+    return this._scope.join(' ')
+  }
   getConfig(): StreamingClientConfig {
     return {
       playlistsLimit: 50,
@@ -81,13 +88,11 @@ export class SpotifyClient implements IClient {
   }
 
   async getLoginUrl(): Promise<string | null> {
-    const scope = ['user-read-private', 'user-read-email']
-
     const query = querystring.stringify({
       response_type: 'code',
       client_id: serverConfig.spotifyClientId,
-      scope: scope.join(' '),
-      redirect_uri: 'http://localhost:3000/streaming/token/spotify',
+      scope: this.scope,
+      redirect_uri: this.redirectLink,
       state: 1234,
     })
 
