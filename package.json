@@ -81,6 +81,7 @@
   },
   "jest": {
     "setupFilesAfterEnv": [
+      "<rootDir>/src/test/helpers/setup-jest-env.ts",
       "<rootDir>/src/test/helpers/setup-jest.ts"
     ],
     "moduleFileExtensions": [
