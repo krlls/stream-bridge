@@ -5,7 +5,15 @@ import { TYPES } from '../../types/const'
 import { controllerContainer } from '../../inversify.config'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
-import { getRandomTracks, testPlaylistDTO, testStreamingDTO, testTrackDTO, testUserData } from '../helpers/test.helpers'
+import {
+  getRandomTracks,
+  PLAYLISTS,
+  testPlaylistDTO,
+  testStreamingDTO,
+  testTrackDTO,
+  testUserData,
+  TRACKS,
+} from '../helpers/test.helpers'
 import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistService'
 import { UserDTO } from '../../modules/user/dtos/UserDTO'
 import { EStreamingType, ServiceResultDTO } from '../../types/common'
@@ -13,7 +21,6 @@ import { isServiceError } from '../../utils/errors'
 import { ITrackService } from '../../modules/music/interfaces/TrackService'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
 import { ImportMediaDTO } from '../../modules/music/dtos/ImportMediaDTO'
-import { PLAYLISTS, TRACKS } from '../../infra/clients/StreamingClient/Spotify/adapters/SpotifyClient'
 
 const playlistService = controllerContainer.get<IPlaylistService>(TYPES.PlaylistService)
 const userService = controllerContainer.get<IUserService>(TYPES.UserService)
