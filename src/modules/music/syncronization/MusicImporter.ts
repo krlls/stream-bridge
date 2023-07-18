@@ -2,12 +2,13 @@ import { inject, injectable } from 'inversify'
 
 import { TYPES } from '../../../types/const'
 import { IPlaylistRepository } from '../interfaces/IPlaylistRepository'
-import { IStreamingClient } from '../clients/IStreamingClient'
+import { EPrepareResult, IStreamingClient } from '../../streaming/clients/IStreamingClient'
 import { IMusicImporter } from '../interfaces/IMusicImporter'
 import { StreamingCredentialsDTO } from '../dtos/StreamingCredentialsDTO'
-import { EStreamingType } from '../../../types/common'
+import { Errors, EStreamingType } from '../../../types/common'
 import { GetTracksByPlaylistDTO } from '../dtos/GetTracksByPlaylistDTO'
 import { ITracksRepository } from '../interfaces/ITracksRepository'
+import { ErrorDTO } from '../../common/dtos/errorDTO'
 
 @injectable()
 export class MusicImporter implements IMusicImporter {
@@ -27,6 +28,12 @@ export class MusicImporter implements IMusicImporter {
     credentials: StreamingCredentialsDTO,
   }) {
     this.streamingClient.set(streamingType, credentials)
+
+    const prepareRes = await this.streamingClient.prepare()
+
+    if (prepareRes.result === EPrepareResult.ERROR) {
+      return new ErrorDTO(Errors.PREPARE_CLIENT_ERROR)
+    }
 
     const counter = { exported: 0, saved: 0 }
     const step = this.streamingClient.getConfig().playlistsLimit
@@ -50,20 +57,46 @@ export class MusicImporter implements IMusicImporter {
     return counter
   }
 
-  async importTracksByPlaylist(
-    credentials: StreamingCredentialsDTO,
-    data: GetTracksByPlaylistDTO,
-  ): Promise<{ exported: number, saved: number }> {
-    const { streamingType, playlistId, playlistExternalId, userId } = data
-    this.streamingClient.set(streamingType, credentials)
+  async importTracksByPlaylists(credentials: StreamingCredentialsDTO, data: GetTracksByPlaylistDTO[]) {
+    if (!data.length) {
+      return { exported: 0, saved: 0 }
+    }
+
+    this.streamingClient.set(data[0].streamingType, credentials)
+
+    const prepareRes = await this.streamingClient.prepare()
+
+    if (prepareRes.result === EPrepareResult.ERROR) {
+      return new ErrorDTO(Errors.PREPARE_CLIENT_ERROR)
+    }
+
+    const results = []
+
+    for (const playlist of data) {
+      const res = await this.importTracksByPlaylist(playlist)
+      results.push(res)
+    }
+
+    return results.reduce(
+      (acc, item) => {
+        return {
+          exported: acc.exported + item.exported,
+          saved: acc.saved + item.saved,
+        }
+      },
+      { exported: 0, saved: 0 },
+    )
+  }
+
+  private async importTracksByPlaylist(data: GetTracksByPlaylistDTO) {
+    const { playlistId, playlistExternalId, userId } = data
 
     const counter = { exported: 0, saved: 0 }
     const step = this.streamingClient.getConfig().playlistsLimit
     let offset = 0
 
     while (!counter.exported || !(counter.exported % step)) {
-      const chunk =
-        (await this.streamingClient.getTracksByPlaylist(credentials, { playlistId: playlistExternalId, offset })) || []
+      const chunk = (await this.streamingClient.getTracksByPlaylist({ playlistId: playlistExternalId, offset })) || []
 
       if (chunk.length === 0) {
         break

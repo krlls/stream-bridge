@@ -1,5 +1,5 @@
 import { StreamingCredentialsDTO } from '../dtos/StreamingCredentialsDTO'
-import { EStreamingType } from '../../../types/common'
+import { EStreamingType, ServiceResultDTO } from '../../../types/common'
 import { GetTracksByPlaylistDTO } from '../dtos/GetTracksByPlaylistDTO'
 
 export interface IMusicImporter {
@@ -8,10 +8,10 @@ export interface IMusicImporter {
     streamingId: number,
     streamingType: EStreamingType,
     credentials: StreamingCredentialsDTO,
-  }): Promise<{ exported: number, saved: number }>,
+  }): Promise<ServiceResultDTO<{ exported: number, saved: number }>>,
 
-  importTracksByPlaylist(
+  importTracksByPlaylists(
     credentials: StreamingCredentialsDTO,
-    data: GetTracksByPlaylistDTO,
-  ): Promise<{ exported: number, saved: number }>,
+    data: GetTracksByPlaylistDTO[],
+  ): Promise<ServiceResultDTO<{ exported: number, saved: number }>>,
 }

@@ -13,6 +13,7 @@ import { StreamingCredentialsDTO } from '../dtos/StreamingCredentialsDTO'
 import { IStreamingRepository } from '../../streaming/interfaces/IStreamingRepository'
 import { GetTracksByPlaylistDTO } from '../dtos/GetTracksByPlaylistDTO'
 import { ImportResultDTO } from '../dtos/ImportResultDTO'
+import { isServiceError } from '../../../utils/errors'
 
 @injectable()
 export class TrackService implements ITrackService {
@@ -35,7 +36,6 @@ export class TrackService implements ITrackService {
   }
 
   async importTracks(toImport: ImportMediaDTO) {
-    const results = []
     const streaming = await this.streamingRepository.getStreaming(toImport.userId, toImport.streamingType)
 
     if (!streaming) {
@@ -57,20 +57,13 @@ export class TrackService implements ITrackService {
         }),
     )
 
-    for (const playlist of playlistsToExport) {
-      const res = await this.musicImporter.importTracksByPlaylist(credentials, playlist)
-      results.push(res)
+    const res = await this.musicImporter.importTracksByPlaylists(credentials, playlistsToExport)
+
+    if (isServiceError(res)) {
+      return new ErrorDTO(Errors.IMPORT_TRACKS_ERROR)
     }
 
-    return results.reduce(
-      (acc, item) => {
-        return {
-          exported: acc.exported + item.exported,
-          saved: acc.saved + item.saved,
-        }
-      },
-      { exported: 0, saved: 0 },
-    )
+    return res
   }
 
   async importTracksByPlaylist(playlistId: number, toImport: ImportMediaDTO) {
@@ -99,8 +92,12 @@ export class TrackService implements ITrackService {
       refreshToken: streaming.reefresh_token || '',
     })
 
-    const exportResult = await this.musicImporter.importTracksByPlaylist(credentials, data)
+    const importResult = await this.musicImporter.importTracksByPlaylists(credentials, [data])
 
-    return new ImportResultDTO(exportResult)
+    if (isServiceError(importResult)) {
+      return importResult
+    }
+
+    return new ImportResultDTO(importResult)
   }
 }
