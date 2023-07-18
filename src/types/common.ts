@@ -35,6 +35,7 @@ export enum Errors {
   STREAMING_CREATE_ERROR = 'Streaming create error',
   STREAMING_UPDATE_ERROR = 'Streaming update error',
   STREAMING_NOT_FOUND = 'Streaming not found',
+  WRONG_CREDENTIALS = 'Wrong credentials, needs reconnect to streaming service',
 
   CREATE_URL_ERROR = 'Create streaming url error',
 

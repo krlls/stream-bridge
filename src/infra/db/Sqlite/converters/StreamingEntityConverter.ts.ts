@@ -10,8 +10,9 @@ export class StreamingEntityConverter implements Converter<StreamingEntity, Stre
     return {
       id: from.id,
       token: from.token,
-      reefresh_token: from.reefresh_token,
+      refresh_token: from.refresh_token,
       type: from.type,
+      expiresIn: from.expiresIn,
     }
   }
 

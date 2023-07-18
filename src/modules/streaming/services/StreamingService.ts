@@ -29,7 +29,7 @@ export class StreamingService implements IStreamingService {
   async getLoginUrl(data: CreateLoginUrlDTO) {
     await this.streamingClient.set(data.streamingType)
 
-    const url = await this.streamingClient.getLoginUrl(data.token)
+    const url = this.streamingClient.getLoginUrl(data.token)
 
     if (!url) {
       return new ErrorDTO(Errors.CREATE_URL_ERROR)
