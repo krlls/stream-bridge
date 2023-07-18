@@ -6,8 +6,8 @@ import base64url from 'base64url'
 import { StreamingCredentialsDTO } from '../../../../../modules/music/dtos/StreamingCredentialsDTO'
 import { PlaylistApiConverter } from '../converters/PlaylistApiConverter'
 import { IClient } from '../../IClient'
-import { StreamingClientConfig } from '../../../../../modules/music/clients/IStreamingClient'
-import { ITokenResp, ITrackApi } from '../interfaces/ISpotifyApi'
+import { EPrepareResult, StreamingClientConfig } from '../../../../../modules/streaming/clients/IStreamingClient'
+import { ITokenResp, ITrackApi, IUpdateTokenResp } from '../interfaces/ISpotifyApi'
 import { ExternalTrackDTO } from '../../../../../modules/music/dtos/TrackPlaylistDTO'
 import { TrackApiConverter } from '../converters/TrackApiConverter'
 import { serverConfig } from '../../../../../config'
@@ -16,6 +16,7 @@ import { Api } from '../../../../../types/TApi'
 import { StreamingLogger } from '../../../../../utils/logger'
 import { TokenApiConverter } from '../converters/TokenApiConverter'
 import { EStreamingType } from '../../../../../types/common'
+import { StreamingPrepareResultDTO } from '../../../../../modules/streaming/dtos/StreamingPrepareResultDTO'
 
 import * as querystring from 'querystring'
 
@@ -48,7 +49,7 @@ mockPlaylists.forEach((p) =>
 )
 
 const fakeApi = {
-  getPlaylists: (offset: number) =>
+  getPlaylists: (offset: number, _token: string) =>
     new Promise<Array<{ name: string, id: string, num: number }>>((resolve) =>
       resolve(mockPlaylists.slice(offset, offset + 50)),
     ),
@@ -64,17 +65,36 @@ export class SpotifyClient implements IClient {
   private playlistConverter = new PlaylistApiConverter()
   private trackConverter = new TrackApiConverter()
   private tokenConverter = new TokenApiConverter()
+  private logger = new StreamingLogger(EStreamingType.SPOTIFY)
+  private baseUrl = 'https://accounts.spotify.com'
+  private spotifyAuthUrl = '/authorize?'
+  private _scope: string[] = ['user-read-private', 'user-read-email']
+  private token: string = ''
   private redirectLink = apiLink(
     Api.Streaming.PREFIX,
     Api.Streaming.Token.PATCH,
     '/' + Api.Streaming.EApiStreamingType.SPOTIFY,
   )
-  private _scope: string[] = ['user-read-private', 'user-read-email']
-  private baseUrl = 'https://accounts.spotify.com'
-  private spotifyAuthUrl = '/authorize?'
+  private get authHeader() {
+    const { spotifyClientId, spotifyClientSecret } = serverConfig
+
+    return 'Basic ' + base64url(`${spotifyClientId}:${spotifyClientSecret}`)
+  }
 
   private get scope(): string {
     return this._scope.join(' ')
+  }
+
+  async prepare(credentials: StreamingCredentialsDTO) {
+    const token = await this.updateToken(credentials.refreshToken)
+
+    if (!token) {
+      return new StreamingPrepareResultDTO(EPrepareResult.ERROR)
+    }
+
+    this.token = token
+
+    return new StreamingPrepareResultDTO(EPrepareResult.SUCCESS)
   }
 
   getConfig(): StreamingClientConfig {
@@ -83,19 +103,13 @@ export class SpotifyClient implements IClient {
     }
   }
 
-  async getPlaylists(_credentials: StreamingCredentialsDTO, offset: number) {
-    const playlists = await fakeApi.getPlaylists(offset)
+  async getPlaylists(offset: number) {
+    const playlists = await fakeApi.getPlaylists(offset, this.token)
 
     return playlists.map(this.playlistConverter.from)
   }
 
-  async getTracksByPlaylist(
-    _credentials: StreamingCredentialsDTO,
-    data: {
-      playlistId: string,
-      offset: number,
-    },
-  ): Promise<ExternalTrackDTO[]> {
+  async getTracksByPlaylist(data: { playlistId: string, offset: number }): Promise<ExternalTrackDTO[]> {
     const tracks = await fakeApi.getTracks(data.playlistId, data.offset)
 
     return tracks.map(this.trackConverter.from)
@@ -114,8 +128,6 @@ export class SpotifyClient implements IClient {
   }
 
   async getToken(code: string) {
-    const { spotifyClientId, spotifyClientSecret } = serverConfig
-
     try {
       const tokenData: AxiosResponse<ITokenResp> = await axios.request({
         method: 'POST',
@@ -123,7 +135,7 @@ export class SpotifyClient implements IClient {
         baseURL: this.baseUrl,
         headers: {
           'content-type': 'application/x-www-form-urlencoded',
-          Authorization: 'Basic ' + base64url(`${spotifyClientId}:${spotifyClientSecret}`),
+          Authorization: this.authHeader,
         },
         data: {
           code,
@@ -134,7 +146,31 @@ export class SpotifyClient implements IClient {
 
       return this.tokenConverter.from(tokenData.data)
     } catch (e: any) {
-      StreamingLogger.error(EStreamingType.SPOTIFY, e?.response?.status, e?.response?.statusText)
+      this.logger.error('getToken', e?.response?.status, e?.response?.statusText)
+
+      return null
+    }
+  }
+
+  private async updateToken(refreshToken: string) {
+    try {
+      const tokenData: AxiosResponse<IUpdateTokenResp> = await axios.request({
+        method: 'POST',
+        url: '/api/token',
+        baseURL: this.baseUrl,
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          Authorization: this.authHeader,
+        },
+        data: {
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken,
+        },
+      })
+
+      return tokenData?.data?.access_token
+    } catch (e: any) {
+      this.logger.error('updateToken', e?.response?.status, e?.response?.statusText)
 
       return null
     }

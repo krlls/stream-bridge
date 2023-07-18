@@ -25,6 +25,8 @@ export enum Errors {
   TOKEN_NOT_VALID = 'Token not valid',
   CREATE_TOKEN_ERROR = 'create token error',
 
+  PREPARE_CLIENT_ERROR = 'Prepare client error',
+
   PLAYLIST_CREATE_ERROR = 'Playlist not created',
   PLAYLIST_NOT_FOUND = 'Playlist not found',
 
@@ -35,6 +37,8 @@ export enum Errors {
   STREAMING_NOT_FOUND = 'Streaming not found',
 
   CREATE_URL_ERROR = 'Create streaming url error',
+
+  IMPORT_TRACKS_ERROR = 'Import tracks error',
 }
 
 export enum EStreamingType {

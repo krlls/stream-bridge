@@ -23,7 +23,7 @@ import { StreamingRepository } from './infra/db/Sqlite/repositories/StreamingRep
 import { StreamingEntityConverter } from './infra/db/Sqlite/converters/StreamingEntityConverter.ts'
 import { IStreamingService } from './modules/streaming/interfaces/IStreamingService'
 import { StreamingService } from './modules/streaming/services/StreamingService'
-import { IStreamingClient } from './modules/music/clients/IStreamingClient'
+import { IStreamingClient } from './modules/streaming/clients/IStreamingClient'
 import { StreamingClient } from './infra/clients/StreamingClient/StreamingClient'
 import { SpotifyClient } from './infra/clients/StreamingClient/Spotify/adapters/SpotifyClient'
 import { Factory, EStreamingType } from './types/common'

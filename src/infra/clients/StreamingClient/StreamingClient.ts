@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify'
 
-import { IStreamingClient } from '../../../modules/music/clients/IStreamingClient'
+import { IStreamingClient } from '../../../modules/streaming/clients/IStreamingClient'
 import { StreamingCredentialsDTO } from '../../../modules/music/dtos/StreamingCredentialsDTO'
 import { ExternalPlaylistDTO } from '../../../modules/music/dtos/ExternalPlaylistDTO'
 import { TYPES } from '../../../types/const'
@@ -9,6 +9,7 @@ import { IClient } from './IClient'
 import { strategy } from '../../../utils/decorators'
 import { ExternalTrackDTO } from '../../../modules/music/dtos/TrackPlaylistDTO'
 import { CreateStreamingTokenDTO } from '../../../modules/streaming/dtos/CreateStreamingTokenDTO'
+import { StreamingPrepareResultDTO } from '../../../modules/streaming/dtos/StreamingPrepareResultDTO'
 
 @injectable()
 @strategy('client', 'set')
@@ -27,15 +28,16 @@ export class StreamingClient implements IStreamingClient {
     return this.client.getConfig()
   }
 
-  async getPlaylists(offset: number): Promise<ExternalPlaylistDTO[]> {
-    return this.client.getPlaylists(this.credentials, offset)
+  async prepare(): Promise<StreamingPrepareResultDTO> {
+    return this.client.prepare(this.credentials)
   }
 
-  async getTracksByPlaylist(
-    credentials: StreamingCredentialsDTO,
-    data: { playlistId: string, offset: number },
-  ): Promise<ExternalTrackDTO[]> {
-    return this.client.getTracksByPlaylist(credentials, data)
+  async getPlaylists(offset: number): Promise<ExternalPlaylistDTO[]> {
+    return this.client.getPlaylists(offset)
+  }
+
+  async getTracksByPlaylist(data: { playlistId: string, offset: number }): Promise<ExternalTrackDTO[]> {
+    return this.client.getTracksByPlaylist(data)
   }
 
   async getLoginUrl(state: string): Promise<string | null> {

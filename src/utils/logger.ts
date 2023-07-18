@@ -5,6 +5,7 @@ import { RouterContext } from 'koa-router'
 import { isEmpty } from 'lodash'
 
 import { serverConfig } from '../config'
+import { EStreamingType } from '../types/common'
 
 enum ELogType {
   WARN = 'WARN',
@@ -60,16 +61,19 @@ export class ApiLogger extends Logger {
 }
 
 export class StreamingLogger extends Logger {
-  static info(...args: any) {
-    return this.logInfo(ELogger.STREAMING, ...args)
+  constructor(private name: EStreamingType) {
+    super()
+  }
+  info(...args: any) {
+    return StreamingLogger.logInfo(this.name, ...args)
   }
 
-  static warn(...args: any) {
-    return this.logWarn(ELogger.STREAMING, ...args)
+  warn(...args: any) {
+    return StreamingLogger.logWarn(this.name, ...args)
   }
 
-  static error(...args: any) {
-    return this.logError(ELogger.STREAMING, ...args)
+  error(...args: any) {
+    return StreamingLogger.logError(this.name, ...args)
   }
 }
 

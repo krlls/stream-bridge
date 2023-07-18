@@ -11,6 +11,7 @@ import { StreamingCredentialsDTO } from '../dtos/StreamingCredentialsDTO'
 import { IStreamingRepository } from '../../streaming/interfaces/IStreamingRepository'
 import { ImportResultDTO } from '../dtos/ImportResultDTO'
 import { IMusicImporter } from '../interfaces/IMusicImporter'
+import { isServiceError } from '../../../utils/errors'
 
 @injectable()
 export class PlaylistService implements IPlaylistService {
@@ -46,10 +47,10 @@ export class PlaylistService implements IPlaylistService {
     return (await this.playlistRepository.getPlaylistsByUserId(userId)) || []
   }
 
-  async importPlaylists(toExport: ImportMediaDTO) {
-    const { userId } = toExport
+  async importPlaylists(toImport: ImportMediaDTO) {
+    const { userId } = toImport
 
-    const streaming = await this.streamingRepository.getStreaming(toExport.userId, toExport.streamingType)
+    const streaming = await this.streamingRepository.getStreaming(toImport.userId, toImport.streamingType)
 
     if (!streaming) {
       return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
@@ -66,6 +67,10 @@ export class PlaylistService implements IPlaylistService {
       streamingId: streaming.id,
       streamingType: streaming.type,
     })
+
+    if (isServiceError(result)) {
+      return result
+    }
 
     return new ImportResultDTO(result)
   }

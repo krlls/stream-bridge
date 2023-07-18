@@ -17,3 +17,5 @@ export interface ITokenResp {
   refresh_token: string,
   scope: string,
 }
+
+export type IUpdateTokenResp = Omit<ITokenResp, 'refresh_token'>
