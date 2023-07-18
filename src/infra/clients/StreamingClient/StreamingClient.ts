@@ -40,7 +40,7 @@ export class StreamingClient implements IStreamingClient {
     return this.client.getTracksByPlaylist(data)
   }
 
-  async getLoginUrl(state: string): Promise<string | null> {
+  getLoginUrl(state: string): string | null {
     return this.client.getLoginUrl(state)
   }
 

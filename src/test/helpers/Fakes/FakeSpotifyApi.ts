@@ -1,4 +1,4 @@
-import { Playlist } from '@spotify/web-api-ts-sdk/src/types'
+import { SimplifiedPlaylist } from '@spotify/web-api-ts-sdk/src/types'
 
 import { SpotifyClient } from '../../../infra/clients/StreamingClient/Spotify/adapters/SpotifyClient'
 import { EPrepareResult } from '../../../modules/streaming/clients/IStreamingClient'
@@ -11,7 +11,7 @@ export class FakeSpotifyClient extends SpotifyClient {
   }
 
   async getPlaylists(offset: number) {
-    const playlists = (await fakeApi.getPlaylists(this.getConfig().playlistsLimit, offset)) as Playlist[]
+    const playlists = (await fakeApi.getPlaylists(this.getConfig().playlistsLimit, offset)) as SimplifiedPlaylist[]
 
     return playlists.map(this.playlistConverter.from)
   }

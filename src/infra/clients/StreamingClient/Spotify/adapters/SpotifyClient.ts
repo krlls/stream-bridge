@@ -79,20 +79,21 @@ export class SpotifyClient implements IClient {
   }
 
   async getPlaylists(offset: number) {
-    const user = await this.client.currentUser.profile()
+    const limit = this.getConfig().playlistsLimit as MaxInt<50>
+    //ToDo This method return only user's playlists, need fix to get all playlists from user's library
+    const paginatedPlaylists = await this.client.currentUser.playlists.playlists(limit, offset)
 
-    if (!user) {
+    if (!paginatedPlaylists) {
+      this.logger.error('getPlaylists', 'Playlists:')
+
       return []
     }
 
-    const limit = this.getConfig().playlistsLimit as MaxInt<50>
-    const playlists = await this.client.playlists.getUsersPlaylists(user.id, limit, offset)
+    const playlists = paginatedPlaylists?.items || []
 
-    if (!playlists) {
-      return playlists
-    }
+    this.logger.info('getPlaylists', 'Playlists:', playlists.length)
 
-    return (playlists.items || []).map(this.playlistConverter.from)
+    return playlists.map(this.playlistConverter.from)
   }
 
   async getTracksByPlaylist(data: { playlistId: string, offset: number }): Promise<ExternalTrackDTO[]> {
@@ -101,7 +102,7 @@ export class SpotifyClient implements IClient {
     return tracks.map(this.trackConverter.from)
   }
 
-  async getLoginUrl(state: string): Promise<string | null> {
+  getLoginUrl(state: string): string | null {
     const query = querystring.stringify({
       state,
       response_type: 'code',
@@ -129,6 +130,8 @@ export class SpotifyClient implements IClient {
           redirect_uri: this.redirectLink,
         },
       })
+
+      this.logger.info('getToken', tokenData.data.refresh_token.slice(-10))
 
       return this.tokenConverter.from(tokenData.data)
     } catch (e: any) {

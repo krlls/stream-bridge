@@ -10,6 +10,6 @@ export interface IClient {
   getConfig(): StreamingClientConfig,
   getPlaylists(offset: number): Promise<ExternalPlaylistDTO[]>,
   getTracksByPlaylist(data: { playlistId: string, offset: number }): Promise<ExternalTrackDTO[]>,
-  getLoginUrl(state: string): Promise<string | null>,
+  getLoginUrl(state: string): string | null,
   getToken(code: string): Promise<CreateStreamingTokenDTO | null>,
 }
