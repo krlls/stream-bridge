@@ -15,7 +15,7 @@ export class StreamingEntity extends BaseEntity implements Streaming {
   token?: string
 
   @Column({ type: 'text', nullable: true })
-  reefresh_token?: string
+  refresh_token?: string
 
   @Column({ type: 'text', nullable: true, enum: EStreamingType })
   type: EStreamingType

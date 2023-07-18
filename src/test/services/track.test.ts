@@ -119,7 +119,7 @@ describe('Track service tests', () => {
     const exportCount = await trackService.importTracks(dto)
 
     if (isServiceError(exportCount)) {
-      throw Error('User not created')
+      throw Error('Playlists not exported')
     }
 
     expect(exportCount.saved).toBe(TRACKS * PLAYLISTS)

@@ -56,9 +56,16 @@ export class PlaylistService implements IPlaylistService {
       return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
     }
 
+    const { expiresIn, refresh_token, token } = streaming
+
+    if (!expiresIn || !refresh_token || !token) {
+      return new ErrorDTO(Errors.WRONG_CREDENTIALS)
+    }
+
     const credentials = new StreamingCredentialsDTO({
-      token: streaming.token || '',
-      refreshToken: streaming.reefresh_token || '',
+      token,
+      expiresIn,
+      refreshToken: refresh_token,
     })
 
     const result = await this.musicImporter.importPlaylists({

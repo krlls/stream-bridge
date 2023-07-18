@@ -34,7 +34,7 @@ export class StreamingRepository implements IStreamingRepository {
 
     streamingToSave.type = steamingData.type
     streamingToSave.token = steamingData.token
-    streamingToSave.reefresh_token = steamingData.refreshToken
+    streamingToSave.refresh_token = steamingData.refreshToken
     streamingToSave.expiresIn = steamingData.expiresIn
     streamingToSave.user = user
 
@@ -65,7 +65,7 @@ export class StreamingRepository implements IStreamingRepository {
     }
 
     streaming.token = data.token
-    streaming.reefresh_token = data.refreshToken
+    streaming.refresh_token = data.refreshToken
     streaming.expiresIn = data.expiresIn
 
     const result = await this.repository.save(streaming)

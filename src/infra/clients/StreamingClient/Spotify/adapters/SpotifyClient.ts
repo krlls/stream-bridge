@@ -1,12 +1,14 @@
 import { injectable } from 'inversify'
 import axios, { AxiosResponse } from 'axios'
 import base64url from 'base64url'
+import { SpotifyApi } from '@spotify/web-api-ts-sdk'
+import { MaxInt } from '@spotify/web-api-ts-sdk/src/types'
 
 import { StreamingCredentialsDTO } from '../../../../../modules/music/dtos/StreamingCredentialsDTO'
 import { PlaylistApiConverter } from '../converters/PlaylistApiConverter'
 import { IClient } from '../../IClient'
 import { EPrepareResult, StreamingClientConfig } from '../../../../../modules/streaming/clients/IStreamingClient'
-import { ITokenResp, IUpdateTokenResp } from '../interfaces/ISpotifyApi'
+import { ITokenResp } from '../interfaces/ISpotifyApi'
 import { ExternalTrackDTO } from '../../../../../modules/music/dtos/TrackPlaylistDTO'
 import { TrackApiConverter } from '../converters/TrackApiConverter'
 import { serverConfig } from '../../../../../config'
@@ -17,6 +19,7 @@ import { TokenApiConverter } from '../converters/TokenApiConverter'
 import { EStreamingType } from '../../../../../types/common'
 import { StreamingPrepareResultDTO } from '../../../../../modules/streaming/dtos/StreamingPrepareResultDTO'
 import { fakeApi } from '../../../../../test/helpers/test.helpers'
+import { CredentialsConverter } from '../converters/CredentialsConverter'
 
 import * as querystring from 'querystring'
 
@@ -25,11 +28,13 @@ export class SpotifyClient implements IClient {
   playlistConverter = new PlaylistApiConverter()
   trackConverter = new TrackApiConverter()
   tokenConverter = new TokenApiConverter()
+  credentialsConverter = new CredentialsConverter()
+
+  private _client: SpotifyApi
   private logger = new StreamingLogger(EStreamingType.SPOTIFY)
   private baseUrl = 'https://accounts.spotify.com'
   private spotifyAuthUrl = '/authorize?'
   private _scope: string[] = ['user-read-private', 'user-read-email']
-  private token: string = ''
   private redirectLink = apiLink(
     Api.Streaming.PREFIX,
     Api.Streaming.Token.PATCH,
@@ -45,32 +50,53 @@ export class SpotifyClient implements IClient {
     return this._scope.join(' ')
   }
 
-  async prepare(credentials: StreamingCredentialsDTO) {
-    const token = await this.updateToken(credentials.refreshToken)
+  private get client(): SpotifyApi {
+    if (!this._client) {
+      throw Error('Client not defined')
+    }
 
-    if (!token) {
+    return this._client
+  }
+
+  async prepare(credentials: StreamingCredentialsDTO) {
+    const client = SpotifyApi.withAccessToken(serverConfig.spotifyClientId, this.credentialsConverter.from(credentials))
+
+    const user = await client.currentUser.profile()
+
+    if (!user || !user.id) {
       return new StreamingPrepareResultDTO(EPrepareResult.ERROR)
     }
 
-    this.token = token
+    this._client = client
 
     return new StreamingPrepareResultDTO(EPrepareResult.SUCCESS)
   }
 
   getConfig(): StreamingClientConfig {
     return {
-      playlistsLimit: 50,
+      playlistsLimit: 49,
     }
   }
 
   async getPlaylists(offset: number) {
-    const playlists = await fakeApi.getPlaylists(offset, this.token)
+    const user = await this.client.currentUser.profile()
 
-    return playlists.map(this.playlistConverter.from)
+    if (!user) {
+      return []
+    }
+
+    const limit = this.getConfig().playlistsLimit as MaxInt<50>
+    const playlists = await this.client.playlists.getUsersPlaylists(user.id, limit, offset)
+
+    if (!playlists) {
+      return playlists
+    }
+
+    return (playlists.items || []).map(this.playlistConverter.from)
   }
 
   async getTracksByPlaylist(data: { playlistId: string, offset: number }): Promise<ExternalTrackDTO[]> {
-    const tracks = await fakeApi.getTracks(data.playlistId, data.offset)
+    const tracks = await fakeApi.getTracks(data.playlistId, data.offset, data.offset)
 
     return tracks.map(this.trackConverter.from)
   }
@@ -107,30 +133,6 @@ export class SpotifyClient implements IClient {
       return this.tokenConverter.from(tokenData.data)
     } catch (e: any) {
       this.logger.error('getToken', e?.response?.status, e?.response?.statusText)
-
-      return null
-    }
-  }
-
-  private async updateToken(refreshToken: string) {
-    try {
-      const tokenData: AxiosResponse<IUpdateTokenResp> = await axios.request({
-        method: 'POST',
-        url: '/api/token',
-        baseURL: this.baseUrl,
-        headers: {
-          'content-type': 'application/x-www-form-urlencoded',
-          Authorization: this.authHeader,
-        },
-        data: {
-          grant_type: 'refresh_token',
-          refresh_token: refreshToken,
-        },
-      })
-
-      return tokenData?.data?.access_token
-    } catch (e: any) {
-      this.logger.error('updateToken', e?.response?.status, e?.response?.statusText)
 
       return null
     }

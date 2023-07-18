@@ -41,6 +41,7 @@ export const testStreamingDTO = (userId: number) =>
     token: faker.string.uuid(),
     refreshToken: faker.string.uuid(),
     type: EStreamingType.SPOTIFY,
+    expiresIn: 3600,
   })
 
 export const getRandomTracks = ({ userId, playlistId }: { userId: number, playlistId: number }, size: number) =>
@@ -60,14 +61,12 @@ export const PLAYLISTS = 10
 export const TRACKS = 150
 
 export const fakeApi = {
-  getPlaylists: (offset: number, _token?: string) =>
-    new Promise<Array<{ name: string, id: string, num: number }>>((resolve) =>
-      resolve(mockPlaylists.slice(offset, offset + 50)),
-    ),
-  getTracks: (playlist: string, offset: number) =>
+  getPlaylists: (limit: number, offset: number) =>
+    new Promise<Array<{ name: string, id: string }>>((resolve) => resolve(mockPlaylists.slice(offset, offset + limit))),
+  getTracks: (playlist: string, limit: number, offset: number) =>
     new Promise<ITrackApi[]>((resolve) => {
       const tracks = mockTracks.get(playlist)
-      !tracks ? resolve([]) : resolve(tracks.slice(offset, offset + 50))
+      !tracks ? resolve([]) : resolve(tracks.slice(offset, offset + limit))
     }),
 }
 
