@@ -18,7 +18,6 @@ import { StreamingLogger } from '../../../../../utils/logger'
 import { TokenApiConverter } from '../converters/TokenApiConverter'
 import { EStreamingType } from '../../../../../types/common'
 import { StreamingPrepareResultDTO } from '../../../../../modules/streaming/dtos/StreamingPrepareResultDTO'
-import { fakeApi } from '../../../../../test/helpers/test.helpers'
 import { CredentialsConverter } from '../converters/CredentialsConverter'
 
 import * as querystring from 'querystring'
@@ -34,7 +33,7 @@ export class SpotifyClient implements IClient {
   private logger = new StreamingLogger(EStreamingType.SPOTIFY)
   private baseUrl = 'https://accounts.spotify.com'
   private spotifyAuthUrl = '/authorize?'
-  private _scope: string[] = ['user-read-private', 'user-read-email']
+  private _scope: string[] = ['user-read-private', 'user-read-email', 'playlist-read-private']
   private redirectLink = apiLink(
     Api.Streaming.PREFIX,
     Api.Streaming.Token.PATCH,
@@ -97,7 +96,19 @@ export class SpotifyClient implements IClient {
   }
 
   async getTracksByPlaylist(data: { playlistId: string, offset: number }): Promise<ExternalTrackDTO[]> {
-    const tracks = await fakeApi.getTracks(data.playlistId, data.offset, data.offset)
+    const limit = this.getConfig().playlistsLimit as MaxInt<50>
+    const paginatedTracks = await this.client.playlists.getPlaylistItems(
+      data.playlistId,
+      undefined,
+      undefined,
+      limit,
+      data.offset,
+    )
+    const tracks = paginatedTracks?.items || []
+
+    if (!tracks.length) {
+      return []
+    }
 
     return tracks.map(this.trackConverter.from)
   }

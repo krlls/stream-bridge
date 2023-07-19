@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker'
+import { PlaylistedTrack } from '@spotify/web-api-ts-sdk/src/types'
 
 import { createPatch } from '../../utils/links'
 import { Api } from '../../types/TApi'
@@ -6,7 +7,6 @@ import { CreateTrackDTO } from '../../modules/music/dtos/CreateTrackDTO'
 import { CreatePlaylistDTO } from '../../modules/music/dtos/CreatePlaylistDTO'
 import { EStreamingType } from '../../types/common'
 import { CreateStreamingDTO } from '../../modules/streaming/dtos/CreateStreamingDTO'
-import { ITrackApi } from '../../infra/clients/StreamingClient/Spotify/interfaces/ISpotifyApi'
 
 export const userUrl: (...args: string[]) => string = createPatch.bind(null, Api.User.PREFIX)
 export const authUrl: (...args: string[]) => string = createPatch.bind(null, Api.Auth.PREFIX)
@@ -64,7 +64,7 @@ export const fakeApi = {
   getPlaylists: (limit: number, offset: number) =>
     new Promise<Array<{ name: string, id: string }>>((resolve) => resolve(mockPlaylists.slice(offset, offset + limit))),
   getTracks: (playlist: string, limit: number, offset: number) =>
-    new Promise<ITrackApi[]>((resolve) => {
+    new Promise<PlaylistedTrack[]>((resolve) => {
       const tracks = mockTracks.get(playlist)
       !tracks ? resolve([]) : resolve(tracks.slice(offset, offset + limit))
     }),
@@ -78,19 +78,22 @@ export const mockPlaylists = Array(PLAYLISTS)
     id: faker.string.uuid(),
   }))
 
-export const mockTracks = new Map<string, ITrackApi[]>()
+export const mockTracks = new Map()
 
 mockPlaylists.forEach((p) =>
   mockTracks.set(
     p.id,
     Array(TRACKS)
       .fill(null)
-      .map((_e, i) => ({
-        num: i,
-        id: faker.string.uuid(),
-        name: faker.music.songName(),
-        album: p.name,
-        artist: faker.person.fullName(),
+      .map((_e) => ({
+        track: {
+          id: faker.string.uuid(),
+          name: faker.music.songName(),
+          album: {
+            name: faker.person.fullName(),
+            album_group: faker.lorem.words({ min: 2, max: 3 }),
+          },
+        },
       })),
   ),
 )
