@@ -23,6 +23,7 @@ import { ITrackService } from '../../modules/music/interfaces/TrackService'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
 import { ImportMediaDTO } from '../../modules/music/dtos/ImportMediaDTO'
 import { Track } from '../../modules/music/entities/Track'
+import { Playlist } from '../../modules/music/entities/Playlist'
 
 const playlistService = controllerContainer.get<IPlaylistService>(TYPES.PlaylistService)
 const userService = controllerContainer.get<IUserService>(TYPES.UserService)
@@ -220,5 +221,72 @@ describe('Track service tests', () => {
 
     expect(exportCount?.exported).toBe(totalTracks.length)
     expect(trackAfterImport).toHaveProperty('error', Errors.TRACK_NOT_FOUND)
+  })
+
+  test('Remove tracks by remove playlist', async () => {
+    if (isServiceError(currentUser)) {
+      throw Error('User not created')
+    }
+
+    const streaming = await streamingService.createStreaming(testStreamingDTO(currentUser.id))
+
+    if (isServiceError(streaming)) {
+      throw Error('Streaming not created')
+    }
+
+    const exportData = new ImportMediaDTO({
+      streamingType: EStreamingType.SPOTIFY,
+      userId: currentUser.id,
+    })
+
+    const unusedPlaylist = (await playlistService.createPlayList(
+      testPlaylistDTO(currentUser.id, streaming.id),
+    )) as Playlist
+
+    for (let i = 0; i <= 10; i++) {
+      await trackService.saveTrack(testRandomTrackDTO(currentUser.id, unusedPlaylist.id))
+    }
+
+    const tracksByExistPlaylist = await trackService.getTracksByPlaylist(unusedPlaylist.id)
+    expect(tracksByExistPlaylist).toHaveLength(11)
+
+    await playlistService.importPlaylists(exportData)
+
+    const tracksByRemovedPlaylist = await trackService.getTracksByPlaylist(unusedPlaylist.id)
+    expect(tracksByRemovedPlaylist).toHaveLength(0)
+  })
+
+  test('Remove tracks by remove playlist', async () => {
+    if (isServiceError(currentUser)) {
+      throw Error('User not created')
+    }
+
+    const streaming = await streamingService.createStreaming(testStreamingDTO(currentUser.id))
+
+    if (isServiceError(streaming)) {
+      throw Error('Streaming not created')
+    }
+
+    const exportData = new ImportMediaDTO({
+      streamingType: EStreamingType.SPOTIFY,
+      userId: currentUser.id,
+    })
+
+    const unusedPlaylist = (await playlistService.createPlayList(
+      testPlaylistDTO(currentUser.id, streaming.id),
+    )) as Playlist
+
+    for (let i = 0; i <= 10; i++) {
+      await trackService.saveTrack(testRandomTrackDTO(currentUser.id, unusedPlaylist.id))
+    }
+
+    const tracksByExistPlaylist = await trackService.getTracksByPlaylist(unusedPlaylist.id)
+
+    await playlistService.importPlaylists(exportData)
+
+    const tracksByRemovedPlaylist = await trackService.getTracksByPlaylist(unusedPlaylist.id)
+
+    expect(tracksByExistPlaylist).toHaveLength(11)
+    expect(tracksByRemovedPlaylist).toHaveLength(0)
   })
 })

@@ -26,7 +26,7 @@ export class TrackEntity extends BaseEntity implements Track {
   @Column({ type: 'text', nullable: false })
   import_id: Uid
 
-  @ManyToOne(() => PlaylistEntity, (playlist) => playlist.tracks, { nullable: false })
+  @ManyToOne(() => PlaylistEntity, (playlist) => playlist.tracks, { nullable: false, onDelete: 'CASCADE' })
   playlist: PlaylistEntity
 
   @ManyToOne(() => StreamingEntity, (streaming) => streaming.tracks, { nullable: false })
