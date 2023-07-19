@@ -1,14 +1,17 @@
+import { PlaylistedTrack, Track } from '@spotify/web-api-ts-sdk/src/types'
+
 import { Converter } from '../../../../../types/common'
-import { ITrackApi } from '../interfaces/ISpotifyApi'
 import { ExternalTrackDTO } from '../../../../../modules/music/dtos/TrackPlaylistDTO'
 
-export class TrackApiConverter implements Converter<ITrackApi, ExternalTrackDTO> {
-  from(from: ITrackApi): ExternalTrackDTO {
+export class TrackApiConverter implements Converter<PlaylistedTrack, ExternalTrackDTO> {
+  from(from: PlaylistedTrack): ExternalTrackDTO {
+    const track = from.track as Track
+
     return new ExternalTrackDTO({
-      artist: from.artist,
-      album: from.album,
-      name: from.name,
-      id: from.id,
+      artist: track.album.album_group,
+      album: track.album.name,
+      name: track.name,
+      id: track.id,
     })
   }
 }
