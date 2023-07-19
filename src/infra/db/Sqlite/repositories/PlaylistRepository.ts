@@ -128,7 +128,7 @@ export class PlaylistRepository implements IPlaylistRepository {
       return 0
     }
 
-    return result.raw
+    return result.generatedMaps.length
   }
 
   private async getPlaylistRelations(data: { userId: number, streamingId: number }) {

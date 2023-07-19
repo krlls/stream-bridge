@@ -103,9 +103,9 @@ export class MusicImporter implements IMusicImporter {
       }
 
       const tracksData = chunk.map((t) => t.toCreate({ userId, playlistId }))
-      const savedTracks = await this.trackRepository.createTracks(tracksData)
+      const savedTracks = await this.trackRepository.upsertTracks(tracksData)
 
-      counter.saved += savedTracks.length
+      counter.saved += savedTracks
       counter.exported += chunk.length
       offset += step
     }

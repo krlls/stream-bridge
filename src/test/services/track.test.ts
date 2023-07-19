@@ -152,4 +152,34 @@ describe('Track service tests', () => {
     expect(exportCount?.saved).toBe(TRACKS)
     expect(exportCount?.exported).toBe(exportCount?.saved)
   })
+
+  test('Re-importing tracks does not create duplicates', async () => {
+    if (isServiceError(currentUser)) {
+      throw Error('User not created')
+    }
+
+    await streamingService.createStreaming(testStreamingDTO(currentUser.id))
+
+    const exportData = new ImportMediaDTO({
+      streamingType: EStreamingType.SPOTIFY,
+      userId: currentUser.id,
+    })
+
+    await playlistService.importPlaylists(exportData)
+
+    const playlists = await playlistService.getUserPlaylists(currentUser.id)
+
+    if (isServiceError(playlists)) {
+      throw Error('No playlists')
+    }
+
+    const dto = new ImportMediaDTO({ streamingType: EStreamingType.SPOTIFY, userId: currentUser.id })
+
+    await trackService.importTracksByPlaylist(playlists[0].id, dto)
+
+    const exportCount = (await trackService.importTracksByPlaylist(playlists[0].id, dto)) as any
+    const totalTracks = (await trackService.getTracksByPlaylist(currentUser.id)) as []
+
+    expect(exportCount?.exported).toBe(totalTracks.length)
+  })
 })
