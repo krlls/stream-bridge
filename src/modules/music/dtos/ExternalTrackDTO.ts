@@ -1,4 +1,5 @@
 import { CreateTrackDTO } from './CreateTrackDTO'
+import { Uid } from '../../../types/common'
 
 export class ExternalTrackDTO {
   id: string
@@ -13,10 +14,11 @@ export class ExternalTrackDTO {
     this.album = track.album
   }
 
-  toCreate({ userId, playlistId }: { userId: number, playlistId: number }): CreateTrackDTO {
+  toCreate({ userId, playlistId, importId }: { userId: number, playlistId: number, importId: Uid }): CreateTrackDTO {
     return new CreateTrackDTO({
       userId,
       playlistId,
+      importId,
       externalId: this.id,
       name: this.name,
       artist: this.artist,

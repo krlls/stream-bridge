@@ -18,7 +18,7 @@ export class PlaylistEntity extends BaseEntity implements Playlist {
   @Column()
   name: string
 
-  @Column()
+  @Column({ type: 'text', nullable: false })
   import_id: Uid
 
   @ManyToOne(() => UserEntity, (user) => user.playlists, { nullable: false })

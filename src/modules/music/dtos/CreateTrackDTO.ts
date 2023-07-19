@@ -1,3 +1,5 @@
+import { Uid } from '../../../types/common'
+
 export class CreateTrackDTO {
   userId: number
   playlistId: number
@@ -5,6 +7,8 @@ export class CreateTrackDTO {
   name: string
   artist: string
   album: string
+  importId: Uid
+
   constructor(track: {
     userId: number,
     playlistId: number,
@@ -12,6 +16,7 @@ export class CreateTrackDTO {
     name: string,
     artist: string,
     album: string,
+    importId: Uid,
   }) {
     this.externalId = track.externalId
     this.userId = track.userId
@@ -19,5 +24,6 @@ export class CreateTrackDTO {
     this.artist = track.artist
     this.name = track.name
     this.playlistId = track.playlistId
+    this.importId = track.importId
   }
 }

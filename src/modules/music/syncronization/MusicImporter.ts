@@ -5,7 +5,7 @@ import { IPlaylistRepository } from '../interfaces/IPlaylistRepository'
 import { EPrepareResult, IStreamingClient } from '../../streaming/clients/IStreamingClient'
 import { IMusicImporter } from '../interfaces/IMusicImporter'
 import { StreamingCredentialsDTO } from '../dtos/StreamingCredentialsDTO'
-import { Errors, EStreamingType } from '../../../types/common'
+import { Errors, EStreamingType, Uid } from '../../../types/common'
 import { GetTracksByPlaylistDTO } from '../dtos/GetTracksByPlaylistDTO'
 import { ITracksRepository } from '../interfaces/ITracksRepository'
 import { ErrorDTO } from '../../common/dtos/errorDTO'
@@ -67,6 +67,8 @@ export class MusicImporter implements IMusicImporter {
   }
 
   async importTracksByPlaylists(credentials: StreamingCredentialsDTO, data: GetTracksByPlaylistDTO[]) {
+    const importId = genUid()
+
     if (!data.length) {
       return { exported: 0, saved: 0 }
     }
@@ -82,7 +84,7 @@ export class MusicImporter implements IMusicImporter {
     const results = []
 
     for (const playlist of data) {
-      const res = await this.importTracksByPlaylist(playlist)
+      const res = await this.importTracksByPlaylist(playlist, importId)
       results.push(res)
     }
 
@@ -97,9 +99,8 @@ export class MusicImporter implements IMusicImporter {
     )
   }
 
-  private async importTracksByPlaylist(data: GetTracksByPlaylistDTO) {
+  private async importTracksByPlaylist(data: GetTracksByPlaylistDTO, importId: Uid) {
     const { playlistId, playlistExternalId, userId } = data
-
     const counter = { exported: 0, saved: 0 }
     const step = this.streamingClient.getConfig().playlistsLimit
     let offset = 0
@@ -111,7 +112,7 @@ export class MusicImporter implements IMusicImporter {
         break
       }
 
-      const tracksData = chunk.map((t) => t.toCreate({ userId, playlistId }))
+      const tracksData = chunk.map((t) => t.toCreate({ userId, playlistId, importId }))
       const savedTracks = await this.trackRepository.upsertTracks(tracksData)
 
       counter.saved += savedTracks
@@ -119,6 +120,8 @@ export class MusicImporter implements IMusicImporter {
       offset += step
     }
 
-    return counter
+    const deleted = await this.trackRepository.purgeMismatchedTracksByImportId(playlistId, importId)
+
+    return { ...counter, ...deleted }
   }
 }
