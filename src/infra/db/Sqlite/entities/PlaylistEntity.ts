@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, OneToMany } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, OneToMany, Index } from 'typeorm'
 
 import { Playlist } from '../../../../modules/music/entities/Playlist'
 import { UserEntity } from './UserEntity'
@@ -6,10 +6,11 @@ import { TrackEntity } from './TrackEntity'
 import { StreamingEntity } from './StreamingEntity'
 
 @Entity()
+@Index(['external_id', 'streaming'], { unique: true })
 export class PlaylistEntity extends BaseEntity implements Playlist {
   @PrimaryGeneratedColumn()
   id: number
-  @Column()
+  @Column({ unique: true })
   external_id: string
   @Column()
   name: string

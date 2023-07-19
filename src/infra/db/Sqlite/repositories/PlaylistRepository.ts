@@ -28,17 +28,17 @@ export class PlaylistRepository implements IPlaylistRepository {
       return []
     }
 
-    const [user, streaming] = await Promise.all([
-      this.userRepository.findOneBy({ id: playlistData[0]?.userId }),
-      this.streamingRepository.findOneBy({ id: playlistData[0]?.streamingId }),
-    ])
+    const { user, streaming } = await this.getPlaylistRelations({
+      streamingId: playlistData[0].streamingId,
+      userId: playlistData[0].userId,
+    })
 
     if (!user || !streaming) {
       return []
     }
 
     const playlists = playlistData.map((playlist) =>
-      this._createPlaylist({
+      this.convertPlaylist({
         user,
         streaming,
         playlistData: playlist,
@@ -55,20 +55,16 @@ export class PlaylistRepository implements IPlaylistRepository {
   }
 
   async createPlaylist(playlistData: CreatePlaylistDTO) {
-    const [user, streaming] = await Promise.all([
-      this.userRepository.findOneBy({ id: playlistData.userId }),
-      this.streamingRepository.findOneBy({ id: playlistData.streamingId }),
-    ])
+    const { user, streaming } = await this.getPlaylistRelations({
+      streamingId: playlistData.streamingId,
+      userId: playlistData.userId,
+    })
 
     if (!user || !streaming) {
       return null
     }
 
-    const playlist = new PlaylistEntity()
-    playlist.name = playlistData.name
-    playlist.external_id = playlistData.externalId
-    playlist.user = user
-    playlist.streaming = streaming
+    const playlist = this.convertPlaylist({ user, streaming, playlistData })
 
     const newPlaylist = await this.repository.save(playlist)
 
@@ -108,7 +104,43 @@ export class PlaylistRepository implements IPlaylistRepository {
     return this.entityConverter.from(playlist)
   }
 
-  private _createPlaylist({
+  async upsertPlaylists(playlistData: CreatePlaylistDTO[]): Promise<number> {
+    if (!playlistData.length) {
+      return 0
+    }
+
+    const { user, streaming } = await this.getPlaylistRelations({
+      streamingId: playlistData[0].streamingId,
+      userId: playlistData[0].userId,
+    })
+
+    if (!user || !streaming) {
+      return 0
+    }
+
+    const convertedPlaylists = playlistData.map((playlist) =>
+      this.convertPlaylist({ user, streaming, playlistData: playlist }),
+    )
+
+    const result = await this.repository.upsert(convertedPlaylists, ['external_id', 'streaming'])
+
+    if (!result) {
+      return 0
+    }
+
+    return result.generatedMaps.length
+  }
+
+  private async getPlaylistRelations(data: { userId: number, streamingId: number }) {
+    const [user, streaming] = await Promise.all([
+      this.userRepository.findOneBy({ id: data.userId }),
+      this.streamingRepository.findOneBy({ id: data.streamingId }),
+    ])
+
+    return { user, streaming }
+  }
+
+  private convertPlaylist({
     user,
     streaming,
     playlistData,

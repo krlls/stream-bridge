@@ -30,7 +30,7 @@ export class TrackRepository implements ITracksRepository {
       return null
     }
 
-    const track = this._createTrack(trackData, playlist)
+    const track = this.convertTrack(trackData, playlist)
     const newTrack = await this.repository.save(track)
 
     if (!newTrack) {
@@ -54,7 +54,7 @@ export class TrackRepository implements ITracksRepository {
       return []
     }
 
-    const tracks = trackData.map((dto) => this._createTrack(dto, playlist))
+    const tracks = trackData.map((dto) => this.convertTrack(dto, playlist))
     const newTracks = await this.repository.save(tracks)
 
     if (!newTracks) {
@@ -74,7 +74,49 @@ export class TrackRepository implements ITracksRepository {
     return tracks.map(this.trackEntityConverter.from)
   }
 
-  private _createTrack(trackData: CreateTrackDTO, playlist: PlaylistEntity): TrackEntity {
+  async upsertTracks(tracks: CreateTrackDTO[]): Promise<number> {
+    if (!tracks.length) {
+      return 0
+    }
+
+    const playlist = await this.playlistRepository.findOne({
+      relations: ['streaming'],
+      where: { id: tracks[0].playlistId },
+    })
+
+    if (!playlist) {
+      return 0
+    }
+
+    const convertedTracks = tracks.map((track) => this.convertTrack(track, playlist))
+
+    const result = await this.repository.upsert(convertedTracks, ['external_id', 'playlist'])
+
+    if (!result) {
+      return 0
+    }
+
+    return result.generatedMaps.length
+  }
+
+  async getTracksByUserId(userId: number): Promise<Track[]> {
+    const tracks = await this.repository.find({
+      relations: ['playlist', 'user'],
+      where: {
+        playlist: {
+          user: { id: userId },
+        },
+      },
+    })
+
+    if (!tracks) {
+      return []
+    }
+
+    return tracks
+  }
+
+  private convertTrack(trackData: CreateTrackDTO, playlist: PlaylistEntity): TrackEntity {
     const track = new TrackEntity()
 
     track.external_id = trackData.externalId
