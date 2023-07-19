@@ -1,8 +1,8 @@
 import { inject, injectable } from 'inversify'
-import { Repository } from 'typeorm'
+import { In, Not, Repository } from 'typeorm'
 
 import { TYPES } from '../../../../types/const'
-import { Converter } from '../../../../types/common'
+import { Converter, Uid } from '../../../../types/common'
 import { getRepository } from '../SetupConnection'
 import { TrackEntity } from '../entities/TrackEntity'
 import { Track } from '../../../../modules/music/entities/Track'
@@ -116,6 +116,27 @@ export class TrackRepository implements ITracksRepository {
     return tracks
   }
 
+  async purgeMismatchedTracksByImportId(playlistId: number, importId: Uid): Promise<{ deleted: number }> {
+    const tracks = await this.repository.find({
+      relations: ['playlist'],
+      where: { playlist: { id: playlistId }, import_id: Not(importId) },
+    })
+
+    const deleted = await this.repository.delete({ id: In(tracks.map((t) => t.id)) })
+
+    return { deleted: deleted.affected || 0 }
+  }
+
+  async getTrackById(trackId: number): Promise<Track | null> {
+    const track = await this.repository.findOneBy({ id: trackId })
+
+    if (!track) {
+      return null
+    }
+
+    return this.trackEntityConverter.from(track)
+  }
+
   private convertTrack(trackData: CreateTrackDTO, playlist: PlaylistEntity): TrackEntity {
     const track = new TrackEntity()
 
@@ -125,6 +146,7 @@ export class TrackRepository implements ITracksRepository {
     track.album = trackData.album
     track.playlist = playlist
     track.streaming = playlist.streaming
+    track.import_id = trackData.importId
 
     return track
   }

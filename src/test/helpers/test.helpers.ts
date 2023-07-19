@@ -7,6 +7,7 @@ import { CreateTrackDTO } from '../../modules/music/dtos/CreateTrackDTO'
 import { CreatePlaylistDTO } from '../../modules/music/dtos/CreatePlaylistDTO'
 import { EStreamingType } from '../../types/common'
 import { CreateStreamingDTO } from '../../modules/streaming/dtos/CreateStreamingDTO'
+import { genUid } from '../../utils/app'
 
 export const userUrl: (...args: string[]) => string = createPatch.bind(null, Api.User.PREFIX)
 export const authUrl: (...args: string[]) => string = createPatch.bind(null, Api.Auth.PREFIX)
@@ -23,6 +24,7 @@ export const testPlaylistDTO = (userId: number, streamingId: number) =>
     name: 'Test playlist',
     externalId: '65FD4G65SF',
     streamingId,
+    importId: genUid(),
   })
 
 export const testTrackDTO = (userId: number, playlistId: number) =>
@@ -33,6 +35,18 @@ export const testTrackDTO = (userId: number, playlistId: number) =>
     name: 'Test track',
     artist: 'Test artist',
     album: 'Test album',
+    importId: genUid(),
+  })
+
+export const testRandomTrackDTO = (userId: number, playlistId: number) =>
+  new CreateTrackDTO({
+    userId,
+    playlistId,
+    externalId: faker.string.uuid(),
+    name: faker.music.songName(),
+    artist: faker.person.fullName(),
+    album: faker.lorem.words({ min: 2, max: 3 }),
+    importId: genUid(),
   })
 
 export const testStreamingDTO = (userId: number) =>
@@ -54,6 +68,7 @@ export const getRandomTracks = ({ userId, playlistId }: { userId: number, playli
         name: faker.music.songName(),
         artist: faker.person.fullName(),
         album: faker.lorem.words({ min: 1, max: 3 }),
+        importId: '24',
       }),
   )
 

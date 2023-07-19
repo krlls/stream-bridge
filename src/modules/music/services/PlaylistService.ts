@@ -33,7 +33,7 @@ export class PlaylistService implements IPlaylistService {
     const playlist = await this.playlistRepository.getPlaylistById(id)
 
     if (!playlist) {
-      return null
+      return new ErrorDTO(Errors.PLAYLIST_NOT_FOUND)
     }
 
     return playlist

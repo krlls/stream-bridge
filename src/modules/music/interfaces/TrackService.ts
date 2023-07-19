@@ -6,7 +6,7 @@ import { ImportResultDTO } from '../dtos/ImportResultDTO'
 
 export interface ITrackService {
   // saveTracks(tracks: CreateTrackDTO[]): Promise<boolean>,
-  // getTracks(playlistId?: string): Promise<TrackDTO[]>,
+  getTrackById(trackId: number): Promise<ServiceResultDTO<Track>>,
   saveTrack(trackData: CreateTrackDTO): Promise<ServiceResultDTO<Track>>,
   getTracksByPlaylist(playlistId: number): Promise<ServiceResultDTO<Track[]>>,
   importTracks(toImport: ImportMediaDTO): Promise<ServiceResultDTO<ImportResultDTO>>,

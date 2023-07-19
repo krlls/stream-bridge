@@ -2,7 +2,7 @@ import { SimplifiedPlaylist } from '@spotify/web-api-ts-sdk/src/types'
 
 import { SpotifyClient } from '../../../infra/clients/StreamingClient/Spotify/adapters/SpotifyClient'
 import { EPrepareResult } from '../../../modules/streaming/clients/IStreamingClient'
-import { ExternalTrackDTO } from '../../../modules/music/dtos/TrackPlaylistDTO'
+import { ExternalTrackDTO } from '../../../modules/music/dtos/ExternalTrackDTO'
 import { fakeApi } from '../test.helpers'
 
 export class FakeSpotifyClient extends SpotifyClient {

@@ -9,10 +9,11 @@ import { PLAYLISTS, testPlaylistDTO, testStreamingDTO, testUserData } from '../h
 import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistService'
 import { CreatePlaylistDTO } from '../../modules/music/dtos/CreatePlaylistDTO'
 import { UserDTO } from '../../modules/user/dtos/UserDTO'
-import { EStreamingType, ServiceResultDTO } from '../../types/common'
+import { Errors, EStreamingType, ServiceResultDTO } from '../../types/common'
 import { isServiceError } from '../../utils/errors'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
 import { ImportMediaDTO } from '../../modules/music/dtos/ImportMediaDTO'
+import { Playlist } from '../../modules/music/entities/Playlist'
 
 const playlistService = controllerContainer.get<IPlaylistService>(TYPES.PlaylistService)
 const userService = controllerContainer.get<IUserService>(TYPES.UserService)
@@ -158,5 +159,36 @@ describe('Playlist service tests', () => {
     const totalPlaylists = (await playlistService.getUserPlaylists(currentUser.id)) as any
 
     expect(totalPlaylists.length).toBe(exportResult.exported)
+  })
+
+  test('Remove unused playlists', async () => {
+    if (isServiceError(currentUser)) {
+      throw Error('User not created')
+    }
+
+    const streaming = await streamingService.createStreaming(testStreamingDTO(currentUser.id))
+
+    if (isServiceError(streaming)) {
+      throw Error('Streaming not created')
+    }
+
+    const exportData = new ImportMediaDTO({
+      streamingType: EStreamingType.SPOTIFY,
+      userId: currentUser.id,
+    })
+
+    const unusedPlaylist = (await playlistService.createPlayList(
+      testPlaylistDTO(currentUser.id, streaming.id),
+    )) as Playlist
+
+    await playlistService.importPlaylists(exportData)
+
+    const exportResult = (await playlistService.importPlaylists(exportData)) as any
+    const totalPlaylists = (await playlistService.getUserPlaylists(currentUser.id)) as any
+
+    const checkPlaylist = await playlistService.getPlaylistById(unusedPlaylist.id)
+
+    expect(totalPlaylists.length).toBe(exportResult.exported)
+    expect(checkPlaylist).toHaveProperty('error', Errors.PLAYLIST_NOT_FOUND)
   })
 })

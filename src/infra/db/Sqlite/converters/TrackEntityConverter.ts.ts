@@ -13,6 +13,7 @@ export class TrackEntityConverter implements Converter<TrackEntity, Track> {
       external_id: from.external_id,
       artist: from.artist,
       album: from.album,
+      import_id: from.import_id,
     }
   }
 
@@ -23,6 +24,7 @@ export class TrackEntityConverter implements Converter<TrackEntity, Track> {
     track.external_id = to.external_id
     track.name = to.name
     track.artist = to.artist
+    track.import_id = to.import_id
 
     return track
   }

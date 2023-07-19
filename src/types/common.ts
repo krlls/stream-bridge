@@ -3,6 +3,8 @@ export interface Converter<F, T> {
   to?(to: T): F,
 }
 
+export type Uid = string
+
 export enum E_NODE_ENV {
   TEST = 'test',
   DEV = 'development',
@@ -31,6 +33,7 @@ export enum Errors {
   PLAYLIST_NOT_FOUND = 'Playlist not found',
 
   TRACK_CREATE_ERROR = 'Track not created',
+  TRACK_NOT_FOUND = 'Track not found',
 
   STREAMING_CREATE_ERROR = 'Streaming create error',
   STREAMING_UPDATE_ERROR = 'Streaming update error',

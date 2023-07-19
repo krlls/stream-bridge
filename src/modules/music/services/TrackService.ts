@@ -115,4 +115,14 @@ export class TrackService implements ITrackService {
 
     return new ImportResultDTO(importResult)
   }
+
+  async getTrackById(trackId: number) {
+    const track = await this.trackRepository.getTrackById(trackId)
+
+    if (!track) {
+      return new ErrorDTO(Errors.TRACK_NOT_FOUND)
+    }
+
+    return track
+  }
 }

@@ -1,7 +1,7 @@
 import { StreamingCredentialsDTO } from '../../music/dtos/StreamingCredentialsDTO'
 import { ExternalPlaylistDTO } from '../../music/dtos/ExternalPlaylistDTO'
 import { ContextStrategy, EStreamingType } from '../../../types/common'
-import { ExternalTrackDTO } from '../../music/dtos/TrackPlaylistDTO'
+import { ExternalTrackDTO } from '../../music/dtos/ExternalTrackDTO'
 import { CreateStreamingTokenDTO } from '../dtos/CreateStreamingTokenDTO'
 import { StreamingPrepareResultDTO } from '../dtos/StreamingPrepareResultDTO'
 
