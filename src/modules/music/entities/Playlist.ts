@@ -1,10 +1,10 @@
 import { User } from '../../user/entities/User'
-import { Track } from './Track'
+import { Uid } from '../../../types/common'
 
 export interface Playlist {
   id: number,
   user: User,
   external_id: string,
   name: string,
-  tracks: Track[],
+  import_id: Uid,
 }

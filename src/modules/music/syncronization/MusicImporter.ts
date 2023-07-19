@@ -9,6 +9,7 @@ import { Errors, EStreamingType } from '../../../types/common'
 import { GetTracksByPlaylistDTO } from '../dtos/GetTracksByPlaylistDTO'
 import { ITracksRepository } from '../interfaces/ITracksRepository'
 import { ErrorDTO } from '../../common/dtos/errorDTO'
+import { genUid } from '../../../utils/app'
 
 @injectable()
 export class MusicImporter implements IMusicImporter {
@@ -27,6 +28,8 @@ export class MusicImporter implements IMusicImporter {
     streamingType: EStreamingType,
     credentials: StreamingCredentialsDTO,
   }) {
+    const importId = genUid()
+
     this.streamingClient.set(streamingType, credentials)
 
     const prepareRes = await this.streamingClient.prepare()
@@ -46,7 +49,7 @@ export class MusicImporter implements IMusicImporter {
         break
       }
 
-      const playlistsData = chunk.map((p) => p.toCreate({ userId, streamingId }))
+      const playlistsData = chunk.map((p) => p.toCreate({ userId, streamingId, importId }))
       const savedPlaylists = await this.playlistRepository.upsertPlaylists(playlistsData)
 
       counter.saved += savedPlaylists
@@ -54,7 +57,13 @@ export class MusicImporter implements IMusicImporter {
       offset += step
     }
 
-    return counter
+    const deleted = await this.playlistRepository.purgeMismatchedPlaylistsByImportId({
+      streamingType,
+      importId,
+      userId,
+    })
+
+    return { ...counter, ...deleted }
   }
 
   async importTracksByPlaylists(credentials: StreamingCredentialsDTO, data: GetTracksByPlaylistDTO[]) {

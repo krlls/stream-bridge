@@ -12,7 +12,7 @@ export class PlaylistEntityConverter implements Converter<PlaylistEntity, Playli
       name: from.name,
       user: from.user,
       external_id: from.external_id,
-      tracks: from.tracks,
+      import_id: from.import_id,
     }
   }
 

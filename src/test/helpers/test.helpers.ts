@@ -7,6 +7,7 @@ import { CreateTrackDTO } from '../../modules/music/dtos/CreateTrackDTO'
 import { CreatePlaylistDTO } from '../../modules/music/dtos/CreatePlaylistDTO'
 import { EStreamingType } from '../../types/common'
 import { CreateStreamingDTO } from '../../modules/streaming/dtos/CreateStreamingDTO'
+import { genUid } from '../../utils/app'
 
 export const userUrl: (...args: string[]) => string = createPatch.bind(null, Api.User.PREFIX)
 export const authUrl: (...args: string[]) => string = createPatch.bind(null, Api.Auth.PREFIX)
@@ -23,6 +24,7 @@ export const testPlaylistDTO = (userId: number, streamingId: number) =>
     name: 'Test playlist',
     externalId: '65FD4G65SF',
     streamingId,
+    importId: genUid(),
   })
 
 export const testTrackDTO = (userId: number, playlistId: number) =>

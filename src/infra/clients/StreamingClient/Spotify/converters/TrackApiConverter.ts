@@ -1,7 +1,7 @@
 import { PlaylistedTrack, Track } from '@spotify/web-api-ts-sdk/src/types'
 
 import { Converter } from '../../../../../types/common'
-import { ExternalTrackDTO } from '../../../../../modules/music/dtos/TrackPlaylistDTO'
+import { ExternalTrackDTO } from '../../../../../modules/music/dtos/ExternalTrackDTO'
 
 export class TrackApiConverter implements Converter<PlaylistedTrack, ExternalTrackDTO> {
   from(from: PlaylistedTrack): ExternalTrackDTO {

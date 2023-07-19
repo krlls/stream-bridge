@@ -3,6 +3,8 @@ export interface Converter<F, T> {
   to?(to: T): F,
 }
 
+export type Uid = string
+
 export enum E_NODE_ENV {
   TEST = 'test',
   DEV = 'development',

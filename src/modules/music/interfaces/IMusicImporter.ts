@@ -8,7 +8,7 @@ export interface IMusicImporter {
     streamingId: number,
     streamingType: EStreamingType,
     credentials: StreamingCredentialsDTO,
-  }): Promise<ServiceResultDTO<{ exported: number, saved: number }>>,
+  }): Promise<ServiceResultDTO<{ exported: number, saved: number, deleted: number }>>,
 
   importTracksByPlaylists(
     credentials: StreamingCredentialsDTO,

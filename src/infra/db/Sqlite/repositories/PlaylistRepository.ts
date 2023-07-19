@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify'
-import { Repository } from 'typeorm'
+import { In, Not, Repository } from 'typeorm'
 
 import { UserEntity } from '../entities/UserEntity'
 import { TYPES } from '../../../../types/const'
-import { Converter } from '../../../../types/common'
+import { Converter, EStreamingType, Uid } from '../../../../types/common'
 import { getRepository } from '../SetupConnection'
 import { IPlaylistRepository } from '../../../../modules/music/interfaces/IPlaylistRepository'
 import { CreatePlaylistDTO } from '../../../../modules/music/dtos/CreatePlaylistDTO'
@@ -131,6 +131,24 @@ export class PlaylistRepository implements IPlaylistRepository {
     return result.generatedMaps.length
   }
 
+  async purgeMismatchedPlaylistsByImportId(data: {
+    streamingType: EStreamingType,
+    importId: Uid,
+    userId: number,
+  }): Promise<{ deleted: number }> {
+    const entities = await this.repository.find({
+      relations: ['streaming', 'user'],
+      where: {
+        import_id: Not(data.importId),
+        streaming: { type: data.streamingType },
+        user: { id: data.userId },
+      },
+    })
+    const deleted = await this.repository.delete({ id: In(entities.map((p) => p.id)) })
+
+    return { deleted: deleted.affected || 0 }
+  }
+
   private async getPlaylistRelations(data: { userId: number, streamingId: number }) {
     const [user, streaming] = await Promise.all([
       this.userRepository.findOneBy({ id: data.userId }),
@@ -155,6 +173,7 @@ export class PlaylistRepository implements IPlaylistRepository {
     playlist.streaming = streaming
     playlist.name = playlistData.name
     playlist.external_id = playlistData.externalId
+    playlist.import_id = playlistData.importId
 
     return playlist
   }

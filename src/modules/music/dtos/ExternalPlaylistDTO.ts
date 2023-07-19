@@ -1,4 +1,5 @@
 import { CreatePlaylistDTO } from './CreatePlaylistDTO'
+import { Uid } from '../../../types/common'
 
 export class ExternalPlaylistDTO {
   external_id: string
@@ -9,10 +10,19 @@ export class ExternalPlaylistDTO {
     this.name = playlist.name
   }
 
-  toCreate({ userId, streamingId }: { userId: number, streamingId: number }): CreatePlaylistDTO {
+  toCreate({
+    userId,
+    streamingId,
+    importId,
+  }: {
+    userId: number,
+    streamingId: number,
+    importId: Uid,
+  }): CreatePlaylistDTO {
     return new CreatePlaylistDTO({
       userId,
       streamingId,
+      importId,
       externalId: this.external_id,
       name: this.name,
     })
