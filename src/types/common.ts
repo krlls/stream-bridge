@@ -31,6 +31,7 @@ export enum Errors {
 
   PLAYLIST_CREATE_ERROR = 'Playlist not created',
   PLAYLIST_NOT_FOUND = 'Playlist not found',
+  PLAYLIST_NOT_MATCH = 'Playlist(s) not match with streaming',
 
   TRACK_CREATE_ERROR = 'Track not created',
   TRACK_NOT_FOUND = 'Track not found',

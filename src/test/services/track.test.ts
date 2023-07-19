@@ -24,6 +24,7 @@ import { IStreamingService } from '../../modules/streaming/interfaces/IStreaming
 import { ImportMediaDTO } from '../../modules/music/dtos/ImportMediaDTO'
 import { Track } from '../../modules/music/entities/Track'
 import { Playlist } from '../../modules/music/entities/Playlist'
+import { ImportTracksByPlaylistDTO } from '../../modules/music/dtos/ImportTracksByPlaylistDTO'
 
 const playlistService = controllerContainer.get<IPlaylistService>(TYPES.PlaylistService)
 const userService = controllerContainer.get<IUserService>(TYPES.UserService)
@@ -149,8 +150,8 @@ describe('Track service tests', () => {
       throw Error('No playlists')
     }
 
-    const dto = new ImportMediaDTO({ streamingType: EStreamingType.SPOTIFY, userId: currentUser.id })
-    const exportCount = (await trackService.importTracksByPlaylist(playlists[0].id, dto)) as any
+    const dto = new ImportTracksByPlaylistDTO({ playlistId: playlists[0].id, userId: currentUser.id })
+    const exportCount = (await trackService.importTracksByPlaylist(dto)) as any
 
     expect(exportCount?.saved).toBe(TRACKS)
     expect(exportCount?.exported).toBe(exportCount?.saved)
@@ -176,11 +177,11 @@ describe('Track service tests', () => {
       throw Error('No playlists')
     }
 
-    const dto = new ImportMediaDTO({ streamingType: EStreamingType.SPOTIFY, userId: currentUser.id })
+    const dto = new ImportTracksByPlaylistDTO({ playlistId: playlists[0].id, userId: currentUser.id })
 
-    await trackService.importTracksByPlaylist(playlists[0].id, dto)
+    await trackService.importTracksByPlaylist(dto)
 
-    const exportCount = (await trackService.importTracksByPlaylist(playlists[0].id, dto)) as any
+    const exportCount = (await trackService.importTracksByPlaylist(dto)) as any
     const totalTracks = (await trackService.getTracksByPlaylist(currentUser.id)) as []
 
     expect(exportCount?.exported).toBe(totalTracks.length)
@@ -210,11 +211,11 @@ describe('Track service tests', () => {
 
     const track = (await trackService.saveTrack(testTrackDTO(currentUser.id, playlists[0].id))) as Track
 
-    const dto = new ImportMediaDTO({ streamingType: EStreamingType.SPOTIFY, userId: currentUser.id })
+    const dto = new ImportTracksByPlaylistDTO({ playlistId: playlists[0].id, userId: currentUser.id })
 
-    await trackService.importTracksByPlaylist(playlists[0].id, dto)
+    await trackService.importTracksByPlaylist(dto)
 
-    const exportCount = (await trackService.importTracksByPlaylist(playlists[0].id, dto)) as any
+    const exportCount = (await trackService.importTracksByPlaylist(dto)) as any
     const totalTracks = (await trackService.getTracksByPlaylist(currentUser.id)) as []
 
     const trackAfterImport = await trackService.getTrackById(track.id)

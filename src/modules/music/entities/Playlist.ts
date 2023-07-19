@@ -1,10 +1,10 @@
-import { User } from '../../user/entities/User'
-import { Uid } from '../../../types/common'
+import { EStreamingType, Uid } from '../../../types/common'
 
 export interface Playlist {
   id: number,
-  user: User,
+  user_id: number,
   external_id: string,
   name: string,
   import_id: Uid,
+  streaming_type: EStreamingType,
 }

@@ -14,6 +14,7 @@ import { IStreamingRepository } from '../../streaming/interfaces/IStreamingRepos
 import { GetTracksByPlaylistDTO } from '../dtos/GetTracksByPlaylistDTO'
 import { ImportResultDTO } from '../dtos/ImportResultDTO'
 import { isServiceError } from '../../../utils/errors'
+import { ImportTracksByPlaylistDTO } from '../dtos/ImportTracksByPlaylistDTO'
 
 @injectable()
 export class TrackService implements ITrackService {
@@ -55,6 +56,11 @@ export class TrackService implements ITrackService {
     })
 
     const playlists = await this.playlistRepository.getPlaylistsByUserId(toImport.userId)
+
+    if (playlists.some((p) => p.streaming_type !== streaming.type)) {
+      return new ErrorDTO(Errors.PLAYLIST_NOT_MATCH)
+    }
+
     const playlistsToExport = playlists.map(
       (playlist) =>
         new GetTracksByPlaylistDTO({
@@ -74,11 +80,14 @@ export class TrackService implements ITrackService {
     return res
   }
 
-  async importTracksByPlaylist(playlistId: number, toImport: ImportMediaDTO) {
-    const [streaming, playlist] = await Promise.all([
-      this.streamingRepository.getStreaming(toImport.userId, toImport.streamingType),
-      this.playlistRepository.getPlaylistById(playlistId),
-    ])
+  async importTracksByPlaylist({ playlistId, userId }: ImportTracksByPlaylistDTO) {
+    const playlist = await this.playlistRepository.getPlaylistById(playlistId)
+
+    if (!playlist) {
+      return new ErrorDTO(Errors.PLAYLIST_NOT_FOUND)
+    }
+
+    const streaming = await this.streamingRepository.getStreaming(userId, playlist.streaming_type)
 
     if (!streaming) {
       return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
@@ -88,6 +97,10 @@ export class TrackService implements ITrackService {
       return new ErrorDTO(Errors.PLAYLIST_NOT_FOUND)
     }
 
+    if (playlist.streaming_type !== streaming.type) {
+      return new ErrorDTO(Errors.PLAYLIST_NOT_MATCH)
+    }
+
     const { expiresIn, refresh_token, token } = streaming
 
     if (!expiresIn || !refresh_token || !token) {
@@ -95,8 +108,8 @@ export class TrackService implements ITrackService {
     }
 
     const data = new GetTracksByPlaylistDTO({
-      streamingType: streaming.type,
-      userId: toImport.userId,
+      streamingType: playlist.streaming_type,
+      userId: playlist.user_id,
       playlistId: playlist.id,
       playlistExternalId: playlist.external_id,
     })

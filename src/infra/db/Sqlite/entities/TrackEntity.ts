@@ -1,13 +1,12 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, Index } from 'typeorm'
 
-import { Track } from '../../../../modules/music/entities/Track'
 import { PlaylistEntity } from './PlaylistEntity'
 import { StreamingEntity } from './StreamingEntity'
 import { Uid } from '../../../../types/common'
 
 @Entity()
 @Index(['external_id', 'playlist'], { unique: true })
-export class TrackEntity extends BaseEntity implements Track {
+export class TrackEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 

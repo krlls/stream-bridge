@@ -76,7 +76,7 @@ export class PlaylistRepository implements IPlaylistRepository {
   }
 
   async getPlaylistById(id: number): Promise<Playlist | null> {
-    const playlist = await this.repository.findOneBy({ id })
+    const playlist = await this.repository.findOne({ relations: ['streaming', 'user'], where: { id } })
 
     if (!playlist) {
       return null
@@ -88,6 +88,7 @@ export class PlaylistRepository implements IPlaylistRepository {
   async getPlaylistsByUserId(userId: number): Promise<Playlist[]> {
     const playlists =
       (await this.repository.find({
+        relations: ['streaming', 'user'],
         where: { user: { id: userId } },
       })) || []
 
@@ -95,7 +96,10 @@ export class PlaylistRepository implements IPlaylistRepository {
   }
 
   async getPlaylistByExternalId(externalId: string): Promise<Playlist | null> {
-    const playlist = await this.repository.findOneBy({ external_id: externalId })
+    const playlist = await this.repository.findOne({
+      relations: ['streaming', 'user'],
+      where: { external_id: externalId },
+    })
 
     if (!playlist) {
       return null
