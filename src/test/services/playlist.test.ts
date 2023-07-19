@@ -135,4 +135,28 @@ describe('Playlist service tests', () => {
     expect(exportResult).toEqual({ exported: PLAYLISTS, saved: PLAYLISTS })
     expect(exportResult.exported).toBe(exportResult.saved)
   })
+
+  test('Re-exporting playlists does not create duplicates', async () => {
+    if (isServiceError(currentUser)) {
+      throw Error('User not created')
+    }
+
+    const streaming = await streamingService.createStreaming(testStreamingDTO(currentUser.id))
+
+    if (isServiceError(streaming)) {
+      throw Error('Streaming not created')
+    }
+
+    const exportData = new ImportMediaDTO({
+      streamingType: EStreamingType.SPOTIFY,
+      userId: currentUser.id,
+    })
+
+    await playlistService.importPlaylists(exportData)
+
+    const exportResult = (await playlistService.importPlaylists(exportData)) as any
+    const totalPlaylists = (await playlistService.getUserPlaylists(currentUser.id)) as any
+
+    expect(totalPlaylists.length).toBe(exportResult.exported)
+  })
 })

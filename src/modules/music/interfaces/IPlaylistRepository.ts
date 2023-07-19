@@ -4,6 +4,7 @@ import { CreatePlaylistDTO } from '../dtos/CreatePlaylistDTO'
 export interface IPlaylistRepository {
   createPlaylist(playlistData: CreatePlaylistDTO): Promise<Playlist | null>,
   createPlaylists(playlistData: CreatePlaylistDTO[]): Promise<Playlist[]>,
+  upsertPlaylists(playlistData: CreatePlaylistDTO[]): Promise<number>,
   getPlaylistByExternalId(externalId: string): Promise<Playlist | null>,
   getPlaylistById(id: number): Promise<Playlist | null>,
   getPlaylistsByUserId(userId: number): Promise<Playlist[]>,
