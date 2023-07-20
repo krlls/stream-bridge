@@ -10,7 +10,7 @@ export class TrackEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ type: 'text', unique: true })
+  @Column({ type: 'text' })
   external_id: string
 
   @Column()

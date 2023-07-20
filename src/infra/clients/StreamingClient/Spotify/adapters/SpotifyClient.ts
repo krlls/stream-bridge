@@ -60,15 +60,21 @@ export class SpotifyClient implements IClient {
   async prepare(credentials: StreamingCredentialsDTO) {
     const client = SpotifyApi.withAccessToken(serverConfig.spotifyClientId, this.credentialsConverter.from(credentials))
 
-    const user = await client.currentUser.profile()
+    try {
+      const user = await client.currentUser.profile()
 
-    if (!user || !user.id) {
+      if (!user || !user.id) {
+        return new StreamingPrepareResultDTO(EPrepareResult.ERROR)
+      }
+
+      this._client = client
+
+      return new StreamingPrepareResultDTO(EPrepareResult.SUCCESS)
+    } catch (e: any) {
+      this.logger.error('prepare', e?.message)
+
       return new StreamingPrepareResultDTO(EPrepareResult.ERROR)
     }
-
-    this._client = client
-
-    return new StreamingPrepareResultDTO(EPrepareResult.SUCCESS)
   }
 
   getConfig(): StreamingClientConfig {
@@ -97,20 +103,29 @@ export class SpotifyClient implements IClient {
 
   async getTracksByPlaylist(data: { playlistId: string, offset: number }): Promise<ExternalTrackDTO[]> {
     const limit = this.getConfig().playlistsLimit as MaxInt<50>
-    const paginatedTracks = await this.client.playlists.getPlaylistItems(
-      data.playlistId,
-      undefined,
-      undefined,
-      limit,
-      data.offset,
-    )
-    const tracks = paginatedTracks?.items || []
 
-    if (!tracks.length) {
-      return []
+    try {
+      const paginatedTracks = await this.client.playlists.getPlaylistItems(
+        data.playlistId,
+        undefined,
+        undefined,
+        limit,
+        data.offset,
+      )
+      const tracks = paginatedTracks?.items || []
+
+      if (!tracks.length) {
+        return []
+      }
+
+      this.logger.info('getTracksByPlaylist', 'Tracks:', tracks.length)
+
+      return tracks.map(this.trackConverter.from)
+    } catch (e) {
+      this.logger.error(e)
     }
 
-    return tracks.map(this.trackConverter.from)
+    return []
   }
 
   getLoginUrl(state: string): string | null {
