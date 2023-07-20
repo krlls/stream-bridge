@@ -6,7 +6,7 @@ const authUser = validatorFactory(
   Joi.object({
     login: Joi.string().required(),
     pass: Joi.string().required(),
-  }),
+  }).required(),
 )
 
 export const authValidators = {
