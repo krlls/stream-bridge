@@ -8,6 +8,7 @@ import { authRouter } from './authRoutes'
 import { userRouter } from './userRoutes'
 import { streamingRouter } from './streamingRoutes'
 import { importRouter } from './importRoutes'
+import { swaggerMiddleware, swaggerRouter } from '../swagger/swagger'
 
 const rootRouter = new Router()
 
@@ -17,6 +18,9 @@ export const routers = (app: any) => {
     await next()
   })
   rootRouter.get('/', (ctx) => respond200plain(ctx, '🔥 Hello world!'))
+  app.use(swaggerRouter.routes(), swaggerRouter.allowedMethods())
+  app.use(swaggerMiddleware)
+
   rootRouter.use(Api.User.PREFIX, userRouter.routes())
   rootRouter.use(Api.Auth.PREFIX, authRouter.routes())
   rootRouter.use(Api.Streaming.PREFIX, streamingRouter.routes())
