@@ -79,4 +79,36 @@ export namespace Api {
       }>
     }
   }
+
+  export namespace Import {
+    export const PREFIX = '/import'
+
+    export namespace Playlists {
+      export const URL = '/playlists'
+
+      export type Req = {
+        streamingType: Streaming.EApiStreamingType,
+      }
+
+      export type Resp = Response<{
+        exported: number,
+        saved: number,
+        deleted: number,
+      }>
+    }
+
+    export namespace Tracks {
+      export const URL = '/tracks'
+
+      export type Req = {
+        playlistId: number,
+      }
+
+      export type Resp = Response<{
+        exported: number,
+        saved: number,
+        deleted: number,
+      }>
+    }
+  }
 }

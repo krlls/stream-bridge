@@ -10,9 +10,10 @@ export class PlaylistEntityConverter implements Converter<PlaylistEntity, Playli
     return {
       id: from.id,
       name: from.name,
-      user: from.user,
+      user_id: from.user.id,
       external_id: from.external_id,
       import_id: from.import_id,
+      streaming_type: from.streaming.type,
     }
   }
 

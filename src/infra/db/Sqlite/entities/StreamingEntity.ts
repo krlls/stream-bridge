@@ -2,12 +2,11 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, OneToMan
 
 import { EStreamingType } from '../../../../types/common'
 import { UserEntity } from './UserEntity'
-import { Streaming } from '../../../../modules/streaming/entities/Streaming'
 import { PlaylistEntity } from './PlaylistEntity'
 import { TrackEntity } from './TrackEntity'
 
 @Entity()
-export class StreamingEntity extends BaseEntity implements Streaming {
+export class StreamingEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 

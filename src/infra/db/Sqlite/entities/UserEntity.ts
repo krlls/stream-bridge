@@ -1,11 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from 'typeorm'
 
-import { User } from '../../../../modules/user/entities/User'
 import { PlaylistEntity } from './PlaylistEntity'
 import { StreamingEntity } from './StreamingEntity'
 
 @Entity()
-export class UserEntity extends BaseEntity implements User {
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 

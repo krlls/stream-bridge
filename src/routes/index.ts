@@ -7,6 +7,7 @@ import { Api } from '../types/TApi'
 import { authRouter } from './authRoutes'
 import { userRouter } from './userRoutes'
 import { streamingRouter } from './streamingRoutes'
+import { importRouter } from './importRoutes'
 
 const rootRouter = new Router()
 
@@ -19,6 +20,7 @@ export const routers = (app: any) => {
   rootRouter.use(Api.User.PREFIX, userRouter.routes())
   rootRouter.use(Api.Auth.PREFIX, authRouter.routes())
   rootRouter.use(Api.Streaming.PREFIX, streamingRouter.routes())
+  rootRouter.use(Api.Import.PREFIX, importRouter.routes())
 
   app.use(rootRouter.routes())
 }

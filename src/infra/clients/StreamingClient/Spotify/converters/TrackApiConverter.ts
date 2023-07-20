@@ -8,7 +8,9 @@ export class TrackApiConverter implements Converter<PlaylistedTrack, ExternalTra
     const track = from.track as Track
 
     return new ExternalTrackDTO({
-      artist: track.album.album_group,
+      artist: (track.artists || [])
+        .map((a, index, arr) => (index === arr.length - 1 ? a.name : `${a.name}, `))
+        .join(' '),
       album: track.album.name,
       name: track.name,
       id: track.id,

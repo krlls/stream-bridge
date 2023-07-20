@@ -31,12 +31,14 @@ import { IClient } from './infra/clients/StreamingClient/IClient'
 import { MusicImporter } from './modules/music/syncronization/MusicImporter'
 import { IMusicImporter } from './modules/music/interfaces/IMusicImporter'
 import { StreamingController } from './controllers/streaming'
+import { ImportController } from './controllers/import'
 
 const controllerContainer = new Container()
 
 controllerContainer.bind<UserController>(TYPES.UserController).to(UserController)
 controllerContainer.bind<AuthController>(TYPES.AuthController).to(AuthController)
 controllerContainer.bind<StreamingController>(TYPES.StreamingController).to(StreamingController)
+controllerContainer.bind<ImportController>(TYPES.ImportController).to(ImportController)
 
 controllerContainer.bind<IUserService>(TYPES.UserService).to(UserService)
 controllerContainer.bind<IAuthService>(TYPES.AuthService).to(AuthService)
