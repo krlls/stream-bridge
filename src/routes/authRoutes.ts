@@ -15,10 +15,10 @@ export const authRouter = router
 /**
  * @swagger
  * /auth/login:
- *     post:
- *      tags:
- *        - Auth
- *     summary: User login endpoint
+ *   post:
+ *     tags:
+ *      - Auth
+ *     summary: Auth user
  *     requestBody:
  *       required: true
  *       content:
@@ -26,13 +26,16 @@ export const authRouter = router
  *           schema:
  *             type: object
  *             required:
- *              - login
- *              - pass
+ *              - login:
+ *              - pass:
  *             properties:
  *              login:
  *                name: login
+ *                type: string
  *              pass:
  *                name: pass
+ *                type: string
+ *
  *     responses:
  *       200:
  *         description: User successfully login

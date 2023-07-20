@@ -16,6 +16,7 @@ export const serverConfig: ServerConfig = {
   port: PORT || 3000,
   apiUrl: API_URL ? `${API_URL}:${PORT || 3000}` : `http://localhost:${PORT || 3000}`,
   silent: NODE_ENV === E_NODE_ENV.TEST,
+  isProduction: NODE_ENV === E_NODE_ENV.PROD,
   expiresSessionIn: EXPIRES_SESSION_IN || '3 days',
   jwtSecret: JWT_SECRET || 'test',
   jwtStreamingAuthSecret: JWT_STREAMING_AUTH_SECRET || 'test',
