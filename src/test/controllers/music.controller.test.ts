@@ -15,8 +15,11 @@ import {
 import { appContainer } from '../../inversify.config'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
 import { TYPES } from '../../types/const'
+import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistService'
 
 const streamingService = appContainer.get<IStreamingService>(TYPES.StreamingService)
+const playlistsServise = appContainer.get<IPlaylistService>(TYPES.PlaylistService)
+
 describe('Music library media controller tests', () => {
   let testToken: string = ''
   let currentUser = {} as any
@@ -44,6 +47,16 @@ describe('Music library media controller tests', () => {
       .send({
         streamingType: Api.Streaming.EApiStreamingType.SPOTIFY,
       })
+
+    const playlists = (await playlistsServise.getAllUserPlaylists(currentUser.id)) as any[]
+
+    await TestApp.post(importUrl(Api.Import.Tracks.URL))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .send({
+        playlistId: playlists[0].id,
+      })
   })
 
   afterEach(async () => {
@@ -62,5 +75,20 @@ describe('Music library media controller tests', () => {
 
     expect(response.status).toBe(200)
     expect(JSON.parse(response.text).items).toHaveLength(PLAYLISTS)
+  })
+
+  test('Get playlists works', async () => {
+    const response = await TestApp.get(musicUrl(Api.Music.Tracks.PATCH, '/spotify'))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .query({
+        playlistId: 1,
+        offset: 0,
+        limit: 50,
+      })
+
+    expect(response.status).toBe(200)
+    expect(JSON.parse(response.text).items).toHaveLength(50)
   })
 })

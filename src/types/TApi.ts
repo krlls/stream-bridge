@@ -139,7 +139,9 @@ export namespace Api {
     }
 
     export namespace Tracks {
-      export const URL = '/tracks'
+      export const PATCH = '/tracks'
+      export const STREAMING_TYPE = '/:type'
+      export const URL = PATCH + STREAMING_TYPE
 
       export type Req = {
         playlistId: number,
