@@ -1,6 +1,6 @@
 import Router from 'koa-router'
 
-import { controllerContainer } from '../inversify.config'
+import { appContainer } from '../inversify.config'
 import { Api } from '../types/TApi'
 import { TYPES } from '../types/const'
 import { importValidators } from '../controllers/import'
@@ -9,7 +9,7 @@ import { checkAuth } from '../utils/crypto'
 
 const router = new Router()
 
-const importController = controllerContainer.get<ImportController>(TYPES.ImportController)
+const importController = appContainer.get<ImportController>(TYPES.ImportController)
 
 router.post(Api.Import.Playlists.URL, checkAuth, importValidators.importPlaylists, (ctx) =>
   importController.importPlaylists(ctx, ctx.request.body),

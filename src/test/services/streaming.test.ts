@@ -1,7 +1,7 @@
 import { describe, beforeEach, afterEach, expect } from '@jest/globals'
 
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
-import { controllerContainer } from '../../inversify.config'
+import { appContainer } from '../../inversify.config'
 import { TYPES } from '../../types/const'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
@@ -11,8 +11,8 @@ import { ServiceResultDTO } from '../../types/common'
 import { isServiceError } from '../../utils/errors'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
 
-const userService = controllerContainer.get<IUserService>(TYPES.UserService)
-const streamingService = controllerContainer.get<IStreamingService>(TYPES.StreamingService)
+const userService = appContainer.get<IUserService>(TYPES.UserService)
+const streamingService = appContainer.get<IStreamingService>(TYPES.StreamingService)
 describe('Track service tests', () => {
   let currentUser: ServiceResultDTO<UserDTO>
 

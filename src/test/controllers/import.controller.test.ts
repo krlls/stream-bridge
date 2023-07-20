@@ -4,13 +4,13 @@ import { Api } from '../../types/TApi'
 import { TestApp } from '../index.test'
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
 import { authUrl, importUrl, testStreamingDTO, testUserData, userUrl } from '../helpers/test.helpers'
-import { controllerContainer } from '../../inversify.config'
+import { appContainer } from '../../inversify.config'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
 import { TYPES } from '../../types/const'
 import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistService'
 
-const streamingService = controllerContainer.get<IStreamingService>(TYPES.StreamingService)
-const playlistsServise = controllerContainer.get<IPlaylistService>(TYPES.PlaylistService)
+const streamingService = appContainer.get<IStreamingService>(TYPES.StreamingService)
+const playlistsServise = appContainer.get<IPlaylistService>(TYPES.PlaylistService)
 describe('Import media controller tests', () => {
   let testToken: string = ''
   let currentUser = {} as any
@@ -73,7 +73,7 @@ describe('Import media controller tests', () => {
         streamingType: Api.Streaming.EApiStreamingType.SPOTIFY,
       })
 
-    const playlists = (await playlistsServise.getUserPlaylists(currentUser.id)) as any[]
+    const playlists = (await playlistsServise.getAllUserPlaylists(currentUser.id)) as any[]
 
     const playlistsResponse = await TestApp.post(importUrl(Api.Import.Tracks.URL))
       .set({

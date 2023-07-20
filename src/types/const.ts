@@ -3,6 +3,7 @@ export const TYPES = {
   AuthController: Symbol.for('AuthController'),
   StreamingController: Symbol.for('StreamingController'),
   ImportController: Symbol.for('ImportController'),
+  MusicController: Symbol.for('MusicController'),
 
   UserService: Symbol.for('UserService'),
   AuthService: Symbol.for('AuthService'),

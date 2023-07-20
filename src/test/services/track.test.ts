@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, test } from '@jest/globals'
 
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
 import { TYPES } from '../../types/const'
-import { controllerContainer } from '../../inversify.config'
+import { appContainer } from '../../inversify.config'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
 import {
@@ -26,10 +26,10 @@ import { Track } from '../../modules/music/entities/Track'
 import { Playlist } from '../../modules/music/entities/Playlist'
 import { ImportTracksByPlaylistDTO } from '../../modules/music/dtos/ImportTracksByPlaylistDTO'
 
-const playlistService = controllerContainer.get<IPlaylistService>(TYPES.PlaylistService)
-const userService = controllerContainer.get<IUserService>(TYPES.UserService)
-const trackService = controllerContainer.get<ITrackService>(TYPES.TrackService)
-const streamingService = controllerContainer.get<IStreamingService>(TYPES.StreamingService)
+const playlistService = appContainer.get<IPlaylistService>(TYPES.PlaylistService)
+const userService = appContainer.get<IUserService>(TYPES.UserService)
+const trackService = appContainer.get<ITrackService>(TYPES.TrackService)
+const streamingService = appContainer.get<IStreamingService>(TYPES.StreamingService)
 describe('Track service tests', () => {
   let currentUser: ServiceResultDTO<UserDTO>
 
@@ -92,7 +92,8 @@ describe('Track service tests', () => {
 
     await Promise.all(createTracks)
 
-    const tracks = (await trackService.getTracksByPlaylist(playlist.id)) || []
+    const tracks =
+      (await trackService.getAllTracksByPlaylistId({ playlistId: playlist.id, userId: currentUser.id })) || []
 
     expect(tracks).toHaveLength(tracksSize)
 
@@ -144,7 +145,7 @@ describe('Track service tests', () => {
 
     await playlistService.importPlaylists(exportData)
 
-    const playlists = await playlistService.getUserPlaylists(currentUser.id)
+    const playlists = await playlistService.getAllUserPlaylists({ userId: currentUser.id })
 
     if (isServiceError(playlists)) {
       throw Error('No playlists')
@@ -171,7 +172,7 @@ describe('Track service tests', () => {
 
     await playlistService.importPlaylists(exportData)
 
-    const playlists = await playlistService.getUserPlaylists(currentUser.id)
+    const playlists = await playlistService.getAllUserPlaylists({ userId: currentUser.id })
 
     if (isServiceError(playlists)) {
       throw Error('No playlists')
@@ -182,7 +183,10 @@ describe('Track service tests', () => {
     await trackService.importTracksByPlaylist(dto)
 
     const exportCount = (await trackService.importTracksByPlaylist(dto)) as any
-    const totalTracks = (await trackService.getTracksByPlaylist(currentUser.id)) as []
+    const totalTracks = (await trackService.getAllTracksByPlaylistId({
+      userId: currentUser.id,
+      playlistId: playlists[0].id,
+    })) as []
 
     expect(exportCount?.exported).toBe(totalTracks.length)
   })
@@ -201,7 +205,7 @@ describe('Track service tests', () => {
 
     await playlistService.importPlaylists(exportData)
 
-    const playlists = await playlistService.getUserPlaylists(currentUser.id)
+    const playlists = await playlistService.getAllUserPlaylists({ userId: currentUser.id })
 
     if (isServiceError(playlists)) {
       throw Error('No playlists')
@@ -216,7 +220,10 @@ describe('Track service tests', () => {
     await trackService.importTracksByPlaylist(dto)
 
     const exportCount = (await trackService.importTracksByPlaylist(dto)) as any
-    const totalTracks = (await trackService.getTracksByPlaylist(currentUser.id)) as []
+    const totalTracks = (await trackService.getAllTracksByPlaylistId({
+      userId: currentUser.id,
+      playlistId: playlists[0].id,
+    })) as []
 
     const trackAfterImport = await trackService.getTrackById(track.id)
 
@@ -248,12 +255,18 @@ describe('Track service tests', () => {
       await trackService.saveTrack(testRandomTrackDTO(currentUser.id, unusedPlaylist.id))
     }
 
-    const tracksByExistPlaylist = await trackService.getTracksByPlaylist(unusedPlaylist.id)
+    const tracksByExistPlaylist = await trackService.getAllTracksByPlaylistId({
+      userId: unusedPlaylist.id,
+      playlistId: unusedPlaylist.id,
+    })
     expect(tracksByExistPlaylist).toHaveLength(11)
 
     await playlistService.importPlaylists(exportData)
 
-    const tracksByRemovedPlaylist = await trackService.getTracksByPlaylist(unusedPlaylist.id)
+    const tracksByRemovedPlaylist = await trackService.getAllTracksByPlaylistId({
+      userId: unusedPlaylist.id,
+      playlistId: unusedPlaylist.id,
+    })
     expect(tracksByRemovedPlaylist).toHaveLength(0)
   })
 
@@ -281,11 +294,17 @@ describe('Track service tests', () => {
       await trackService.saveTrack(testRandomTrackDTO(currentUser.id, unusedPlaylist.id))
     }
 
-    const tracksByExistPlaylist = await trackService.getTracksByPlaylist(unusedPlaylist.id)
+    const tracksByExistPlaylist = await trackService.getAllTracksByPlaylistId({
+      userId: unusedPlaylist.id,
+      playlistId: unusedPlaylist.id,
+    })
 
     await playlistService.importPlaylists(exportData)
 
-    const tracksByRemovedPlaylist = await trackService.getTracksByPlaylist(unusedPlaylist.id)
+    const tracksByRemovedPlaylist = await trackService.getAllTracksByPlaylistId({
+      userId: unusedPlaylist.id,
+      playlistId: unusedPlaylist.id,
+    })
 
     expect(tracksByExistPlaylist).toHaveLength(11)
     expect(tracksByRemovedPlaylist).toHaveLength(0)

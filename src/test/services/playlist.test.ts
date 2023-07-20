@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test } from '@jest/globals'
 
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
-import { controllerContainer } from '../../inversify.config'
+import { appContainer } from '../../inversify.config'
 import { TYPES } from '../../types/const'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
@@ -15,9 +15,9 @@ import { IStreamingService } from '../../modules/streaming/interfaces/IStreaming
 import { ImportMediaDTO } from '../../modules/music/dtos/ImportMediaDTO'
 import { Playlist } from '../../modules/music/entities/Playlist'
 
-const playlistService = controllerContainer.get<IPlaylistService>(TYPES.PlaylistService)
-const userService = controllerContainer.get<IUserService>(TYPES.UserService)
-const streamingService = controllerContainer.get<IStreamingService>(TYPES.StreamingService)
+const playlistService = appContainer.get<IPlaylistService>(TYPES.PlaylistService)
+const userService = appContainer.get<IUserService>(TYPES.UserService)
+const streamingService = appContainer.get<IStreamingService>(TYPES.StreamingService)
 describe('Playlist service tests', () => {
   let currentUser: ServiceResultDTO<UserDTO>
 
@@ -89,7 +89,7 @@ describe('Playlist service tests', () => {
 
     await playlistService.createPlayList(playlistData)
 
-    const findPlaylist = await playlistService.getUserPlaylists(currentUser.id)
+    const findPlaylist = await playlistService.getAllUserPlaylists({ userId: currentUser.id })
 
     expect(findPlaylist).toHaveLength(1)
   })
@@ -156,7 +156,7 @@ describe('Playlist service tests', () => {
     await playlistService.importPlaylists(exportData)
 
     const exportResult = (await playlistService.importPlaylists(exportData)) as any
-    const totalPlaylists = (await playlistService.getUserPlaylists(currentUser.id)) as any
+    const totalPlaylists = (await playlistService.getAllUserPlaylists({ userId: currentUser.id })) as any
 
     expect(totalPlaylists.length).toBe(exportResult.exported)
   })
@@ -184,7 +184,7 @@ describe('Playlist service tests', () => {
     await playlistService.importPlaylists(exportData)
 
     const exportResult = (await playlistService.importPlaylists(exportData)) as any
-    const totalPlaylists = (await playlistService.getUserPlaylists(currentUser.id)) as any
+    const totalPlaylists = (await playlistService.getAllUserPlaylists({ userId: currentUser.id })) as any
 
     const checkPlaylist = await playlistService.getPlaylistById(unusedPlaylist.id)
 

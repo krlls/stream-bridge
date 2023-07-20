@@ -3,14 +3,20 @@ import Router from 'koa-router'
 import { appContainer } from '../inversify.config'
 import { Api } from '../types/TApi'
 import { TYPES } from '../types/const'
-import { AuthController, authValidators } from '../controllers/auth'
+import { MusicController, musicValidators } from '../controllers/music'
+import { checkAuth } from '../utils/crypto'
 
 const router = new Router()
 
-const authController = appContainer.get<AuthController>(TYPES.AuthController)
-router.post(Api.Auth.Login.URL, authValidators.authUser, (ctx) => authController.login(ctx, ctx.request.body))
+const musicController = appContainer.get<MusicController>(TYPES.MusicController)
+router.get(Api.Music.Tracks.URL, checkAuth, musicValidators.getTracks, (ctx) =>
+  musicController.getTracks(ctx, ctx.request.body),
+)
+router.get(Api.Music.Playlists.URL, checkAuth, musicValidators.getPlaylists, (ctx) =>
+  musicController.getPlaylists(ctx, ctx.request.body),
+)
 
-export const authRouter = router
+export const musicRouter = router
 
 /**
  * @swagger

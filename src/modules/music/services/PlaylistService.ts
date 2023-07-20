@@ -12,6 +12,9 @@ import { IStreamingRepository } from '../../streaming/interfaces/IStreamingRepos
 import { ImportResultDTO } from '../dtos/ImportResultDTO'
 import { IMusicImporter } from '../interfaces/IMusicImporter'
 import { isServiceError } from '../../../utils/errors'
+import { GetUserPlaylistsDto } from '../dtos/GetUserPlaylistsDto'
+import { limits } from '../../common/const'
+import { PlaylistDto } from '../dtos/PlaylistDto'
 
 @injectable()
 export class PlaylistService implements IPlaylistService {
@@ -43,8 +46,23 @@ export class PlaylistService implements IPlaylistService {
     return await this.playlistRepository.getPlaylistByExternalId(externalId)
   }
 
-  async getUserPlaylists(userId: number) {
-    return (await this.playlistRepository.getPlaylistsByUserId(userId)) || []
+  async getAllUserPlaylists(getPlaylists: GetUserPlaylistsDto) {
+    const playlists = (await this.playlistRepository.getPlaylistsByUserId(getPlaylists)) || []
+
+    return playlists.map((p) => new PlaylistDto(p))
+  }
+
+  async getUserPlaylists(getPlaylists: GetUserPlaylistsDto) {
+    const { maxOffset, maxLimit } = limits.music.pagination
+    const data = {
+      ...getPlaylists,
+      limit: Math.min(maxLimit, getPlaylists.limit || maxLimit),
+      offset: Math.min(maxOffset, getPlaylists.offset || 0),
+    }
+
+    const playlists = (await this.playlistRepository.getPlaylistsByUserId(data)) || []
+
+    return playlists.map((p) => new PlaylistDto(p))
   }
 
   async importPlaylists(toImport: ImportMediaDTO) {

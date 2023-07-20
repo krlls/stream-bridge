@@ -10,6 +10,7 @@ import { streamingRouter } from './streamingRoutes'
 import { importRouter } from './importRoutes'
 import { swaggerMiddleware, swaggerRouter } from '../swagger/swagger'
 import { serverConfig } from '../config'
+import { musicRouter } from './musicRoutes'
 
 const rootRouter = new Router()
 
@@ -24,6 +25,7 @@ export const routers = (app: any) => {
   rootRouter.use(Api.Auth.PREFIX, authRouter.routes())
   rootRouter.use(Api.Streaming.PREFIX, streamingRouter.routes())
   rootRouter.use(Api.Import.PREFIX, importRouter.routes())
+  rootRouter.use(Api.Music.PREFIX, musicRouter.allowedMethods(), musicRouter.routes())
 
   if (!serverConfig.isProduction) {
     app.use(swaggerRouter.routes(), swaggerRouter.allowedMethods())

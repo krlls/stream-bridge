@@ -32,38 +32,40 @@ import { MusicImporter } from './modules/music/syncronization/MusicImporter'
 import { IMusicImporter } from './modules/music/interfaces/IMusicImporter'
 import { StreamingController } from './controllers/streaming'
 import { ImportController } from './controllers/import'
+import { MusicController } from './controllers/music'
 
-const controllerContainer = new Container()
+const appContainer = new Container()
 
-controllerContainer.bind<UserController>(TYPES.UserController).to(UserController)
-controllerContainer.bind<AuthController>(TYPES.AuthController).to(AuthController)
-controllerContainer.bind<StreamingController>(TYPES.StreamingController).to(StreamingController)
-controllerContainer.bind<ImportController>(TYPES.ImportController).to(ImportController)
+appContainer.bind<UserController>(TYPES.UserController).to(UserController)
+appContainer.bind<AuthController>(TYPES.AuthController).to(AuthController)
+appContainer.bind<StreamingController>(TYPES.StreamingController).to(StreamingController)
+appContainer.bind<ImportController>(TYPES.ImportController).to(ImportController)
+appContainer.bind<MusicController>(TYPES.MusicController).to(MusicController)
 
-controllerContainer.bind<IUserService>(TYPES.UserService).to(UserService)
-controllerContainer.bind<IAuthService>(TYPES.AuthService).to(AuthService)
-controllerContainer.bind<IPlaylistService>(TYPES.PlaylistService).to(PlaylistService)
-controllerContainer.bind<ITrackService>(TYPES.TrackService).to(TrackService)
-controllerContainer.bind<IStreamingService>(TYPES.StreamingService).to(StreamingService)
+appContainer.bind<IUserService>(TYPES.UserService).to(UserService)
+appContainer.bind<IAuthService>(TYPES.AuthService).to(AuthService)
+appContainer.bind<IPlaylistService>(TYPES.PlaylistService).to(PlaylistService)
+appContainer.bind<ITrackService>(TYPES.TrackService).to(TrackService)
+appContainer.bind<IStreamingService>(TYPES.StreamingService).to(StreamingService)
 
-controllerContainer.bind<IUserRepository>(TYPES.UserRepository).to(UserRepository)
-controllerContainer.bind<IPlaylistRepository>(TYPES.PlaylistRepository).to(PlaylistRepository)
-controllerContainer.bind<TrackRepository>(TYPES.TrackRepository).to(TrackRepository)
-controllerContainer.bind<StreamingRepository>(TYPES.StreamingRepository).to(StreamingRepository)
+appContainer.bind<IUserRepository>(TYPES.UserRepository).to(UserRepository)
+appContainer.bind<IPlaylistRepository>(TYPES.PlaylistRepository).to(PlaylistRepository)
+appContainer.bind<TrackRepository>(TYPES.TrackRepository).to(TrackRepository)
+appContainer.bind<StreamingRepository>(TYPES.StreamingRepository).to(StreamingRepository)
 
-controllerContainer.bind<UserEntityConverter>(TYPES.UserEntityConverter).to(UserEntityConverter)
-controllerContainer.bind<PlaylistEntityConverter>(TYPES.PlaylistEntityConverter).to(PlaylistEntityConverter)
-controllerContainer.bind<TrackEntityConverter>(TYPES.TrackEntityConverter).to(TrackEntityConverter)
-controllerContainer.bind<StreamingEntityConverter>(TYPES.StreamingEntityConverter).to(StreamingEntityConverter)
+appContainer.bind<UserEntityConverter>(TYPES.UserEntityConverter).to(UserEntityConverter)
+appContainer.bind<PlaylistEntityConverter>(TYPES.PlaylistEntityConverter).to(PlaylistEntityConverter)
+appContainer.bind<TrackEntityConverter>(TYPES.TrackEntityConverter).to(TrackEntityConverter)
+appContainer.bind<StreamingEntityConverter>(TYPES.StreamingEntityConverter).to(StreamingEntityConverter)
 
-controllerContainer.bind<IMusicImporter>(TYPES.MusicImporter).to(MusicImporter)
+appContainer.bind<IMusicImporter>(TYPES.MusicImporter).to(MusicImporter)
 
-controllerContainer.bind<IStreamingClient>(TYPES.Client).to(StreamingClient)
-controllerContainer.bind<IClient>(TYPES.ClientApi).to(SpotifyClient).whenTargetNamed(EStreamingType.SPOTIFY)
-controllerContainer
+appContainer.bind<IStreamingClient>(TYPES.Client).to(StreamingClient)
+appContainer.bind<IClient>(TYPES.ClientApi).to(SpotifyClient).whenTargetNamed(EStreamingType.SPOTIFY)
+appContainer
   .bind<Factory<IClient, [EStreamingType]>>(TYPES.ClientApiFactory)
   .toFactory<IClient, [EStreamingType]>(
     (ctx) => (type: EStreamingType) => ctx.container.getNamed<IClient>(TYPES.ClientApi, type),
   )
 
-export { controllerContainer }
+export { appContainer }

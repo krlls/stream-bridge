@@ -1,5 +1,8 @@
+import { EStreamingType } from './common'
+
 type ApiErrorResp = { error: string }
 type Response<T> = T | ApiErrorResp
+type Paginated<T> = { items: T[] }
 
 export namespace Api {
   export namespace User {
@@ -111,4 +114,145 @@ export namespace Api {
       }>
     }
   }
+
+  export namespace Music {
+    export const PREFIX = '/music'
+
+    export namespace Playlists {
+      export const PATCH = '/playlists'
+      export const STREAMING_TYPE = '/:type'
+      export const URL = PATCH + STREAMING_TYPE
+
+      export type Req = {
+        offset: number,
+        limit?: number,
+      }
+
+      export type Playlist = {
+        id: number,
+        externalId: string,
+        name: string,
+        streamingType: EStreamingType,
+      }
+
+      export type Resp = Response<Paginated<Playlist>>
+    }
+
+    export namespace Tracks {
+      export const URL = '/tracks'
+
+      export type Req = {
+        playlistId: number,
+        offset: number,
+        limit?: number,
+      }
+
+      export type Track = {
+        id: number,
+        playlistId: number,
+        externalId: string,
+        name: string,
+        artist: string,
+        album: string,
+      }
+
+      export type Resp = Response<Paginated<Track>>
+    }
+  }
 }
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Playlist:
+ *       type: object
+ *       required:
+ *         - id
+ *         - externalId
+ *         - name
+ *         - streamingType
+ *       properties:
+ *         id:
+ *           type: number
+ *           description: The auto-generated id of the Playlist
+ *         externalId:
+ *           type: number
+ *           description: External id from streaming service
+ *         name:
+ *           type: string
+ *           description: Playlist title
+ *         streamingType:
+ *           type: string
+ *           enum: [spotify]
+ *           description: Type of streaming service
+ *       example:
+ *         id: 4
+ *         externalId: dsf5564dsf564ds
+ *         name: My awesome playlist
+ *         streamingType: SPOTIFY
+ *
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Track:
+ *       type: object
+ *       required:
+ *        - id: number,
+ *        - playlistId: number,
+ *        - externalId: string,
+ *        - name: string,
+ *        - artist: string,
+ *        - album: string,
+ *       properties:
+ *         id:
+ *           type: number
+ *           description: The auto-generated id of the Track
+ *
+ *         playlistId:
+ *           type: number
+ *
+ *         externalId:
+ *           type: string
+ *           description: External id from streaming service
+ *
+ *         name:
+ *           type: string
+ *           description: Track title
+ *
+ *         artist:
+ *           type: string
+ *           description: String with artist(s) names
+ *
+ *         album:
+ *           type: string
+ *           description: Name of album
+ *
+ *       example:
+ *         id: 4
+ *         externalId: dsf5564dsf564ds
+ *         name: My track
+ *         artist: Some artist name
+ *         album: Some album name
+ *
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ErrorResult:
+ *       type: object
+ *       required:
+ *         - error
+ *       properties:
+ *         error:
+ *           type: string
+ *           description: Error message
+ *       example:
+ *        error: Incorrect credentials
+ *
+ */

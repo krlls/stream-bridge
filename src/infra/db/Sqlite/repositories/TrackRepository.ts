@@ -9,6 +9,7 @@ import { Track } from '../../../../modules/music/entities/Track'
 import { ITracksRepository } from '../../../../modules/music/interfaces/ITracksRepository'
 import { CreateTrackDTO } from '../../../../modules/music/dtos/CreateTrackDTO'
 import { PlaylistEntity } from '../entities/PlaylistEntity'
+import { GetTracksByPlaylistDTO } from '../../../../modules/music/dtos/GetTracksByPlaylistDTO'
 
 @injectable()
 export class TrackRepository implements ITracksRepository {
@@ -135,6 +136,20 @@ export class TrackRepository implements ITracksRepository {
     }
 
     return this.trackEntityConverter.from(track)
+  }
+
+  async getUserTracksByPlaylist({ playlistId, userId, limit, offset }: GetTracksByPlaylistDTO): Promise<Track[]> {
+    const tracks = await this.repository.find({
+      where: { playlist: { id: playlistId, user: { id: userId } } },
+      take: limit,
+      skip: offset,
+    })
+
+    if (!tracks) {
+      return []
+    }
+
+    return tracks.map(this.trackEntityConverter.from)
   }
 
   private convertTrack(trackData: CreateTrackDTO, playlist: PlaylistEntity): TrackEntity {

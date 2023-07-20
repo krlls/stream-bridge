@@ -1,7 +1,7 @@
 import { RouterContext } from 'koa-router'
 import { inject, injectable } from 'inversify'
 
-import { respond200json, respond400, respond403 } from '../../utils/response'
+import { respond200json, respond400, respond401json, respond403 } from '../../utils/response'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
 import { TYPES } from '../../types/const'
 import { convertStreamingName } from '../../utils/transform'
@@ -59,7 +59,13 @@ export class StreamingController {
       return respond400(ctx, new ErrorDTO(Errors.STREAMING_NOT_FOUND))
     }
 
-    const authToken = await this.userService.getSignedToken(1)
+    const user = await this.userService.findUserById(ctx.state.userId)
+
+    if (isServiceError(user)) {
+      return respond401json(ctx, user)
+    }
+
+    const authToken = await this.userService.getSignedToken(user.id)
 
     if (isServiceError(authToken)) {
       return respond400(ctx, authToken)

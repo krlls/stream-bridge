@@ -1,7 +1,7 @@
 import { RouterContext } from 'koa-router'
 import { inject, injectable } from 'inversify'
 
-import { respond200json, respond400 } from '../../utils/response'
+import { respond200json, respond400, respond401json } from '../../utils/response'
 import { TYPES } from '../../types/const'
 import { convertStreamingName } from '../../utils/transform'
 import { ErrorDTO } from '../../modules/common/dtos/errorDTO'
@@ -29,7 +29,7 @@ export class ImportController {
     const user = await this.userService.findUserById(ctx.state.userId)
 
     if (isServiceError(user)) {
-      return user
+      return respond401json(ctx, user)
     }
 
     const importData = new ImportMediaDTO({ streamingType, userId: user.id })
@@ -44,7 +44,7 @@ export class ImportController {
     const user = await this.userService.findUserById(ctx.state.userId)
 
     if (isServiceError(user)) {
-      return user
+      return respond401json(ctx, user)
     }
 
     const importData = new ImportTracksByPlaylistDTO({ playlistId: params.playlistId, userId: user.id })

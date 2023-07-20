@@ -6,7 +6,7 @@ import { EPrepareResult, IStreamingClient } from '../../streaming/clients/IStrea
 import { IMusicImporter } from '../interfaces/IMusicImporter'
 import { StreamingCredentialsDTO } from '../dtos/StreamingCredentialsDTO'
 import { Errors, EStreamingType, Uid } from '../../../types/common'
-import { GetTracksByPlaylistDTO } from '../dtos/GetTracksByPlaylistDTO'
+import { ImportTracksDTO } from '../dtos/ImportTracksDTO'
 import { ITracksRepository } from '../interfaces/ITracksRepository'
 import { ErrorDTO } from '../../common/dtos/errorDTO'
 import { genUid } from '../../../utils/app'
@@ -66,7 +66,7 @@ export class MusicImporter implements IMusicImporter {
     return { ...counter, ...deleted }
   }
 
-  async importTracksByPlaylists(credentials: StreamingCredentialsDTO, data: GetTracksByPlaylistDTO[]) {
+  async importTracksByPlaylists(credentials: StreamingCredentialsDTO, data: ImportTracksDTO[]) {
     const importId = genUid()
 
     if (!data.length) {
@@ -99,7 +99,7 @@ export class MusicImporter implements IMusicImporter {
     )
   }
 
-  private async importTracksByPlaylist(data: GetTracksByPlaylistDTO, importId: Uid) {
+  private async importTracksByPlaylist(data: ImportTracksDTO, importId: Uid) {
     const { playlistId, playlistExternalId, userId } = data
     const counter = { exported: 0, saved: 0 }
     const step = this.streamingClient.getConfig().playlistsLimit
