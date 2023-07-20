@@ -11,10 +11,14 @@ import { IPlaylistRepository } from '../interfaces/IPlaylistRepository'
 import { IMusicImporter } from '../interfaces/IMusicImporter'
 import { StreamingCredentialsDTO } from '../dtos/StreamingCredentialsDTO'
 import { IStreamingRepository } from '../../streaming/interfaces/IStreamingRepository'
-import { GetTracksByPlaylistDTO } from '../dtos/GetTracksByPlaylistDTO'
+import { ImportTracksDTO } from '../dtos/ImportTracksDTO'
 import { ImportResultDTO } from '../dtos/ImportResultDTO'
 import { isServiceError } from '../../../utils/errors'
 import { ImportTracksByPlaylistDTO } from '../dtos/ImportTracksByPlaylistDTO'
+import { GetUserPlaylistsDto } from '../dtos/GetUserPlaylistsDto'
+import { GetTracksByPlaylistDTO } from '../dtos/GetTracksByPlaylistDTO'
+import { limits } from '../../common/const'
+import { TrackDTO } from '../dtos/TrackDto'
 
 @injectable()
 export class TrackService implements ITrackService {
@@ -32,8 +36,23 @@ export class TrackService implements ITrackService {
 
     return track
   }
-  async getTracksByPlaylist(playlistId: number) {
-    return await this.trackRepository.getTracksByPlaylistId(playlistId)
+
+  async getAllTracksByPlaylistId(getTracksData: GetTracksByPlaylistDTO) {
+    const tracks = await this.trackRepository.getUserTracksByPlaylist(new GetTracksByPlaylistDTO(getTracksData))
+
+    return tracks.map((t) => new TrackDTO(t))
+  }
+  async getTracksByPlaylist(getTracksData: GetTracksByPlaylistDTO) {
+    const { maxLimit, maxOffset } = limits.music.pagination
+    const data = {
+      ...getTracksData,
+      limit: Math.min(maxLimit, getTracksData.limit || maxLimit),
+      offset: Math.min(maxOffset, getTracksData.offset || maxOffset),
+    }
+
+    const tracks = await this.trackRepository.getUserTracksByPlaylist(data)
+
+    return tracks.map((t) => new TrackDTO(t))
   }
 
   async importTracks(toImport: ImportMediaDTO) {
@@ -55,7 +74,8 @@ export class TrackService implements ITrackService {
       refreshToken: refresh_token,
     })
 
-    const playlists = await this.playlistRepository.getPlaylistsByUserId(toImport.userId)
+    const playlistsData = new GetUserPlaylistsDto({ userId: toImport.userId })
+    const playlists = await this.playlistRepository.getPlaylistsByUserId(playlistsData)
 
     if (playlists.some((p) => p.streaming_type !== streaming.type)) {
       return new ErrorDTO(Errors.PLAYLIST_NOT_MATCH)
@@ -63,7 +83,7 @@ export class TrackService implements ITrackService {
 
     const playlistsToExport = playlists.map(
       (playlist) =>
-        new GetTracksByPlaylistDTO({
+        new ImportTracksDTO({
           streamingType: streaming.type,
           userId: toImport.userId,
           playlistId: playlist.id,
@@ -107,7 +127,7 @@ export class TrackService implements ITrackService {
       return new ErrorDTO(Errors.WRONG_CREDENTIALS)
     }
 
-    const data = new GetTracksByPlaylistDTO({
+    const data = new ImportTracksDTO({
       streamingType: playlist.streaming_type,
       userId: playlist.user_id,
       playlistId: playlist.id,

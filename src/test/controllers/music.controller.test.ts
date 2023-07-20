@@ -3,7 +3,15 @@ import { expect, test, describe, beforeEach, afterEach } from '@jest/globals'
 import { Api } from '../../types/TApi'
 import { TestApp } from '../index.test'
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
-import { authUrl, importUrl, testStreamingDTO, testUserData, userUrl } from '../helpers/test.helpers'
+import {
+  authUrl,
+  importUrl,
+  musicUrl,
+  PLAYLISTS,
+  testStreamingDTO,
+  testUserData,
+  userUrl,
+} from '../helpers/test.helpers'
 import { appContainer } from '../../inversify.config'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
 import { TYPES } from '../../types/const'
@@ -11,7 +19,8 @@ import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistServic
 
 const streamingService = appContainer.get<IStreamingService>(TYPES.StreamingService)
 const playlistsServise = appContainer.get<IPlaylistService>(TYPES.PlaylistService)
-describe('Import media controller tests', () => {
+
+describe('Music library media controller tests', () => {
   let testToken: string = ''
   let currentUser = {} as any
 
@@ -26,43 +35,9 @@ describe('Import media controller tests', () => {
       pass: testUserData.pass,
     })
     testToken = JSON.parse(resp.text).token
-  })
 
-  afterEach(async () => {
-    await SqliteDB.instance.teardownTestDB()
-  })
-
-  test('Import playlists works', async () => {
     const streamingDTO = testStreamingDTO(currentUser.id)
 
-    await streamingService.createStreaming(streamingDTO)
-
-    const response = await TestApp.post(importUrl(Api.Import.Playlists.URL))
-      .set({
-        Authorization: `Bearer ${testToken}`,
-      })
-      .send({
-        streamingType: Api.Streaming.EApiStreamingType.SPOTIFY,
-      })
-
-    expect(response.status).toBe(200)
-    expect(response.text).toMatchSnapshot()
-  })
-
-  test('Import playlists without streaming does not work', async () => {
-    const response = await TestApp.post(importUrl(Api.Import.Playlists.URL))
-      .set({
-        Authorization: `Bearer ${testToken}`,
-      })
-      .send({
-        streamingType: Api.Streaming.EApiStreamingType.SPOTIFY,
-      })
-
-    expect(response.status).toBe(400)
-  })
-
-  test('Import tracks by playlist works', async () => {
-    const streamingDTO = testStreamingDTO(currentUser.id)
     await streamingService.createStreaming(streamingDTO)
 
     await TestApp.post(importUrl(Api.Import.Playlists.URL))
@@ -75,15 +50,45 @@ describe('Import media controller tests', () => {
 
     const playlists = (await playlistsServise.getAllUserPlaylists(currentUser.id)) as any[]
 
-    const playlistsResponse = await TestApp.post(importUrl(Api.Import.Tracks.URL))
+    await TestApp.post(importUrl(Api.Import.Tracks.URL))
       .set({
         Authorization: `Bearer ${testToken}`,
       })
       .send({
         playlistId: playlists[0].id,
       })
+  })
 
-    expect(playlistsResponse.status).toBe(200)
-    expect(playlistsResponse.text).toMatchSnapshot()
+  afterEach(async () => {
+    await SqliteDB.instance.teardownTestDB()
+  })
+
+  test('Get playlists works', async () => {
+    const response = await TestApp.get(musicUrl(Api.Music.Playlists.PATCH, '/spotify'))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .query({
+        offset: 0,
+        limit: 50,
+      })
+
+    expect(response.status).toBe(200)
+    expect(JSON.parse(response.text).items).toHaveLength(PLAYLISTS)
+  })
+
+  test('Get playlists works', async () => {
+    const response = await TestApp.get(musicUrl(Api.Music.Tracks.PATCH, '/spotify'))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .query({
+        playlistId: 1,
+        offset: 0,
+        limit: 50,
+      })
+
+    expect(response.status).toBe(200)
+    expect(JSON.parse(response.text).items).toHaveLength(50)
   })
 })

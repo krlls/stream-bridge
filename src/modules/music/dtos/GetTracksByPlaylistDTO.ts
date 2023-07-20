@@ -1,14 +1,12 @@
-import { EStreamingType } from '../../../types/common'
-
 export class GetTracksByPlaylistDTO {
-  streamingType: EStreamingType
   userId: number
   playlistId: number
-  playlistExternalId: string
-  constructor(data: { streamingType: EStreamingType, userId: number, playlistId: number, playlistExternalId: string }) {
-    this.playlistExternalId = data.playlistExternalId
+  limit?: number
+  offset?: number
+  constructor(data: { userId: number, playlistId: number, limit?: number, offset?: number }) {
     this.playlistId = data.playlistId
     this.userId = data.userId
-    this.streamingType = data.streamingType
+    this.offset = data.offset
+    this.limit = data.limit
   }
 }

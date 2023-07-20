@@ -1,7 +1,7 @@
 import { expect, test, describe, beforeEach, afterEach } from '@jest/globals'
 
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
-import { controllerContainer } from '../../inversify.config'
+import { appContainer } from '../../inversify.config'
 import { TYPES } from '../../types/const'
 import { IAuthService } from '../../modules/auth/interfaces/IAuthService'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
@@ -9,8 +9,8 @@ import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
 import { LoginDTO } from '../../modules/auth/dtos/LoginDTO'
 import { testUserData } from '../helpers/test.helpers'
 
-const authService = controllerContainer.get<IAuthService>(TYPES.AuthService)
-const userService = controllerContainer.get<IUserService>(TYPES.UserService)
+const authService = appContainer.get<IAuthService>(TYPES.AuthService)
+const userService = appContainer.get<IUserService>(TYPES.UserService)
 describe('Auth service tests', () => {
   const user = new CreateUserDTO(testUserData)
 

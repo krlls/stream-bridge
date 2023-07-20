@@ -13,6 +13,7 @@ export const userUrl: (...args: string[]) => string = createPatch.bind(null, Api
 export const authUrl: (...args: string[]) => string = createPatch.bind(null, Api.Auth.PREFIX)
 export const streamingUrl: (...args: string[]) => string = createPatch.bind(null, Api.Streaming.PREFIX)
 export const importUrl: (...args: string[]) => string = createPatch.bind(null, Api.Import.PREFIX)
+export const musicUrl: (...args: string[]) => string = createPatch.bind(null, Api.Music.PREFIX)
 
 export const testUserData = {
   login: 'Ksmi',

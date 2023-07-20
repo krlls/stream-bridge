@@ -10,7 +10,7 @@ export const respond204 = <A extends string, B>(ctx: RouterContext, body?: Recor
   ctx.body = body || ''
 }
 
-export const respond200json = <A extends string, B>(ctx: RouterContext, body?: Record<A, B>) => {
+export const respond200json = <T extends Record<any, any>>(ctx: RouterContext, body?: T) => {
   ctx.type = 'json'
   ctx.body = body
 }
@@ -42,9 +42,9 @@ export const respond409 = <A extends string, B>(ctx: RouterContext, body?: Recor
   ctx.body = body || ''
 }
 
-export const respond401 = (ctx: RouterContext) => {
+export const respond401json = <A extends string, B>(ctx: RouterContext, body?: Record<A, B>) => {
   ctx.status = 401
-  ctx.body = ''
+  ctx.body = body
 }
 
 export const respond404 = (ctx: RouterContext, body?: string) => {

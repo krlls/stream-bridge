@@ -10,6 +10,7 @@ import { CreatePlaylistDTO } from '../../../../modules/music/dtos/CreatePlaylist
 import { PlaylistEntity } from '../entities/PlaylistEntity'
 import { Playlist } from '../../../../modules/music/entities/Playlist'
 import { StreamingEntity } from '../entities/StreamingEntity'
+import { GetUserPlaylistsDto } from '../../../../modules/music/dtos/GetUserPlaylistsDto'
 
 @injectable()
 export class PlaylistRepository implements IPlaylistRepository {
@@ -85,11 +86,13 @@ export class PlaylistRepository implements IPlaylistRepository {
     return this.entityConverter.from(playlist)
   }
 
-  async getPlaylistsByUserId(userId: number): Promise<Playlist[]> {
+  async getPlaylistsByUserId({ userId, offset, limit }: GetUserPlaylistsDto): Promise<Playlist[]> {
     const playlists =
       (await this.repository.find({
         relations: ['streaming', 'user'],
         where: { user: { id: userId } },
+        take: limit,
+        skip: offset,
       })) || []
 
     return playlists.map(this.entityConverter.from)
