@@ -19,6 +19,7 @@ export const authRouter = router
  *     tags:
  *      - Auth
  *     summary: Auth user
+ *     description: Authenticate a user with their login credentials (login and password).
  *     requestBody:
  *       required: true
  *       content:
@@ -26,19 +27,19 @@ export const authRouter = router
  *           schema:
  *             type: object
  *             required:
- *              - login:
- *              - pass:
+ *              - login
+ *              - pass
  *             properties:
  *              login:
- *                name: login
  *                type: string
+ *                description: User's login name.
  *              pass:
- *                name: pass
  *                type: string
+ *                description: User's password.
  *
  *     responses:
  *       200:
- *         description: User successfully login
+ *         description: User successfully logged in.
  *         content:
  *           application/json:
  *             schema:
@@ -46,18 +47,24 @@ export const authRouter = router
  *               properties:
  *                token:
  *                  type: string
+ *                  description: JWT token for user authentication.
  *
  *       500:
- *         description: Some server error
+ *         description: Internal server error. Something went wrong on the server side.
  *
  *       400:
- *         description: Validation error
+ *         description: Request validation error.
+ *         content:
+ *           application/json:
+ *            schema:
+ *               oneOf:
+ *                 - $ref: '#/components/schemas/ErrorResult'
+ *                 - $ref: '#/components/schemas/ValidationError'
  *
  *       403:
- *         description: Login or pass incorrect
+ *         description: Login or pass incorrect. Authentication failed.
  *         content:
  *           application/json:
  *             schema:
- *              $ref: '#/components/schemas/ErrorResult'
- *
+ *               $ref: '#/components/schemas/ErrorResult'
  */

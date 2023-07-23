@@ -22,6 +22,9 @@ export const userRouter = router
  *     tags:
  *      - User
  *     summary: Create new user
+ *     description: Create a new user with the provided login, name, and password.
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -29,19 +32,19 @@ export const userRouter = router
  *           schema:
  *             type: object
  *             required:
- *              - login:
- *              - name:
- *              - pass:
+ *              - login
+ *              - name
+ *              - pass
  *             properties:
  *              login:
- *                name: login
  *                type: string
+ *                description: User's login name.
  *              name:
- *                name: name
  *                type: string
+ *                description: User's name.
  *              pass:
- *                name: pass
  *                type: string
+ *                description: User's password.
  *
  *     responses:
  *       200:
@@ -53,16 +56,29 @@ export const userRouter = router
  *               properties:
  *                id:
  *                  type: number
+ *                  description: The unique identifier of the created user.
  *                login:
  *                  type: string
+ *                  description: User's login name.
  *                name:
  *                  type: string
+ *                  description: User's name.
  *
  *       500:
- *         description: Some server error
+ *         description: Internal server error. Something went wrong on the server side.
+ *         content:
+ *           application/json:
+ *             schema:
+ *              oneOf:
+ *                 - $ref: '#/components/schemas/ErrorResult'
+ *                 - $ref: '#/components/schemas/ValidationError'
  *
  *       400:
- *         description: Validation error
+ *         description: Request validation error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ValidationError'
  */
 
 /**
@@ -72,6 +88,9 @@ export const userRouter = router
  *     tags:
  *      - User
  *     summary: Get user profile
+ *     description: Get the user's profile information, including their unique identifier, login name, and name.
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: User profile
@@ -82,16 +101,29 @@ export const userRouter = router
  *               properties:
  *                id:
  *                  type: number
+ *                  description: The unique identifier of the user.
  *                login:
  *                  type: string
+ *                  description: User's login name.
  *                name:
  *                  type: string
+ *                  description: User's name.
  *
  *       500:
- *         description: Some server error
+ *         description: Internal server error. Something went wrong on the server side.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResult'
  *
  *       400:
- *         description: Validation error
+ *         description: Request validation error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *              oneOf:
+ *                 - $ref: '#/components/schemas/ErrorResult'
+ *                 - $ref: '#/components/schemas/ValidationError'
  *       401:
- *         description: Needs valid auth token
+ *         description: Unauthorized. Authentication token is missing or invalid.
  */
