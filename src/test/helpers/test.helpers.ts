@@ -75,7 +75,7 @@ export const getRandomTracks = ({ userId, playlistId }: { userId: number, playli
       }),
   )
 
-export const PLAYLISTS = 10
+export const PLAYLISTS = 100
 export const TRACKS = 150
 
 export const fakeApi = {

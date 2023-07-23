@@ -10,10 +10,10 @@ const router = new Router()
 
 const musicController = appContainer.get<MusicController>(TYPES.MusicController)
 router.get(Api.Music.Tracks.URL, checkAuth, musicValidators.getTracks, (ctx) =>
-  musicController.getTracks(ctx, ctx.request.body),
+  musicController.getTracks(ctx, ctx.request.query as any),
 )
 router.get(Api.Music.Playlists.URL, checkAuth, musicValidators.getPlaylists, (ctx) =>
-  musicController.getPlaylists(ctx, ctx.request.body),
+  musicController.getPlaylists(ctx, ctx.request.query as any),
 )
 
 export const musicRouter = router

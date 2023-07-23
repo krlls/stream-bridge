@@ -43,11 +43,11 @@ export class TrackService implements ITrackService {
     return tracks.map((t) => new TrackDTO(t))
   }
   async getTracksByPlaylist(getTracksData: GetTracksByPlaylistDTO) {
-    const { maxLimit, maxOffset } = limits.music.pagination
+    const { maxLimit } = limits.music.pagination
     const data = {
       ...getTracksData,
       limit: Math.min(maxLimit, getTracksData.limit || maxLimit),
-      offset: Math.min(maxOffset, getTracksData.offset || maxOffset),
+      offset: getTracksData.offset || 0,
     }
 
     const tracks = await this.trackRepository.getUserTracksByPlaylist(data)

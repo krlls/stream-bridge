@@ -53,11 +53,11 @@ export class PlaylistService implements IPlaylistService {
   }
 
   async getUserPlaylists(getPlaylists: GetUserPlaylistsDto) {
-    const { maxOffset, maxLimit } = limits.music.pagination
+    const { maxLimit } = limits.music.pagination
     const data = {
       ...getPlaylists,
       limit: Math.min(maxLimit, getPlaylists.limit || maxLimit),
-      offset: Math.min(maxOffset, getPlaylists.offset || 0),
+      offset: getPlaylists.offset || 0,
     }
 
     const playlists = (await this.playlistRepository.getPlaylistsByUserId(data)) || []
