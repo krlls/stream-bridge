@@ -80,4 +80,20 @@ export class StreamingController {
 
     return respond200json(ctx, url)
   }
+
+  async list(ctx: RouterContext) {
+    const user = await this.userService.findUserById(ctx.state.userId)
+
+    if (isServiceError(user)) {
+      return respond401json(ctx, user)
+    }
+
+    const streamings = await this.streamingService.getUserStreamings(user.id)
+
+    if (isServiceError(streamings)) {
+      return respond400(ctx, streamings)
+    }
+
+    return respond200json<Api.Streaming.List.Resp>(ctx, { items: streamings })
+  }
 }

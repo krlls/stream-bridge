@@ -76,4 +76,19 @@ export class StreamingRepository implements IStreamingRepository {
 
     return this.streamingEntityConverter.from(result)
   }
+
+  async getUserStreamings(userId: number): Promise<Streaming[]> {
+    const streamings = await this.repository
+      .createQueryBuilder('streaming_entity')
+      .loadRelationCountAndMap('streaming_entity.playlistsCount', 'streaming_entity.playlists')
+      .loadRelationCountAndMap('streaming_entity.tracksCount', 'streaming_entity.tracks')
+      .where('streaming_entity.userid = :userid', { userid: userId })
+      .getMany()
+
+    if (!streamings) {
+      return []
+    }
+
+    return streamings.map(this.streamingEntityConverter.from)
+  }
 }

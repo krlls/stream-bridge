@@ -95,7 +95,7 @@ describe('Music library media controller tests', () => {
   })
 
   test('Get playlists with pagination works', async () => {
-    const limit = 50
+    const limit = 10
     let offset = 0
     let tracks: any[] = []
 

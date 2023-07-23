@@ -75,11 +75,26 @@ export namespace Api {
     }
 
     export namespace Auth {
-      export const URL = '/auth/:type'
+      export const PATCH = '/auth'
+      export const STREAMING_TYPE = '/:type'
+      export const URL = PATCH + STREAMING_TYPE
 
       export type Resp = Response<{
         url: string,
       }>
+    }
+
+    export namespace List {
+      export const URL = '/list'
+
+      export type Streaming = {
+        id: number,
+        type: EStreamingType,
+        playlists: number,
+        tracks: number,
+      }
+
+      export type Resp = Response<Paginated<Streaming>>
     }
   }
 
@@ -240,6 +255,34 @@ export namespace Api {
  *         artist: Some artist name
  *         album: Some album name
  *
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Streaming:
+ *       type: object
+ *       required:
+ *        - id: integer,
+ *        - type: string,
+ *        - playlists: integer,
+ *        - tracks: integer,
+ *       properties:
+ *         id:
+ *           description: The auto-generated id of the streaming
+ *         type:
+ *           description: Name of streaming
+ *         playlists:
+ *           description: Playlists count
+ *         tracks:
+ *           description: tracks count
+ *
+ *       example:
+ *         id: 4
+ *         type: spotify
+ *         playlists: 10
+ *         tracks: 100
  */
 
 /**

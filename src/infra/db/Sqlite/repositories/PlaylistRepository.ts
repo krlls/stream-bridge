@@ -111,6 +111,18 @@ export class PlaylistRepository implements IPlaylistRepository {
     return this.entityConverter.from(playlist)
   }
 
+  async countPlaylistsByStreaming(streamingType: EStreamingType): Promise<number> {
+    const count = await this.repository.count({
+      where: { streaming: { type: streamingType } },
+    })
+
+    if (!count) {
+      return 0
+    }
+
+    return count
+  }
+
   async upsertPlaylists(playlistData: CreatePlaylistDTO[]): Promise<number> {
     if (!playlistData.length) {
       return 0

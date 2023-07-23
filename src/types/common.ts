@@ -48,6 +48,7 @@ export enum Errors {
 
 export enum EStreamingType {
   SPOTIFY = 'SPOTIFY',
+  TIDAL = 'TIDAL',
 }
 
 export type Factory<A, B extends unknown[]> = (...args: B) => A

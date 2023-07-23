@@ -52,12 +52,12 @@ export const testRandomTrackDTO = (userId: number, playlistId: number) =>
     importId: genUid(),
   })
 
-export const testStreamingDTO = (userId: number) =>
+export const testStreamingDTO = (userId: number, type?: EStreamingType) =>
   new CreateStreamingDTO({
     userId,
     token: faker.string.uuid(),
     refreshToken: faker.string.uuid(),
-    type: EStreamingType.SPOTIFY,
+    type: type || EStreamingType.SPOTIFY,
     expiresIn: 3600,
   })
 
@@ -75,43 +75,47 @@ export const getRandomTracks = ({ userId, playlistId }: { userId: number, playli
       }),
   )
 
-export const PLAYLISTS = 100
+export const PLAYLISTS = 50
 export const TRACKS = 150
 
-export const fakeApi = {
-  getPlaylists: (limit: number, offset: number) =>
-    new Promise<Array<{ name: string, id: string }>>((resolve) => resolve(mockPlaylists.slice(offset, offset + limit))),
-  getTracks: (playlist: string, limit: number, offset: number) =>
-    new Promise<PlaylistedTrack[]>((resolve) => {
-      const tracks = mockTracks.get(playlist)
-      !tracks ? resolve([]) : resolve(tracks.slice(offset, offset + limit))
-    }),
-}
+export const fakeApi = () => {
+  const mockPlaylists = Array(PLAYLISTS)
+    .fill(null)
+    .map((_e, i) => ({
+      num: i,
+      name: faker.lorem.words({ min: 1, max: 3 }),
+      id: faker.string.uuid(),
+    }))
 
-export const mockPlaylists = Array(PLAYLISTS)
-  .fill(null)
-  .map((_e, i) => ({
-    num: i,
-    name: faker.lorem.words({ min: 1, max: 3 }),
-    id: faker.string.uuid(),
-  }))
+  const mockTracks = new Map()
 
-export const mockTracks = new Map()
-
-mockPlaylists.forEach((p) =>
-  mockTracks.set(
-    p.id,
-    Array(TRACKS)
-      .fill(null)
-      .map((_e) => ({
-        track: {
-          id: faker.string.uuid(),
-          name: faker.music.songName(),
-          album: {
-            name: faker.person.fullName(),
-            album_group: faker.lorem.words({ min: 2, max: 3 }),
+  mockPlaylists.forEach((p) =>
+    mockTracks.set(
+      p.id,
+      Array(TRACKS)
+        .fill(null)
+        .map((_e) => ({
+          track: {
+            id: faker.string.uuid(),
+            name: faker.music.songName(),
+            album: {
+              name: faker.person.fullName(),
+              album_group: faker.lorem.words({ min: 2, max: 3 }),
+            },
           },
-        },
-      })),
-  ),
-)
+        })),
+    ),
+  )
+
+  return {
+    getPlaylists: (limit: number, offset: number) =>
+      new Promise<Array<{ name: string, id: string }>>((resolve) =>
+        resolve(mockPlaylists.slice(offset, offset + limit)),
+      ),
+    getTracks: (playlist: string, limit: number, offset: number) =>
+      new Promise<PlaylistedTrack[]>((resolve) => {
+        const tracks = mockTracks.get(playlist)
+        !tracks ? resolve([]) : resolve(tracks.slice(offset, offset + limit))
+      }),
+  }
+}

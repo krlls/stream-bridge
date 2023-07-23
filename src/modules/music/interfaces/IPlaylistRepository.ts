@@ -18,4 +18,6 @@ export interface IPlaylistRepository {
     importId: Uid,
     userId: number,
   }): Promise<{ deleted: number }>,
+
+  countPlaylistsByStreaming(streamingType: EStreamingType): Promise<number>,
 }
