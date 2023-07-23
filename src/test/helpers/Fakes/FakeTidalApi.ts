@@ -6,7 +6,7 @@ import { ExternalTrackDTO } from '../../../modules/music/dtos/ExternalTrackDTO'
 import { fakeApi } from '../test.helpers'
 
 const api = fakeApi()
-export class FakeSpotifyClient extends SpotifyClient {
+export class FakeTidalApi extends SpotifyClient {
   prepare() {
     return Promise.resolve({ result: EPrepareResult.SUCCESS })
   }

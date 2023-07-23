@@ -10,6 +10,7 @@ import { IStreamingClient } from '../clients/IStreamingClient'
 import { LoginUrlDTO } from '../dtos/LoginUrlDTO'
 import { CreateLoginUrlDTO } from '../dtos/createLoginUrlDTO'
 import { SaveStreamingTokenDTO } from '../dtos/SaveStreamingTokenDTO'
+import { StreamingDTO } from '../dtos/StreamingDTO'
 
 @injectable()
 export class StreamingService implements IStreamingService {
@@ -74,5 +75,15 @@ export class StreamingService implements IStreamingService {
     }
 
     return { status: 'updated' }
+  }
+
+  async getUserStreamings(userId: number) {
+    const streamings = await this.streamingRepository.getUserStreamings(userId)
+
+    if (!streamings) {
+      return []
+    }
+
+    return streamings.map((s) => new StreamingDTO(s))
   }
 }

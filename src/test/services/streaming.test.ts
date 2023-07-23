@@ -1,4 +1,4 @@
-import { describe, beforeEach, afterEach, expect } from '@jest/globals'
+import { afterEach, beforeEach, describe, expect } from '@jest/globals'
 
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
 import { appContainer } from '../../inversify.config'
@@ -7,18 +7,25 @@ import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
 import { testStreamingDTO, testUserData } from '../helpers/test.helpers'
 import { UserDTO } from '../../modules/user/dtos/UserDTO'
-import { ServiceResultDTO } from '../../types/common'
 import { isServiceError } from '../../utils/errors'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
+import { ImportMediaDTO } from '../../modules/music/dtos/ImportMediaDTO'
+import { EStreamingType } from '../../types/common'
+import { ImportTracksByPlaylistDTO } from '../../modules/music/dtos/ImportTracksByPlaylistDTO'
+import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistService'
+import { ITrackService } from '../../modules/music/interfaces/TrackService'
 
 const userService = appContainer.get<IUserService>(TYPES.UserService)
 const streamingService = appContainer.get<IStreamingService>(TYPES.StreamingService)
+const playlistService = appContainer.get<IPlaylistService>(TYPES.PlaylistService)
+const trackService = appContainer.get<ITrackService>(TYPES.TrackService)
+
 describe('Track service tests', () => {
-  let currentUser: ServiceResultDTO<UserDTO>
+  let currentUser: UserDTO
 
   beforeEach(async () => {
     await SqliteDB.instance.setupTestDB()
-    currentUser = await userService.createUser(new CreateUserDTO(testUserData))
+    currentUser = (await userService.createUser(new CreateUserDTO(testUserData))) as any
   })
 
   afterEach(async () => {
@@ -35,5 +42,39 @@ describe('Track service tests', () => {
 
     expect(streaming).toHaveProperty('id')
     expect(streaming).toHaveProperty('token', streamingDTO.token)
+  })
+
+  it('Get streamings by userId works', async () => {
+    // const streamingsLength = 10
+    await streamingService.createStreaming(testStreamingDTO(currentUser.id))
+    await streamingService.createStreaming(testStreamingDTO(currentUser.id, EStreamingType.TIDAL))
+
+    const exportData = new ImportMediaDTO({
+      streamingType: EStreamingType.SPOTIFY,
+      userId: currentUser.id,
+    })
+
+    await playlistService.importPlaylists(exportData)
+
+    await playlistService.importPlaylists(
+      new ImportMediaDTO({
+        streamingType: EStreamingType.TIDAL,
+        userId: currentUser.id,
+      }),
+    )
+
+    const playlists = await playlistService.getAllUserPlaylists({ userId: currentUser.id })
+
+    if (isServiceError(playlists)) {
+      throw Error('No playlists')
+    }
+
+    const dto = new ImportTracksByPlaylistDTO({ playlistId: playlists[0].id, userId: currentUser.id })
+    await trackService.importTracksByPlaylist(dto)
+    // await streamingService.createStreaming(testStreamingDTO(currentUser.id))
+
+    const streamings = (await streamingService.getUserStreamings(currentUser.id)) as any[]
+
+    expect(streamings).toHaveLength(2)
   })
 })

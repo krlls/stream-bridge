@@ -1,6 +1,6 @@
 import { CreateTrackDTO } from '../dtos/CreateTrackDTO'
 import { Track } from '../entities/Track'
-import { Uid } from '../../../types/common'
+import { EStreamingType, Uid } from '../../../types/common'
 import { GetTracksByPlaylistDTO } from '../dtos/GetTracksByPlaylistDTO'
 
 export interface ITracksRepository {
@@ -15,6 +15,8 @@ export interface ITracksRepository {
   getUserTracksByPlaylist(data: GetTracksByPlaylistDTO): Promise<Track[]>,
 
   purgeMismatchedTracksByImportId(playlistId: number, importId: Uid): Promise<{ deleted: number }>,
+
+  countTracksByStreaming(streamingType: EStreamingType): Promise<number>,
   // createTracks(tracks: CreateTrackDTO[]): boolean,
   // getTracksByExternalIds(externalIds: string[]): Promise<Track[]>,
   // getTracksByExternalId(externalId: string): Promise<Track[]>,

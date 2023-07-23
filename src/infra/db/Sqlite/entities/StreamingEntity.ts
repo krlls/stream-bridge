@@ -30,4 +30,7 @@ export class StreamingEntity extends BaseEntity {
 
   @OneToMany(() => TrackEntity, (track) => track.playlist)
   tracks: TrackEntity[]
+
+  playlistsCount?: number
+  tracksCount?: number
 }

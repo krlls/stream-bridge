@@ -14,6 +14,7 @@ router.get(Api.Streaming.Token.URL, streamingValidators.setToken, (ctx) =>
   streamingController.token(ctx, ctx.request.query as any),
 )
 router.get(Api.Streaming.Auth.URL, checkAuth, (ctx) => streamingController.getAuthUrl(ctx))
+router.get(Api.Streaming.List.URL, checkAuth, (ctx) => streamingController.list(ctx))
 
 export const streamingRouter = router
 
@@ -87,6 +88,41 @@ export const streamingRouter = router
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/StreamingTokenResponse'
+ *
+ *       500:
+ *         description: Internal server error. Something went wrong on the server side.
+ *
+ *       400:
+ *         description: Request validation error or error during token setup.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - $ref: '#/components/schemas/ErrorResult'
+ *                 - $ref: '#/components/schemas/ValidationError'
+ */
+
+/**
+ * @swagger
+ * /streaming/list:
+ *   get:
+ *     tags:
+ *      - Streaming
+ *     summary: List all user streamings
+ *     description: Get all user connected streamings.
+ *
+ *     responses:
+ *       200:
+ *         description: Result
+ *         content:
+ *           application/json:
+ *            schema:
+ *               type: object
+ *               properties:
+ *                 items:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Streaming'
  *
  *       500:
  *         description: Internal server error. Something went wrong on the server side.

@@ -3,8 +3,13 @@ import { expect, test, describe, beforeEach, afterEach } from '@jest/globals'
 import { Api } from '../../types/TApi'
 import { TestApp } from '../index.test'
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
-import { authUrl, streamingUrl, testUserData, userUrl } from '../helpers/test.helpers'
+import { authUrl, importUrl, streamingUrl, testStreamingDTO, testUserData, userUrl } from '../helpers/test.helpers'
 import { EStreamingType } from '../../types/common'
+import { appContainer } from '../../inversify.config'
+import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
+import { TYPES } from '../../types/const'
+
+const streamingService = appContainer.get<IStreamingService>(TYPES.StreamingService)
 
 describe('Auth controllers tests', () => {
   let testToken: string = ''
@@ -25,11 +30,31 @@ describe('Auth controllers tests', () => {
   })
 
   test('Get auth url works', async () => {
-    const response = await TestApp.get(streamingUrl(`/auth/${EStreamingType.SPOTIFY.toLowerCase()}`)).set({
+    const response = await TestApp.get(
+      streamingUrl(Api.Streaming.Auth.PATCH, `/${EStreamingType.SPOTIFY.toLowerCase()}`),
+    ).set({
       Authorization: `Bearer ${testToken}`,
     })
 
     expect(response.status).toBe(200)
     expect(JSON.parse(response.text)).toHaveProperty('url')
+  })
+
+  test('List streamings by user id', async () => {
+    await streamingService.createStreaming(testStreamingDTO(1))
+    await TestApp.post(importUrl(Api.Import.Playlists.URL))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .send({
+        streamingType: Api.Streaming.EApiStreamingType.SPOTIFY,
+      })
+
+    const streamings = await TestApp.get(streamingUrl(Api.Streaming.List.URL)).set({
+      Authorization: `Bearer ${testToken}`,
+    })
+
+    expect(streamings.status).toBe(200)
+    expect(JSON.parse(streamings.text)?.items).toHaveLength(1)
   })
 })

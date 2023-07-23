@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify'
 import { In, Not, Repository } from 'typeorm'
 
 import { TYPES } from '../../../../types/const'
-import { Converter, Uid } from '../../../../types/common'
+import { Converter, EStreamingType, Uid } from '../../../../types/common'
 import { getRepository } from '../SetupConnection'
 import { TrackEntity } from '../entities/TrackEntity'
 import { Track } from '../../../../modules/music/entities/Track'
@@ -136,6 +136,18 @@ export class TrackRepository implements ITracksRepository {
     }
 
     return this.trackEntityConverter.from(track)
+  }
+
+  async countTracksByStreaming(streamingType: EStreamingType): Promise<number> {
+    const count = await this.repository.count({
+      where: { streaming: { type: streamingType } },
+    })
+
+    if (!count) {
+      return 0
+    }
+
+    return count
   }
 
   async getUserTracksByPlaylist({ playlistId, userId, limit, offset }: GetTracksByPlaylistDTO): Promise<Track[]> {

@@ -13,6 +13,8 @@ export class StreamingEntityConverter implements Converter<StreamingEntity, Stre
       refresh_token: from.refresh_token,
       type: from.type,
       expiresIn: from.expiresIn,
+      playlists: from.playlistsCount,
+      tracks: from.tracksCount,
     }
   }
 

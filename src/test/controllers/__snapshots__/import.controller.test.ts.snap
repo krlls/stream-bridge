@@ -1,5 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Import media controller tests Import playlists works 1`] = `"{"exported":100,"saved":100}"`;
+exports[`Import media controller tests Import playlists works 1`] = `"{"exported":50,"saved":50}"`;
 
 exports[`Import media controller tests Import tracks by playlist works 1`] = `"{"exported":150,"saved":150}"`;
