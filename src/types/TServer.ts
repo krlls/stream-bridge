@@ -10,4 +10,6 @@ export interface ServerConfig {
 
   spotifyClientId: string,
   spotifyClientSecret: string,
+
+  swaggerPrefix: string,
 }
