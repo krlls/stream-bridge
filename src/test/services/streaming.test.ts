@@ -71,10 +71,47 @@ describe('Track service tests', () => {
 
     const dto = new ImportTracksByPlaylistDTO({ playlistId: playlists[0].id, userId: currentUser.id })
     await trackService.importTracksByPlaylist(dto)
-    // await streamingService.createStreaming(testStreamingDTO(currentUser.id))
 
     const streamings = (await streamingService.getUserStreamings(currentUser.id)) as any[]
 
     expect(streamings).toHaveLength(2)
+  })
+
+  it('Remove streaming works', async () => {
+    const streamingDTO = testStreamingDTO(currentUser.id)
+    const streaming = (await streamingService.createStreaming(streamingDTO)) as any
+
+    const removeResult = (await streamingService.removeStreamingByType(currentUser.id, streaming.type)) as any
+    const emptyStreaming = (await streamingService.getUserStreamings(currentUser.id)) as any
+
+    expect(removeResult).toHaveProperty('deleted', 1)
+    expect(emptyStreaming).toHaveLength(0)
+  })
+
+  it('Remove all data when remove streaming works', async () => {
+    const streamingDTO = testStreamingDTO(currentUser.id)
+    const streaming = (await streamingService.createStreaming(streamingDTO)) as any
+
+    await playlistService.importPlaylists(
+      new ImportMediaDTO({
+        streamingType: EStreamingType.SPOTIFY,
+        userId: currentUser.id,
+      }),
+    )
+
+    const playlists = (await playlistService.getAllUserPlaylists({ userId: currentUser.id })) as any
+
+    ;(await trackService.importTracksByPlaylist(
+      new ImportTracksByPlaylistDTO({ playlistId: playlists[0].id, userId: currentUser.id }),
+    )) as any
+    ;(await streamingService.removeStreamingByType(currentUser.id, streaming.type)) as any
+
+    const emptyStreaming = (await streamingService.getUserStreamings(currentUser.id)) as any
+    const allPlaylists = (await playlistService.getAllUserPlaylists({ userId: currentUser.id })) as any
+    const allTracks = await trackService.getAllTracksByPlaylistId(playlists[0].id)
+
+    expect(emptyStreaming).toHaveLength(0)
+    expect(allPlaylists).toHaveLength(0)
+    expect(allTracks).toHaveLength(0)
   })
 })

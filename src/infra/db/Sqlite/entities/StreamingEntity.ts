@@ -22,13 +22,13 @@ export class StreamingEntity extends BaseEntity {
   @Column({ type: 'int', nullable: true })
   expiresIn?: number
 
-  @ManyToOne(() => UserEntity, (user) => user.streamings, { nullable: false })
+  @ManyToOne(() => UserEntity, (user) => user.streamings, { nullable: false, onDelete: 'CASCADE' })
   user: UserEntity
 
-  @OneToMany(() => PlaylistEntity, (playslist) => playslist.streaming)
+  @OneToMany(() => PlaylistEntity, (playlist) => playlist.streaming, { onDelete: 'CASCADE' })
   playlists: PlaylistEntity[]
 
-  @OneToMany(() => TrackEntity, (track) => track.playlist)
+  @OneToMany(() => TrackEntity, (track) => track.playlist, { onDelete: 'CASCADE' })
   tracks: TrackEntity[]
 
   playlistsCount?: number

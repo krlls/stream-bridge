@@ -28,6 +28,6 @@ export class TrackEntity extends BaseEntity {
   @ManyToOne(() => PlaylistEntity, (playlist) => playlist.tracks, { nullable: false, onDelete: 'CASCADE' })
   playlist: PlaylistEntity
 
-  @ManyToOne(() => StreamingEntity, (streaming) => streaming.tracks, { nullable: false })
+  @ManyToOne(() => StreamingEntity, (streaming) => streaming.tracks, { nullable: false, onDelete: 'CASCADE' })
   streaming: StreamingEntity
 }

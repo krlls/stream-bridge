@@ -20,12 +20,12 @@ export class PlaylistEntity extends BaseEntity {
   @Column({ type: 'text', nullable: false })
   import_id: Uid
 
-  @ManyToOne(() => UserEntity, (user) => user.playlists, { nullable: false })
+  @ManyToOne(() => UserEntity, (user) => user.playlists, { nullable: false, onDelete: 'CASCADE' })
   user: UserEntity
 
   @OneToMany(() => TrackEntity, (track) => track.playlist, { onDelete: 'CASCADE' })
   tracks: TrackEntity[]
 
-  @ManyToOne(() => StreamingEntity, (streaming) => streaming.playlists, { nullable: false })
+  @ManyToOne(() => StreamingEntity, (streaming) => streaming.playlists, { nullable: false, onDelete: 'CASCADE' })
   streaming: StreamingEntity
 }
