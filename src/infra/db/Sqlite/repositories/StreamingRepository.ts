@@ -23,7 +23,7 @@ export class StreamingRepository implements IStreamingRepository {
     this.userRepository = getRepository(UserEntity)
   }
 
-  async createSreaming(steamingData: CreateStreamingDTO): Promise<Streaming | null> {
+  async createStreaming(steamingData: CreateStreamingDTO): Promise<Streaming | null> {
     const user = await this.userRepository.findOneBy({ id: steamingData.userId })
 
     if (!user) {
@@ -90,5 +90,15 @@ export class StreamingRepository implements IStreamingRepository {
     }
 
     return streamings.map(this.streamingEntityConverter.from)
+  }
+
+  async removeUserStreamingByType(userId: number, streamingType: EStreamingType): Promise<number> {
+    const result = await this.repository.delete({ user: { id: userId }, type: streamingType })
+
+    if (!result.affected) {
+      return 0
+    }
+
+    return result.affected
   }
 }

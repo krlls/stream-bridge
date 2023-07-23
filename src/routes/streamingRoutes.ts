@@ -15,6 +15,7 @@ router.get(Api.Streaming.Token.URL, streamingValidators.setToken, (ctx) =>
 )
 router.get(Api.Streaming.Auth.URL, checkAuth, (ctx) => streamingController.getAuthUrl(ctx))
 router.get(Api.Streaming.List.URL, checkAuth, (ctx) => streamingController.list(ctx))
+router.delete(Api.Streaming.Delete.URL, checkAuth, (ctx) => streamingController.delete(ctx))
 
 export const streamingRouter = router
 
@@ -135,4 +136,41 @@ export const streamingRouter = router
  *               oneOf:
  *                 - $ref: '#/components/schemas/ErrorResult'
  *                 - $ref: '#/components/schemas/ValidationError'
+ */
+
+/**
+ * @swagger
+ * /delete/{streaming_type}:
+ *   delete:
+ *     tags:
+ *      - Streaming
+ *     summary: Delete streaming by ID
+ *     description: Delete streaming by id and delete all linked tracks and playlists
+ *     security:
+ *       - BearerAuth: []
+
+ *     responses:
+ *       200:
+ *         description: Import result
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                deleted:
+ *                  type: integer
+ *                  description: Remove result
+ *
+ *       500:
+ *         description: Internal server error. Something went wrong on the server side.
+ *
+ *       400:
+ *         description: Request validation error or business logic execution error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - $ref: '#/components/schemas/ErrorResult'
+ *       401:
+ *         description: Unauthorized. Authentication token is missing or invalid.
  */

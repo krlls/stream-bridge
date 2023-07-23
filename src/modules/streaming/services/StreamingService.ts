@@ -5,7 +5,7 @@ import { CreateStreamingDTO } from '../dtos/CreateStreamingDTO'
 import { TYPES } from '../../../types/const'
 import { IStreamingRepository } from '../interfaces/IStreamingRepository'
 import { ErrorDTO } from '../../common/dtos/errorDTO'
-import { Errors } from '../../../types/common'
+import { Errors, EStreamingType } from '../../../types/common'
 import { IStreamingClient } from '../clients/IStreamingClient'
 import { LoginUrlDTO } from '../dtos/LoginUrlDTO'
 import { CreateLoginUrlDTO } from '../dtos/createLoginUrlDTO'
@@ -18,7 +18,13 @@ export class StreamingService implements IStreamingService {
   @inject(TYPES.Client) private streamingClient: IStreamingClient
 
   async createStreaming(steamingData: CreateStreamingDTO) {
-    const streaming = await this.streamingRepository.createSreaming(steamingData)
+    const isExists = await this.streamingRepository.getStreaming(steamingData.userId, steamingData.type)
+
+    if (isExists) {
+      return new ErrorDTO(Errors.STREAMING_EXISTS)
+    }
+
+    const streaming = await this.streamingRepository.createStreaming(steamingData)
 
     if (!streaming) {
       return new ErrorDTO(Errors.STREAMING_CREATE_ERROR)
@@ -59,7 +65,7 @@ export class StreamingService implements IStreamingService {
         expiresIn: tokenResp.expiresIn,
       })
 
-      const newStreaming = await this.streamingRepository.createSreaming(createData)
+      const newStreaming = await this.streamingRepository.createStreaming(createData)
 
       if (!newStreaming) {
         return new ErrorDTO(Errors.STREAMING_CREATE_ERROR)
@@ -85,5 +91,11 @@ export class StreamingService implements IStreamingService {
     }
 
     return streamings.map((s) => new StreamingDTO(s))
+  }
+
+  async removeStreamingByType(userId: number, streamingType: EStreamingType) {
+    const result = await this.streamingRepository.removeUserStreamingByType(userId, streamingType)
+
+    return { deleted: result }
   }
 }

@@ -17,9 +17,9 @@ export class UserEntity extends BaseEntity {
   @Column({ type: 'text' })
   hash: string
 
-  @OneToMany(() => PlaylistEntity, (playlist) => playlist.user)
+  @OneToMany(() => PlaylistEntity, (playlist) => playlist.user, { onDelete: 'CASCADE' })
   playlists: PlaylistEntity[]
 
-  @OneToMany(() => StreamingEntity, (streaming) => streaming.user)
+  @OneToMany(() => StreamingEntity, (streaming) => streaming.user, { onDelete: 'CASCADE' })
   streamings: StreamingEntity[]
 }

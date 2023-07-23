@@ -96,6 +96,16 @@ export namespace Api {
 
       export type Resp = Response<Paginated<Streaming>>
     }
+
+    export namespace Delete {
+      export const PATCH = '/delete'
+      export const STREAMING_TYPE = '/:type'
+      export const URL = PATCH + STREAMING_TYPE
+
+      export type Resp = Response<{
+        result: string,
+      }>
+    }
   }
 
   export namespace Import {

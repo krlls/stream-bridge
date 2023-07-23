@@ -19,7 +19,7 @@ export type ServiceResultDTO<T> = T | ServiceError
 export enum Errors {
   AUTH_INCORRECT = 'Inkorrect credentials',
 
-  USER_EXSIT = 'User already exist',
+  USER_EXISTS = 'User already exist',
   USER_CREATE_ERROR = 'User not created',
   USER_NOT_FOUND = 'user not found',
   USER_UPDATE_ERROR = 'User update error',
@@ -39,6 +39,7 @@ export enum Errors {
   STREAMING_CREATE_ERROR = 'Streaming create error',
   STREAMING_UPDATE_ERROR = 'Streaming update error',
   STREAMING_NOT_FOUND = 'Streaming not found',
+  STREAMING_EXISTS = 'Streaming type already exists',
   WRONG_CREDENTIALS = 'Wrong credentials, needs reconnect to streaming service',
 
   CREATE_URL_ERROR = 'Create streaming url error',
