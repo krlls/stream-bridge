@@ -11,7 +11,7 @@ import { TYPES } from '../../types/const'
 
 const streamingService = appContainer.get<IStreamingService>(TYPES.StreamingService)
 
-describe('Auth controllers tests', () => {
+describe('Streaming controllers tests', () => {
   let testToken: string = ''
 
   beforeEach(async () => {
@@ -56,5 +56,29 @@ describe('Auth controllers tests', () => {
 
     expect(streamings.status).toBe(200)
     expect(JSON.parse(streamings.text)?.items).toHaveLength(1)
+  })
+
+  test('Remove streaming by type', async () => {
+    await streamingService.createStreaming(testStreamingDTO(1))
+
+    const response = await TestApp.delete(
+      streamingUrl(Api.Streaming.Delete.PATCH, `/${EStreamingType.SPOTIFY.toLowerCase()}`),
+    ).set({
+      Authorization: `Bearer ${testToken}`,
+    })
+
+    expect(response.status).toBe(200)
+    expect(JSON.parse(response.text)).toHaveProperty('deleted', 1)
+  })
+
+  test('Remove non exist streaming by type', async () => {
+    const response = await TestApp.delete(
+      streamingUrl(Api.Streaming.Delete.PATCH, `/${EStreamingType.SPOTIFY.toLowerCase()}`),
+    ).set({
+      Authorization: `Bearer ${testToken}`,
+    })
+
+    expect(response.status).toBe(200)
+    expect(JSON.parse(response.text)).toHaveProperty('deleted', 0)
   })
 })

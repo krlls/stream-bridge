@@ -96,4 +96,26 @@ export class StreamingController {
 
     return respond200json<Api.Streaming.List.Resp>(ctx, { items: streamings })
   }
+
+  async delete(ctx: RouterContext) {
+    const streamingType = convertStreamingName(ctx.params?.type || '')
+
+    if (!streamingType) {
+      return respond400(ctx, new ErrorDTO(Errors.STREAMING_NOT_FOUND))
+    }
+
+    const user = await this.userService.findUserById(ctx.state.userId)
+
+    if (isServiceError(user)) {
+      return respond401json(ctx, user)
+    }
+
+    const deleteResult = await this.streamingService.removeStreamingByType(user.id, streamingType)
+
+    if (isServiceError(deleteResult)) {
+      return respond400(ctx, deleteResult)
+    }
+
+    return respond200json(ctx, deleteResult)
+  }
 }

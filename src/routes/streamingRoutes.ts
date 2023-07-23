@@ -15,6 +15,7 @@ router.get(Api.Streaming.Token.URL, streamingValidators.setToken, (ctx) =>
 )
 router.get(Api.Streaming.Auth.URL, checkAuth, (ctx) => streamingController.getAuthUrl(ctx))
 router.get(Api.Streaming.List.URL, checkAuth, (ctx) => streamingController.list(ctx))
+router.delete(Api.Streaming.Delete.URL, checkAuth, (ctx) => streamingController.delete(ctx))
 
 export const streamingRouter = router
 
