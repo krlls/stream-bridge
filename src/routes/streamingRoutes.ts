@@ -23,10 +23,21 @@ export const streamingRouter = router
  *   get:
  *     tags:
  *      - Streaming
- *     summary: Create streaming auth url for user
+ *     summary: Create streaming auth URL for user
+ *     description: Get the authentication URL for the specified streaming service (e.g., Spotify) to authorize the user.
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: streamingType
+ *         in: path
+ *         description: The type of streaming service for which the authentication URL will be generated.
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [spotify]  # Add more streaming services here if needed
  *     responses:
  *       200:
- *         description: Auth url
+ *         description: Auth URL
  *         content:
  *           application/json:
  *             schema:
@@ -34,13 +45,17 @@ export const streamingRouter = router
  *               properties:
  *                url:
  *                  type: string
+ *                  description: The authentication URL that the user needs to visit to grant permission to the application.
  *
  *       500:
- *         description: Some server error
+ *         description: Internal server error. Something went wrong on the server side.
  *
  *       400:
- *         description: Validation error
- *
+ *         description: Request validation error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResult'
  */
 
 /**
@@ -50,21 +65,20 @@ export const streamingRouter = router
  *     tags:
  *      - Streaming
  *     summary: Setup token data by streaming after redirect from streaming auth service
+ *     description: Handle the redirect from the streaming authentication service after the user grants permission.
  *     parameters:
  *      - name: code
  *        type: string
- *        required: true
  *        in: query
- *        description: Auth session code
+ *        description: Authorization code received from the streaming service after the user grants permission.
  *      - name: state
  *        type: string
- *        required: true
  *        in: query
- *        description: Streaming auth session token width userId
+ *        description:  State token, containing userId or session data.
  *      - name: error
  *        type: string
  *        in: query
- *        description: Auth error message
+ *        description: This parameter should be omitted in successful redirects. It's used for error scenarios.
  *
  *     responses:
  *       200:
@@ -72,15 +86,17 @@ export const streamingRouter = router
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                status:
- *                  type: string
+ *               $ref: '#/components/schemas/StreamingTokenResponse'
  *
  *       500:
- *         description: Some server error
+ *         description: Internal server error. Something went wrong on the server side.
  *
  *       400:
- *         description: Validation error
- *
+ *         description: Request validation error or error during token setup.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - $ref: '#/components/schemas/ErrorResult'
+ *                 - $ref: '#/components/schemas/ValidationError'
  */

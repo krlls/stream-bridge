@@ -255,6 +255,61 @@ export namespace Api {
  *           type: string
  *           description: Error message
  *       example:
- *        error: Incorrect credentials
+ *        error: Some error message
  *
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ValidationError:
+ *       type: object
+ *       properties:
+ *         status:
+ *           type: integer
+ *           example: 400
+ *         message:
+ *           type: string
+ *           example: "Validation error"
+ *         errors:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               field:
+ *                 type: string
+ *                 example: "username"
+ *               message:
+ *                 type: string
+ *                 example: "Username must be at least 4 characters long"
+ *       required:
+ *         - status
+ *         - message
+ *         - errors
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     StreamingTokenResponse:
+ *       type: object
+ *       properties:
+ *         status:
+ *           type: string
+ *           description: The status message indicating success or error.
+ *           enum:
+ *             - success
+ *             - error
+ */
+
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     BearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  */

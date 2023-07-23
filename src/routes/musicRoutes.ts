@@ -20,50 +20,115 @@ export const musicRouter = router
 
 /**
  * @swagger
- * /auth/login:
- *   post:
+ * /music/playlists/{streamingType}:
+ *   get:
  *     tags:
- *      - Auth
- *     summary: Auth user
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *              - login:
- *              - pass:
- *             properties:
- *              login:
- *                name: login
- *                type: string
- *              pass:
- *                name: pass
- *                type: string
+ *      - Music
+ *     summary: Get user playlists with pagination
+ *     description: Get a paginated list of user playlists based on the specified streaming type.
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *      - name: streamingType
+ *        in: path
+ *        description: The type of streaming service for which the playlists will be retrieved.
+ *        required: true
+ *        schema:
+ *          type: string
+ *      - name: limit
+ *        in: query
+ *        description: The maximum number of playlists to return in each paginated response.
+ *        schema:
+ *          type: integer
+ *          minimum: 1
+ *          maximum: 50
+ *          default: 50
+ *      - name: offset
+ *        in: query
+ *        description: The number of playlists to skip before starting to return playlists in the response.
+ *        required: true
+ *        schema:
+ *          type: integer
+ *          minimum: 0
  *
  *     responses:
  *       200:
- *         description: User successfully login
+ *         description: Successful response with a paginated list of playlists.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                token:
- *                  type: string
+ *                 items:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Playlist'
  *
  *       500:
- *         description: Some server error
+ *         description: Some server error occurred.
  *
  *       400:
- *         description: Validation error
- *
- *       403:
- *         description: Login or pass incorrect
+ *         description: Request validation error occurred or an error during the business logic execution.
  *         content:
  *           application/json:
  *             schema:
- *              $ref: '#/components/schemas/ErrorResult'
+ *               oneOf:
+ *                 - $ref: '#/components/schemas/ValidationError'
+ *                 - $ref: '#/components/schemas/ErrorResult'
+ */
+
+/**
+ * @swagger
+ * /music/tracks/{streamingType}:
+ *   get:
+ *     tags:
+ *       - Music
+ *     summary: Get user playlists with pagination
+ *     description: Get a paginated list of music tracks based on the specified streaming type.
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: streamingType
+ *         in: path
+ *         description: The type of streaming service for which the tracks will be retrieved.
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: limit
+ *         in: query
+ *         description: The maximum number of tracks to return in each paginated response.
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 50
+ *           default: 50
+ *       - name: offset
+ *         in: query
+ *         description: The number of tracks to skip before starting to return tracks in the response.
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 0
  *
+ *     responses:
+ *       200:
+ *         description: Successful response with a paginated list of tracks.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 items:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Track'
+ *
+ *       400:
+ *         description: Request validation error occurred or an error during the business logic execution.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - $ref: '#/components/schemas/ValidationError'
+ *                 - $ref: '#/components/schemas/ErrorResult'
  */

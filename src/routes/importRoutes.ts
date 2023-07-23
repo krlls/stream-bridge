@@ -26,7 +26,18 @@ export const importRouter = router
  *   post:
  *     tags:
  *      - Import
- *     summary: Import all user playlists from streaming api
+ *     summary: Import all user playlists from the streaming API
+ *     description: Import all user playlists from the specified streaming service API (e.g., Spotify, Tidal).
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: streaming_type
+ *         in: path
+ *         description: The type of streaming service for which the playlists will be imported.
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [spotify, tidal]
  *     requestBody:
  *       required: true
  *       content:
@@ -34,10 +45,9 @@ export const importRouter = router
  *           schema:
  *             type: object
  *             required:
- *              - streamingType:
+ *              - streamingType
  *             properties:
  *              streamingType:
- *                name: streamingType
  *                type: string
  *                enum: [spotify, tidal]
  *     responses:
@@ -50,16 +60,24 @@ export const importRouter = router
  *               properties:
  *                imported:
  *                  type: number
+ *                  description: Number of playlists imported successfully.
  *                saved:
  *                  type: number
+ *                  description: Number of playlists saved to the database.
  *
  *       500:
- *         description: Some server error
+ *         description: Internal server error. Something went wrong on the server side.
  *
  *       400:
- *         description: Validation error
+ *         description: Request validation error or business logic execution error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - $ref: '#/components/schemas/ValidationError'
+ *                 - $ref: '#/components/schemas/ErrorResult'
  *       401:
- *         description: Needs valid auth token
+ *         description: Unauthorized. Authentication token is missing or invalid.
  */
 
 /**
@@ -68,7 +86,18 @@ export const importRouter = router
  *   post:
  *     tags:
  *      - Import
- *     summary: Import tracks by playlist id
+ *     summary: Import tracks by playlist ID
+ *     description: Import tracks from the specified playlist ID.
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: streaming_type
+ *         in: path
+ *         description: The type of streaming service for which the tracks will be imported.
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [spotify, tidal]
  *     requestBody:
  *       required: true
  *       content:
@@ -76,11 +105,11 @@ export const importRouter = router
  *           schema:
  *             type: object
  *             required:
- *              - playlistId: string
+ *              - playlistId
  *             properties:
  *              playlistId:
- *                name: playlistId
  *                type: string
+ *                description: The ID of the playlist from which to import tracks.
  *     responses:
  *       200:
  *         description: Import result
@@ -91,15 +120,19 @@ export const importRouter = router
  *               properties:
  *                imported:
  *                  type: number
- *                saved:
- *                  type: number
+ *                  description: Number of tracks imported successfully.
  *
  *       500:
- *         description: Some server error
+ *         description: Internal server error. Something went wrong on the server side.
  *
  *       400:
- *         description: Validation error
+ *         description: Request validation error or business logic execution error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - $ref: '#/components/schemas/ValidationError'
+ *                 - $ref: '#/components/schemas/ErrorResult'
  *       401:
- *         description: Needs valid auth token
- *
+ *         description: Unauthorized. Authentication token is missing or invalid.
  */
