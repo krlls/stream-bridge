@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, OneToMany } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, OneToMany, Index } from 'typeorm'
 
 import { EStreamingType } from '../../../../types/common'
 import { UserEntity } from './UserEntity'
@@ -6,6 +6,7 @@ import { PlaylistEntity } from './PlaylistEntity'
 import { TrackEntity } from './TrackEntity'
 
 @Entity()
+@Index(['user', 'type'], { unique: true })
 export class StreamingEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
