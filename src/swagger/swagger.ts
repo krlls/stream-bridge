@@ -2,6 +2,8 @@ import Router from 'koa-router'
 import swaggerJSDoc from 'swagger-jsdoc'
 import { koaSwagger } from 'koa2-swagger-ui'
 
+import { serverConfig } from '../config'
+
 const options: swaggerJSDoc.Options = {
   definition: {
     failOnErrors: true,
@@ -22,7 +24,7 @@ router.get('/api', async function (ctx) {
 })
 
 export const swaggerMiddleware = koaSwagger({
-  routePrefix: '/swagger',
+  routePrefix: serverConfig.swaggerPrefix,
   swaggerOptions: {
     url: '/api',
   },

@@ -24,4 +24,5 @@ export const serverConfig: ServerConfig = {
 
   spotifyClientId: SPOTIFY_CLIENT_ID,
   spotifyClientSecret: SPOTIFY_CLIENT_SECRET,
+  swaggerPrefix: '/swagger',
 }
