@@ -15,10 +15,10 @@ export const requiredEnv = <T extends string | number>(env?: T, name?: string) =
 export const genUid = (): Uid => uid(16)
 
 export const printConsoleMessage = () => {
-  // eslint-disable-next-line no-console
-  console.log('Server is running at production')
-
   if (serverConfig.isProduction) {
+    // eslint-disable-next-line no-console
+    console.log('Server is running at production')
+
     return
   }
 
