@@ -8,8 +8,10 @@ import {
   importUrl,
   musicUrl,
   PLAYLISTS,
+  testPlaylistDTO,
   testStreamingDTO,
   testUserData,
+  TRACKS,
   userUrl,
 } from '../helpers/test.helpers'
 import { appContainer } from '../../inversify.config'
@@ -74,10 +76,10 @@ describe('Music library media controller tests', () => {
       })
 
     expect(response.status).toBe(200)
-    expect(JSON.parse(response.text).items).toHaveLength(PLAYLISTS)
+    expect(JSON.parse(response.text).items).toHaveLength(50)
   })
 
-  test('Get playlists works', async () => {
+  test('Get tracks works', async () => {
     const response = await TestApp.get(musicUrl(Api.Music.Tracks.PATCH, '/spotify'))
       .set({
         Authorization: `Bearer ${testToken}`,
@@ -90,5 +92,137 @@ describe('Music library media controller tests', () => {
 
     expect(response.status).toBe(200)
     expect(JSON.parse(response.text).items).toHaveLength(50)
+  })
+
+  test('Get playlists with pagination works', async () => {
+    const limit = 50
+    let offset = 0
+    let tracks: any[] = []
+
+    while ((!tracks.length && !offset) || tracks.length % limit === 0) {
+      const response = await TestApp.get(musicUrl(Api.Music.Playlists.PATCH, '/spotify'))
+        .set({
+          Authorization: `Bearer ${testToken}`,
+        })
+        .query({
+          offset,
+          limit,
+        })
+
+      const newTracks = JSON.parse(response.text)
+
+      if (newTracks.items.length === 0) {
+        break
+      }
+
+      tracks = [...tracks, ...newTracks.items]
+
+      expect(response.status).toBe(200)
+      offset += limit
+    }
+
+    expect(tracks).toHaveLength(PLAYLISTS)
+  })
+
+  test('Get tracks with pagination works', async () => {
+    const limit = 50
+    let offset = 0
+    let tracks: any[] = []
+
+    while ((!tracks.length && !offset) || tracks.length % limit === 0) {
+      const response = await TestApp.get(musicUrl(Api.Music.Tracks.PATCH, '/spotify'))
+        .set({
+          Authorization: `Bearer ${testToken}`,
+        })
+        .query({
+          playlistId: 1,
+          offset,
+          limit,
+        })
+
+      const newTracks = JSON.parse(response.text)
+
+      if (newTracks.items.length === 0) {
+        break
+      }
+
+      tracks = [...tracks, ...newTracks.items]
+
+      expect(response.status).toBe(200)
+      offset += limit
+    }
+
+    expect(tracks).toHaveLength(TRACKS)
+  })
+
+  test('Get playlists error 400', async () => {
+    const response = await TestApp.get(musicUrl(Api.Music.Playlists.PATCH, '/spotify'))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .query({
+        offset: 0,
+        limit: 500,
+      })
+
+    expect(response.status).toBe(400)
+  })
+
+  test('Get tracks error 400', async () => {
+    const response = await TestApp.get(musicUrl(Api.Music.Tracks.PATCH, '/spotify'))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .query({
+        playlistId: 13242343,
+        limit: 500,
+      })
+
+    expect(response.status).toBe(400)
+  })
+
+  test('Get playlist not found', async () => {
+    const response = await TestApp.get(musicUrl(Api.Music.Tracks.PATCH, '/spotify'))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .query({
+        playlistId: 4738247,
+        limit: 50,
+      })
+
+    expect(response.status).toBe(400)
+  })
+
+  test('Get playlist error 400 with empty query', async () => {
+    const response = await TestApp.get(musicUrl(Api.Music.Tracks.PATCH, '/spotify')).set({
+      Authorization: `Bearer ${testToken}`,
+    })
+
+    expect(response.status).toBe(400)
+  })
+
+  test('Get tracks error 400 with empty query', async () => {
+    const response = await TestApp.get(musicUrl(Api.Music.Tracks.PATCH, '/spotify')).set({
+      Authorization: `Bearer ${testToken}`,
+    })
+
+    expect(response.status).toBe(400)
+  })
+
+  test('Get tracks by empty playlist', async () => {
+    const playlist = (await playlistsServise.createPlayList(testPlaylistDTO(currentUser.is, 1))) as any
+    const response = await TestApp.get(musicUrl(Api.Music.Tracks.PATCH, '/spotify'))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .query({
+        playlistId: playlist.id,
+        offset: 0,
+        limit: 50,
+      })
+
+    expect(response.status).toBe(200)
+    expect(JSON.parse(response.text)).toHaveProperty('items', [])
   })
 })

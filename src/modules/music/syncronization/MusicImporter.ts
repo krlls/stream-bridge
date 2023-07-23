@@ -42,7 +42,7 @@ export class MusicImporter implements IMusicImporter {
     const step = this.streamingClient.getConfig().playlistsLimit
     let offset = 0
 
-    while (!counter.exported || !(counter.exported % step)) {
+    while ((!counter.exported && offset === 0) || !(counter.exported % step)) {
       const chunk = (await this.streamingClient.getPlaylists(offset)) || []
 
       if (chunk.length === 0) {
@@ -105,7 +105,7 @@ export class MusicImporter implements IMusicImporter {
     const step = this.streamingClient.getConfig().playlistsLimit
     let offset = 0
 
-    while (!counter.exported || !(counter.exported % step)) {
+    while ((!counter.exported && offset === 0) || !(counter.exported % step)) {
       const chunk = (await this.streamingClient.getTracksByPlaylist({ playlistId: playlistExternalId, offset })) || []
 
       if (chunk.length === 0) {
