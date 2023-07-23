@@ -18,6 +18,12 @@ export class StreamingService implements IStreamingService {
   @inject(TYPES.Client) private streamingClient: IStreamingClient
 
   async createStreaming(steamingData: CreateStreamingDTO) {
+    const isExists = await this.streamingRepository.getStreaming(steamingData.userId, steamingData.type)
+
+    if (isExists) {
+      return new ErrorDTO(Errors.STREAMING_EXISTS)
+    }
+
     const streaming = await this.streamingRepository.createStreaming(steamingData)
 
     if (!streaming) {

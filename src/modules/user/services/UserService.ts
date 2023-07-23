@@ -17,7 +17,7 @@ export class UserService implements IUserService {
     const existUser = await this.userRepository.findUserByLogin(createUser.login)
 
     if (existUser) {
-      return new ErrorDTO(Errors.USER_EXSIT)
+      return new ErrorDTO(Errors.USER_EXISTS)
     }
 
     const hash = await hashPass(createUser.pass)

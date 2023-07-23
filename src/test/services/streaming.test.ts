@@ -44,6 +44,15 @@ describe('Track service tests', () => {
     expect(streaming).toHaveProperty('token', streamingDTO.token)
   })
 
+  it('Creating two identical streams does not work (by type)', async () => {
+    const streamingDTO = testStreamingDTO(currentUser.id)
+    await streamingService.createStreaming(streamingDTO)
+
+    const twoStreaming = await streamingService.createStreaming(streamingDTO)
+
+    expect(isServiceError(twoStreaming)).toBe(true)
+  })
+
   it('Get streamings by userId works', async () => {
     // const streamingsLength = 10
     await streamingService.createStreaming(testStreamingDTO(currentUser.id))
