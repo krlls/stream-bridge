@@ -73,5 +73,5 @@ module.exports = {
       'files': ['**/*.ts', '**/*.tsx',  '**/*.*.tsx'],
     }
   ],
-  ignorePatterns: ['**/eslint-config-custom/**', '**/eslint.*']
+  ignorePatterns: ['**/eslint-config-custom/**', '**/eslint.*', '**/*.d.ts']
 };

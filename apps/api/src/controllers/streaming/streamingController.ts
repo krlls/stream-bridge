@@ -1,5 +1,6 @@
 import { RouterContext } from 'koa-router'
 import { inject, injectable } from 'inversify'
+import { Api } from 'api-types'
 
 import { respond200json, respond400, respond401json, respond403 } from '../../utils/response'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
@@ -11,7 +12,6 @@ import { isServiceError, isSpotifyAuthError } from '../../utils/errors'
 import { checkStreamingToken } from '../../utils/crypto'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateLoginUrlDTO } from '../../modules/streaming/dtos/createLoginUrlDTO'
-import { Api } from '../../types/TApi'
 import { SaveStreamingTokenDTO } from '../../modules/streaming/dtos/SaveStreamingTokenDTO'
 
 @injectable()

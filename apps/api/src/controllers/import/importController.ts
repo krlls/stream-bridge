@@ -1,12 +1,12 @@
 import { RouterContext } from 'koa-router'
 import { inject, injectable } from 'inversify'
+import { Api } from 'api-types'
 
 import { respond200json, respond400, respond401json } from '../../utils/response'
 import { TYPES } from '../../types/const'
 import { convertStreamingName } from '../../utils/transform'
 import { ErrorDTO } from '../../modules/common/dtos/errorDTO'
 import { Errors } from '../../types/common'
-import { Api } from '../../types/TApi'
 import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistService'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { isServiceError } from '../../utils/errors'
