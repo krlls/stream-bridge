@@ -7,7 +7,6 @@
   "author": "ksmi",
   "license": "CC-BY-NC-SA-4.0",
   "node": ">=18.0.0",
-  "prettier": "prettier-config-custom",
   "scripts": {
     "test": "NODE_ENV=test jest src/test",
     "test-watch": "NODE_ENV=test jest --watch src/test",
@@ -60,6 +59,10 @@
     "tsconfig": "*",
     "prettier-config-custom": "*",
     "eslint-config-custom": "*"
+  },
+  "prettier": "prettier-config-custom",
+  "eslintConfig": {
+    "extends": "eslint-config-custom/web"
   },
   "jest": {
     "setupFilesAfterEnv": [

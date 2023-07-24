@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   env: { browser: true, es2020: true },
   extends: [
-    'custom',
+    './base',
     'plugin:react-hooks/recommended',
   ],
   plugins: ['react-refresh'],
