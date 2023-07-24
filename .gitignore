@@ -140,3 +140,4 @@ dist
 *.sw?
 
 /apps/api/data/
+/packages/api-types/lib/
