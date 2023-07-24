@@ -1,0 +1,104 @@
+{
+  "name": "api",
+  "version": "0.0.1",
+  "description": "Music synchronization tool that allows users to sync music from various streaming services.",
+  "main": "dist/index.js",
+  "repository": "https://github.com/krlls/stream-bridge.git",
+  "author": "ksmi",
+  "license": "CC-BY-NC-SA-4.0",
+  "node": ">=18.0.0",
+  "prettier": "prettier-config-custom",
+  "scripts": {
+    "test": "NODE_ENV=test jest src/test",
+    "test-watch": "NODE_ENV=test jest --watch src/test",
+    "jest-update": "jest --updateSnapshot",
+    "prepare": "husky install",
+    "dev": "ts-node-dev src/index.ts",
+    "build": "rimraf dist && tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint src",
+    "prettier": "prettier --write src",
+    "lint-fix": "eslint --fix src",
+    "fix": "yarn prettier && yarn lint-fix",
+    "build:docker": "docker build -t testnodeproject .",
+    "run:docker": "docker run -p 3000:3000 testnodeproject"
+  },
+  "dependencies": {
+    "@spotify/web-api-ts-sdk": "^1.0.1",
+    "argon2": "^0.30.3",
+    "base64url": "^3.0.1",
+    "better-sqlite3": "^8.4.0",
+    "cli-color": "^2.0.3",
+    "dotenv": "^16.3.1",
+    "inversify": "^6.0.1",
+    "joi": "^17.9.2",
+    "jsonwebtoken": "^9.0.1",
+    "koa": "^2.14.2",
+    "koa-body": "^6.0.1",
+    "koa-jwt": "^4.0.4",
+    "koa-router": "^12.0.0",
+    "typeorm": "^0.3.17",
+    "uid": "^2.0.2"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "@types/better-sqlite3": "^7.6.4",
+    "@types/cli-color": "^2.0.2",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/koa": "^2.13.6",
+    "@types/koa-router": "^7.4.4",
+    "@types/node": "^20.4.2",
+    "@types/supertest": "^2.0.12",
+    "@types/swagger-jsdoc": "^6.0.1",
+    "koa2-swagger-ui": "^5.8.0",
+    "openapi-types": "^12.1.3",
+    "prettier": "^3.0.0",
+    "supertest": "^6.3.3",
+    "swagger-jsdoc": "^6.2.8",
+    "ts-jest": "^29.1.1",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig": "*",
+    "prettier-config-custom": "*",
+    "eslint-config-custom": "*"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/test/helpers/setup-jest-env.ts",
+      "<rootDir>/src/test/helpers/setup-jest.ts"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json",
+      "ts",
+      "tsx"
+    ],
+    "collectCoverageFrom": [
+      "**/*.{ts,js}",
+      "!**/node_modules/**",
+      "!**/build/**",
+      "!**/coverage/**"
+    ],
+    "transform": {
+      "\\.ts$": "ts-jest"
+    },
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
+    "coverageReporters": [
+      "text",
+      "text-summary"
+    ],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(js|ts)x?$",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/build/",
+      "/coverage/"
+    ]
+  }
+}
