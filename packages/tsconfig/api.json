@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "node.js",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "lib": ["ES2022", "dom"],
+    "strictPropertyInitialization": false,
+    "typeRoots": [
+      "node_modules/@types",
+      "node_modules/koa-body",
+      "src/typings"
+    ]
+  }
+}
