@@ -12,9 +12,7 @@
     "fix": {
       "cache": false
     },
-    "test": {
-      "cache": false
-    },
+    "test": {},
     "start": {
       "cache": false
     },
