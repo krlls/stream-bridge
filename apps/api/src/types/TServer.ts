@@ -1,3 +1,5 @@
+import { EStreamingType } from './common'
+
 export interface ServerConfig {
   port: number,
   apiUrl: string,
@@ -12,4 +14,11 @@ export interface ServerConfig {
   spotifyClientSecret: string,
 
   swaggerPrefix: string,
+
+  availableStreamings: AvailableStreaming[],
+}
+
+export type AvailableStreaming = {
+  type: EStreamingType,
+  name: string,
 }

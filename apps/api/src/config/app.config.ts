@@ -1,5 +1,5 @@
-import { ServerConfig } from '../types/TServer'
-import { E_NODE_ENV } from '../types/common'
+import { AvailableStreaming, ServerConfig } from '../types/TServer'
+import { E_NODE_ENV, EStreamingType } from '../types/common'
 import {
   API_URL,
   EXPIRES_SESSION_IN,
@@ -11,6 +11,8 @@ import {
   SPOTIFY_CLIENT_ID,
   SPOTIFY_CLIENT_SECRET,
 } from './env'
+
+export const availableStreamings: AvailableStreaming[] = [{ type: EStreamingType.SPOTIFY, name: 'Spotify' }]
 
 export const serverConfig: ServerConfig = {
   port: PORT || 3000,
@@ -25,4 +27,6 @@ export const serverConfig: ServerConfig = {
   spotifyClientId: SPOTIFY_CLIENT_ID,
   spotifyClientSecret: SPOTIFY_CLIENT_SECRET,
   swaggerPrefix: '/swagger',
+
+  availableStreamings: availableStreamings,
 }

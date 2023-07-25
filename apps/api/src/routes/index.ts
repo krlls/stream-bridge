@@ -163,6 +163,28 @@ export const routers = (app: any) => {
  * @swagger
  * components:
  *   schemas:
+ *     AvailableStreaming:
+ *       type: object
+ *       required:
+ *         - type
+ *         - name
+ *       properties:
+ *         type:
+ *           type: string
+ *           description: Streaming type
+ *         name:
+ *           type: string
+ *           description: Streaming name
+ *       example:
+ *        type: spotify
+ *        name: Spotify
+ *
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
  *     ValidationError:
  *       type: object
  *       properties:

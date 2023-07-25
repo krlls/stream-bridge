@@ -111,7 +111,8 @@ export const streamingRouter = router
  *      - Streaming
  *     summary: List all user streamings
  *     description: Get all user connected streamings.
- *
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Result
@@ -124,6 +125,42 @@ export const streamingRouter = router
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Streaming'
+ *
+ *       500:
+ *         description: Internal server error. Something went wrong on the server side.
+ *
+ *       400:
+ *         description: Request validation error or error during token setup.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - $ref: '#/components/schemas/ErrorResult'
+ *                 - $ref: '#/components/schemas/ValidationError'
+ */
+
+/**
+ * @swagger
+ * /streaming/available:
+ *   get:
+ *     tags:
+ *      - Streaming
+ *     summary: List all available streamings
+ *     description: Get all available streamings.
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Result
+ *         content:
+ *           application/json:
+ *            schema:
+ *               type: object
+ *               properties:
+ *                 items:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/AvailableStreaming'
  *
  *       500:
  *         description: Internal server error. Something went wrong on the server side.
