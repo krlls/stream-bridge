@@ -11,6 +11,8 @@ import { LoginUrlDTO } from '../dtos/LoginUrlDTO'
 import { CreateLoginUrlDTO } from '../dtos/createLoginUrlDTO'
 import { SaveStreamingTokenDTO } from '../dtos/SaveStreamingTokenDTO'
 import { StreamingDTO } from '../dtos/StreamingDTO'
+import { serverConfig } from '../../../config'
+import { AvailableStreamingDTO } from '../dtos/AvailableStreamingDTO'
 
 @injectable()
 export class StreamingService implements IStreamingService {
@@ -98,5 +100,10 @@ export class StreamingService implements IStreamingService {
     const result = await this.streamingRepository.removeUserStreamingByType(userId, streamingType)
 
     return { deleted: result }
+  }
+  getAvailableStreamings() {
+    const { availableStreamings } = serverConfig
+
+    return availableStreamings.map((s) => new AvailableStreamingDTO(s))
   }
 }
