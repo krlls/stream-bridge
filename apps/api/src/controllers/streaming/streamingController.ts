@@ -121,4 +121,14 @@ export class StreamingController {
 
     return respond200json(ctx, deleteResult)
   }
+
+  getAvailableStreamings(ctx: RouterContext) {
+    const streamings = this.streamingService.getAvailableStreamings()
+
+    if (isServiceError(streamings)) {
+      return respond400(ctx, streamings)
+    }
+
+    return respond200json<Api.Streaming.Available.Resp>(ctx, { items: streamings })
+  }
 }

@@ -8,6 +8,7 @@ import { EStreamingType } from '../../types/common'
 import { appContainer } from '../../inversify.config'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
 import { TYPES } from '../../types/const'
+import { serverConfig } from '../../config'
 
 const streamingService = appContainer.get<IStreamingService>(TYPES.StreamingService)
 
@@ -80,5 +81,16 @@ describe('Streaming controllers tests', () => {
 
     expect(response.status).toBe(200)
     expect(JSON.parse(response.text)).toHaveProperty('deleted', 0)
+  })
+
+  it('Get available streamings works', async () => {
+    const response = await TestApp.get(streamingUrl(Api.Streaming.Available.URL)).set({
+      Authorization: `Bearer ${testToken}`,
+    })
+    const resp = JSON.parse(response.text)
+
+    expect(response.status).toBe(200)
+    expect(resp).toHaveProperty('items')
+    expect(resp.items).toEqual(serverConfig.availableStreamings)
   })
 })
