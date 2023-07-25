@@ -1,7 +1,7 @@
 import { RouterContext } from 'koa-router'
 import { inject, injectable } from 'inversify'
+import { Api } from 'api-types'
 
-import { Api } from '../../types/TApi'
 import { respond200json, respond403 } from '../../utils/response'
 import { TYPES } from '../../types/const'
 import { isServiceError } from '../../utils/errors'

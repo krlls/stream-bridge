@@ -1,5 +1,6 @@
+import { Api } from 'api-types'
+
 import { EStreamingType } from '../types/common'
-import { Api } from '../types/TApi'
 
 export const convertStreamingName = (name: string): EStreamingType | undefined =>
   ({

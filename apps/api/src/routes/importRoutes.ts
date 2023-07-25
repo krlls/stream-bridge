@@ -1,7 +1,7 @@
 import Router from 'koa-router'
+import { Api } from 'api-types'
 
 import { appContainer } from '../inversify.config'
-import { Api } from '../types/TApi'
 import { TYPES } from '../types/const'
 import { importValidators } from '../controllers/import'
 import { ImportController } from '../controllers/import'

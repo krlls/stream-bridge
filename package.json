@@ -5,6 +5,7 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "fix": "turbo run fix",
+    "start": "turbo run start",
     "test": "turbo run test",
     "prepare": "husky install"
   },

@@ -23,7 +23,9 @@ export const printConsoleMessage = () => {
   }
 
   // eslint-disable-next-line no-console
-  console.info(`✅  The server is running at ${serverConfig.apiUrl}`)
+  console.info('')
   // eslint-disable-next-line no-console
-  console.info(`🪩 Swagger url ${serverConfig.apiUrl}${serverConfig.swaggerPrefix}`)
+  console.info(`  ➜  The server is running at ${serverConfig.apiUrl}`)
+  // eslint-disable-next-line no-console
+  console.info(`  ➜  Swagger url ${serverConfig.apiUrl}${serverConfig.swaggerPrefix}`)
 }

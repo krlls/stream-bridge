@@ -1,10 +1,8 @@
-// eslint-disable-next-line no-undef
 require('@rushstack/eslint-patch/modern-module-resolution');
 
 const patch = new Array(10).fill(null).map((_, i) => '../'.repeat(i + 1)).join(',');
 const FILE_PATCH = `.,..,${patch.slice(1, -1)}`
 
-// eslint-disable-next-line no-undef
 module.exports = {
   root: true,
   globals: {
@@ -74,5 +72,6 @@ module.exports = {
     {
       'files': ['**/*.ts', '**/*.tsx',  '**/*.*.tsx'],
     }
-  ]
+  ],
+  ignorePatterns: ['**/eslint-config-custom/**', '**/eslint.*', '**/*.d.ts']
 };

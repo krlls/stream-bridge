@@ -13,7 +13,7 @@ jobs:
           cache: yarn
 
       - name: Prepare
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile && yarn global add turbo && turbo build --filter api-types
 
       - name: Lint
         run: yarn lint

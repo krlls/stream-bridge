@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker'
 import { PlaylistedTrack } from '@spotify/web-api-ts-sdk/src/types'
+import { Api } from 'api-types'
 
 import { createPatch } from '../../utils/links'
-import { Api } from '../../types/TApi'
 import { CreateTrackDTO } from '../../modules/music/dtos/CreateTrackDTO'
 import { CreatePlaylistDTO } from '../../modules/music/dtos/CreatePlaylistDTO'
 import { EStreamingType } from '../../types/common'
