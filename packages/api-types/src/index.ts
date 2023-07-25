@@ -4,4 +4,6 @@ export type {
   Response,
   Paginated,
   EStreamingType,
+  Success,
+  Fail,
 } from './common';

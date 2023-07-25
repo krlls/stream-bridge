@@ -16,6 +16,7 @@ export const availableStreamings: AvailableStreaming[] = [{ type: EStreamingType
 
 export const serverConfig: ServerConfig = {
   port: PORT || 3000,
+  appUrl: 'http://localhost:5173',
   apiUrl: API_URL ? `${API_URL}:${PORT || 3000}` : `http://localhost:${PORT || 3000}`,
   silent: NODE_ENV === E_NODE_ENV.TEST,
   isProduction: NODE_ENV === E_NODE_ENV.PROD,

@@ -7,9 +7,10 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 import { RootState } from '../store/configureStore.ts'
-import { increment } from '../data/counter'
+import { increment, useGetAvailableStreamingsQuery } from '../data/counter'
 
 function App() {
+  const { data, isLoading, refetch, error } = useGetAvailableStreamingsQuery('')
   const count = useSelector((state: RootState) => state.counter.value)
   const dispatch = useDispatch()
 
@@ -26,8 +27,13 @@ function App() {
       <h1>Vite + React + Redux Toolkit </h1>
       <div className='card'>
         <button onClick={() => dispatch(increment())}>count is {count}</button>
+        <button onClick={refetch}>
+          Refresh
+          {isLoading && ': Loading'}
+          {error && ': Error'}
+        </button>
         <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+          Available streamings <code>{data?.map((a) => a.name)}</code>
         </p>
       </div>
       <p className='read-the-docs'>Click on the Vite and React logos to learn more</p>

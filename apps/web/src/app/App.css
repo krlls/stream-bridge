@@ -36,7 +36,9 @@
 .card {
   padding: 2em;
 }
-
+.card > * {
+  margin-left: 1em;
+}
 .read-the-docs {
   color: #888;
 }

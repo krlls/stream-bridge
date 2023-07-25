@@ -3,6 +3,7 @@ import { EStreamingType } from './common'
 export interface ServerConfig {
   port: number,
   apiUrl: string,
+  appUrl: string,
   silent: boolean,
   isProduction: boolean,
   expiresSessionIn: number | string,

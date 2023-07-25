@@ -1,14 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit'
+import { setupListeners } from '@reduxjs/toolkit/query'
 
-import counterReducer from '../data/counter/slice.ts'
+import counterReducer, { streamingApi } from '../data/counter'
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
+
+    [streamingApi.reducerPath]: streamingApi.reducer,
   },
+
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(streamingApi.middleware),
 })
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
+setupListeners(store.dispatch)
+
 export type RootState = ReturnType<typeof store.getState>
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch
