@@ -1,7 +1,7 @@
 # Stream Bridge
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![Node.js](https://img.shields.io/badge/Node.js-v18.0.0-green.svg)](https://nodejs.org/)
-[![React](https://img.shields.io/badge/React-v17.0.2-blue.svg)](https://reactjs.org/)
+[![React](https://img.shields.io/badge/React-v18.2.0-blue.svg)](https://reactjs.org/)
 [![Yarn](https://img.shields.io/badge/Package%20Manager-Yarn-2C8EBB.svg)](https://yarnpkg.com/)
 
 >⚠️ Project is currently under development and **does not have a working version yet**. However, we welcome your contributions to the development process. We appreciate any input and support as we work towards creating a functional version of the project. Stay tuned for updates and opportunities to get involved in the development of Stream Bridge. Thank you for your interest!
