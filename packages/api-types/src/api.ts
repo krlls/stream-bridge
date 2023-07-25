@@ -102,6 +102,17 @@ export namespace Api {
         result: string,
       }>;
     }
+
+    export namespace Available {
+      export const URL = '/available';
+
+      export type Streaming = {
+        type: EStreamingType,
+        name: string,
+      };
+
+      export type Resp = Response<Paginated<Streaming>>;
+    }
   }
 
   export namespace Import {
