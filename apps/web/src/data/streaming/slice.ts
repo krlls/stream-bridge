@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
+import { EStoreNames } from '../types.ts'
+
 export interface CounterState {
   value: number,
 }
@@ -9,8 +11,8 @@ const initialState: CounterState = {
   value: 0,
 }
 
-export const counterSlice = createSlice({
-  name: 'counter',
+export const streamingSlice = createSlice({
+  name: EStoreNames.STREAMING,
   initialState,
   reducers: {
     increment: (state) => {
@@ -25,4 +27,4 @@ export const counterSlice = createSlice({
   },
 })
 
-export default counterSlice.reducer
+export default streamingSlice.reducer
