@@ -1,7 +1,7 @@
 import { combineReducers } from '@reduxjs/toolkit'
 
-import counterReducer, { streamingApi } from './counter'
-import userReducer, { userApi } from './user'
+import counterReducer, { streamingApi } from './streaming'
+import userReducer from './user'
 
 const rootReducer = combineReducers({
   counter: counterReducer,
@@ -10,6 +10,6 @@ const rootReducer = combineReducers({
   [streamingApi.reducerPath]: streamingApi.reducer,
 })
 
-const rootApiMiddleware = [streamingApi, userApi].map((api) => api.middleware)
+const rootApiMiddleware = [streamingApi.middleware]
 
 export { rootReducer, rootApiMiddleware }

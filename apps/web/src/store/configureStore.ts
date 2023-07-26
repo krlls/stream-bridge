@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage'
 import { PersistConfig } from 'redux-persist/es/types'
 
 import { rootApiMiddleware, rootReducer } from '../data'
+import { EStoreNames } from '../data/types.ts'
 
 export type RootState = ReturnType<typeof rootReducer>
 
@@ -12,7 +13,7 @@ const persistConfig: PersistConfig<RootState> = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['user'],
+  whitelist: [EStoreNames.USER],
 }
 
 export const store = configureStore({

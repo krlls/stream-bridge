@@ -7,7 +7,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 import { RootState } from '../store/configureStore.ts'
-import { increment, useGetAvailableStreamingsQuery } from '../data/counter'
+import { increment, useGetAvailableStreamingsQuery } from '../data/streaming'
 
 function App() {
   const { data, isLoading, refetch, error } = useGetAvailableStreamingsQuery('')

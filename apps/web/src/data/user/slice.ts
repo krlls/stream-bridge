@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 import { UserState } from './types.ts'
 import { userApi } from './api.ts'
+import { EStoreNames } from '../types.ts'
 
 const initialState: UserState = {
   token: '',
@@ -9,7 +10,7 @@ const initialState: UserState = {
 }
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: EStoreNames.USER,
   initialState,
   reducers: {
     resetToken: (state) => {
