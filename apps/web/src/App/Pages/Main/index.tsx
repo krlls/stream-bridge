@@ -1,15 +1,17 @@
+import { FC, ReactNode } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
-import reactLogo from '../assets/react.svg'
 
 import viteLogo from '/vite.svg'
 
-import './App.css'
+import reactLogo from '../../../assets/react.svg'
+import { increment, useGetAvailableStreamingsQuery } from '../../../data/streaming'
+import { RootState } from '../../../store/configureStore.ts'
 
-import { RootState } from '../store/configureStore.ts'
-import { increment, useGetAvailableStreamingsQuery } from '../data/streaming'
+export type TProps = {
+  children?: ReactNode,
+}
 
-function App() {
+export const Main: FC<TProps> = () => {
   const { data, isLoading, refetch, error } = useGetAvailableStreamingsQuery('')
   const count = useSelector((state: RootState) => state.counter.value)
   const dispatch = useDispatch()
@@ -40,5 +42,3 @@ function App() {
     </>
   )
 }
-
-export default App
