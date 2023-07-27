@@ -8,6 +8,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import './styles/index.css'
 import { store } from './store/configureStore.ts'
 import { router } from './router'
+import './localization'
 
 const persistor = persistStore(store)
 
