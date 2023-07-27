@@ -12,10 +12,16 @@
     "start": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.0",
+    "@chakra-ui/react": "^2.8.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@reduxjs/toolkit": "^1.9.5",
     "api-types": "*",
+    "framer-motion": "^10.14.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.45.2",
     "react-redux": "^8.1.1",
     "react-router-dom": "^6.14.2",
     "redux-persist": "^6.0.0"

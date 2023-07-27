@@ -1,5 +1,6 @@
 import { FC, ReactNode } from 'react'
 import { Outlet } from 'react-router-dom'
+import { Center } from '@chakra-ui/react'
 
 type TProps = {
   children?: ReactNode,
@@ -7,8 +8,8 @@ type TProps = {
 
 export const Auth: FC<TProps> = () => {
   return (
-    <div>
+    <Center width='100%' height='100%'>
       <Outlet />
-    </div>
+    </Center>
   )
 }

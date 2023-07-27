@@ -1,5 +1,6 @@
 import { FC, ReactNode } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Box, Button, Center, Stack, Text } from '@chakra-ui/react'
 
 import viteLogo from '/vite.svg'
 
@@ -17,28 +18,32 @@ export const Main: FC<TProps> = () => {
   const dispatch = useDispatch()
 
   return (
-    <>
-      <div>
-        <a href='https://vitejs.dev' target='_blank'>
-          <img src={viteLogo} className='logo' alt='Vite logo' />
-        </a>
-        <a href='https://react.dev' target='_blank'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
-      </div>
+    <Center height='100%' flexDirection='column'>
+      <Stack direction='row'>
+        <Box>
+          <a href='https://vitejs.dev' target='_blank'>
+            <img src={viteLogo} className='logo' alt='Vite logo' />
+          </a>
+        </Box>
+        <Box>
+          <a href='https://react.dev' target='_blank'>
+            <img src={reactLogo} className='logo react' alt='React logo' />
+          </a>
+        </Box>
+      </Stack>
       <h1>Vite + React + Redux Toolkit </h1>
       <div className='card'>
-        <button onClick={() => dispatch(increment())}>count is {count}</button>
-        <button onClick={refetch}>
+        <Button onClick={() => dispatch(increment())}>count is {count}</Button>
+        <Button onClick={refetch}>
           Refresh
           {isLoading && ': Loading'}
           {error && ': Error'}
-        </button>
-        <p>
+        </Button>
+        <Text marginY={4}>
           Available streamings <code>{data?.map((a) => a.name)}</code>
-        </p>
+        </Text>
       </div>
       <p className='read-the-docs'>Click on the Vite and React logos to learn more</p>
-    </>
+    </Center>
   )
 }
