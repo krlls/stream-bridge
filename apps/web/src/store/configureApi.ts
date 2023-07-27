@@ -4,19 +4,29 @@ import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolk
 import { RootState } from './configureStore.ts'
 
 const baseQuery = retry(
-  fetchBaseQuery({
-    baseUrl: 'http://localhost:3000/',
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).user.token
+  async (args: string | FetchArgs, api, extraOptions) => {
+    const result = await fetchBaseQuery({
+      baseUrl: 'http://localhost:3000/',
+      prepareHeaders: (headers, { getState }) => {
+        const token = (getState() as RootState).user.token
 
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`)
-      }
+        if (token) {
+          headers.set('authorization', `Bearer ${token}`)
+        }
 
-      return headers
-    },
-  }),
-  { maxRetries: 2 },
+        return headers
+      },
+    })(args, api, extraOptions)
+
+    if (result.error?.status === 401 || result.error?.status === 403) {
+      retry.fail(result.error)
+    }
+
+    return result
+  },
+  {
+    maxRetries: 5,
+  },
 )
 
 const baseQueryWithHandlers: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
