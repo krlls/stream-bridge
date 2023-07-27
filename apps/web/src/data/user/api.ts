@@ -7,10 +7,11 @@ const authUrl = apiPatch(Api.Auth.PREFIX)
 
 export const userApi = api.injectEndpoints({
   endpoints: (build) => ({
-    auth: build.query<string, Api.Auth.Login.Req>({
-      query: () => ({
+    auth: build.mutation<string, Api.Auth.Login.Req>({
+      query: (body) => ({
         method: 'POST',
         url: authUrl(Api.Auth.Login.URL),
+        body,
       }),
       transformResponse: (response: Success<Api.Auth.Login.Resp>) => response.token,
     }),
@@ -18,4 +19,4 @@ export const userApi = api.injectEndpoints({
   overrideExisting: false,
 })
 
-export const { useAuthQuery } = userApi
+export const { useAuthMutation } = userApi

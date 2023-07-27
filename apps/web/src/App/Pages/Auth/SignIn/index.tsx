@@ -1,5 +1,5 @@
-import { FC } from 'react'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { FC, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
 import {
   Button,
   Card,
@@ -13,9 +13,12 @@ import {
   Heading,
   Input,
   Stack,
+  useToast,
 } from '@chakra-ui/react'
 import { UnlockIcon } from '@chakra-ui/icons'
 import { Link } from 'react-router-dom'
+
+import { useAuthMutation } from '../../../../data/user'
 
 type Inputs = {
   email: string,
@@ -26,10 +29,27 @@ export const SignIn: FC = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    setError,
+    formState: { errors },
   } = useForm<Inputs>()
-  // eslint-disable-next-line no-console
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+  const toast = useToast()
+  const [sendAuth, result] = useAuthMutation()
+  const auth = ({ email, password }: Inputs) => sendAuth({ login: email, pass: password })
+
+  useEffect(() => {
+    if (result.error) {
+      setError('root.serverError', {
+        type: result.status,
+      })
+      toast({
+        title: 'Login failed.',
+        description: 'Wrong login or password',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
+    }
+  }, [result.error])
 
   return (
     <Container>
@@ -38,9 +58,9 @@ export const SignIn: FC = () => {
           <Heading size='xl'>Sign In</Heading>
         </CardHeader>
         <CardBody>
-          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          <form onSubmit={handleSubmit(auth)} noValidate>
             <Stack spacing={6}>
-              <FormControl isInvalid={!!errors.email}>
+              <FormControl isInvalid={!!errors.email || !!errors.root?.serverError}>
                 <FormLabel htmlFor='name'>Email address</FormLabel>
                 <Input
                   id='email'
@@ -58,7 +78,7 @@ export const SignIn: FC = () => {
                 <FormHelperText>Your email.</FormHelperText>
                 <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={!!errors.password}>
+              <FormControl isInvalid={!!errors.password || !!errors.root?.serverError}>
                 <FormLabel>Password</FormLabel>
                 <Input
                   id='password'
@@ -73,7 +93,7 @@ export const SignIn: FC = () => {
                 <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
               </FormControl>
               <Stack direction='row' justify='end'>
-                <Button colorScheme='teal' isLoading={isSubmitting} type='submit'>
+                <Button colorScheme='teal' isLoading={result.isLoading} type='submit'>
                   <UnlockIcon marginRight={2} />
                   Login
                 </Button>
