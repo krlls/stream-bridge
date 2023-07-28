@@ -1,6 +1,9 @@
-export const ru = {
+import { Dictionary } from './index.ts'
+
+export const ru: Dictionary = {
   login: 'Вход',
   EmailAddress: 'Email адрес',
+  Email: 'Email',
   Password: 'Пароль',
   YourEmail: 'Ваш email',
   YourPassword: 'Ваш пароль',

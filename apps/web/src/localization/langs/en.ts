@@ -1,8 +1,7 @@
-import { Dictionary } from './index.ts'
-
-export const en: Dictionary = {
+export const en = {
   login: 'Login',
   EmailAddress: 'Email address',
+  Email: 'Email',
   Password: 'Password',
   YourEmail: 'Your email',
   YourPassword: 'Your password',
