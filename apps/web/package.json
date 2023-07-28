@@ -36,7 +36,8 @@
     "eslint-config-custom": "*",
     "prettier-config-custom": "*",
     "tsconfig": "*",
-    "vite": "^4.4.5"
+    "vite": "^4.4.5",
+    "vite-plugin-checker": "^0.6.1"
   },
   "prettier": "prettier-config-custom",
   "eslintConfig": {

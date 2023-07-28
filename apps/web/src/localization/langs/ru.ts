@@ -1,4 +1,4 @@
-import { Dictionary } from './index.ts'
+import { Dictionary } from '../types.ts'
 
 export const ru: Dictionary = {
   login: 'Вход',
