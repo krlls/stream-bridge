@@ -31,4 +31,4 @@ for (const key in primaryLang) {
   ;(emptyTranslations as Record<string, string>)[key] = key
 }
 
-export const dictionary = emptyTranslations
+export const dictionary = Object.freeze(emptyTranslations)
