@@ -8,7 +8,7 @@ export const useLocalization = () => {
 
   return {
     ...rest,
-    base: t,
+    _base: t,
     t: (ns: keyof Dictionary, options?: UseTranslationOptions<undefined>) => t(ns, options),
     d: dictionary,
   }
