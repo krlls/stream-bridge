@@ -1,20 +1,6 @@
+import { Lang, primaryLang, TranslationDictionary, Translations } from '../types.ts'
 import { ru } from './ru.ts'
 import { en } from './en.ts'
-
-export const primaryLang = en
-
-export enum Lang {
-  RU = 'ru',
-  EN = 'en',
-}
-
-export type Dictionary = typeof primaryLang
-export type Resources = {
-  translation: Dictionary,
-}
-
-export type Translations = Record<Lang, Resources>
-export type TranslationProp = keyof Dictionary
 
 export const resources: Translations = {
   [Lang.RU]: {
@@ -25,10 +11,10 @@ export const resources: Translations = {
   },
 }
 
-const emptyTranslations: Record<TranslationProp, TranslationProp> = {} as Record<TranslationProp, TranslationProp>
+const translations: Record<string, string> = { ...primaryLang }
 
-for (const key in primaryLang) {
-  ;(emptyTranslations as Record<string, string>)[key] = key
-}
+Object.keys(translations).forEach((key) => {
+  translations[key] = key
+})
 
-export const dictionary = Object.freeze(emptyTranslations)
+export const dictionary = Object.freeze(translations) as TranslationDictionary
