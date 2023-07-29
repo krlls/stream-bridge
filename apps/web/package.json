@@ -43,6 +43,8 @@
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.3",
     "eslint-config-custom": "*",
+    "msw": "^1.2.3",
+    "msw-storybook-addon": "^1.8.0",
     "prettier-config-custom": "*",
     "prop-types": "^15.8.1",
     "storybook": "^7.1.1",
@@ -53,5 +55,8 @@
   "prettier": "prettier-config-custom",
   "eslintConfig": {
     "extends": "eslint-config-custom/web"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }

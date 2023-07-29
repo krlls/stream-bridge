@@ -3,8 +3,8 @@ import { Api, Success } from 'api-types'
 import { api, EApiTags } from '../../store/configureApi.ts'
 import { apiPatch } from '../../utils/links.ts'
 
-const authUrl = apiPatch(Api.Auth.PREFIX)
-const userUrL = apiPatch(Api.User.PREFIX)
+export const authUrl = apiPatch(Api.Auth.PREFIX)
+export const userUrL = apiPatch(Api.User.PREFIX)
 
 export const userApi = api.injectEndpoints({
   endpoints: (build) => ({
