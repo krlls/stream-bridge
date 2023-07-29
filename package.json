@@ -7,6 +7,7 @@
     "fix": "turbo run fix",
     "start": "turbo run start",
     "test": "turbo run test",
+    "storybook": "turbo run storybook",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -18,6 +19,7 @@
     "@turbo/gen": "^1.10.11",
     "@types/jest": "^29.5.3",
     "@types/lodash": "^4.14.195",
+    "concurrently": "^8.2.0",
     "eslint": "^8.45.0",
     "eslint-config-custom": "*",
     "husky": "^8.0.3",

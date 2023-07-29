@@ -20,6 +20,7 @@ import { Link } from 'react-router-dom'
 
 import { useAuthMutation } from '../../../../data/user'
 import { useLocalization } from '../../../../hooks/useLocalization.ts'
+import { Example } from '../../../../components/ToggleTheme'
 
 type Inputs = {
   email: string,
@@ -102,6 +103,7 @@ export const SignIn: FC = () => {
                 <Link to='/auth/sign-up'>
                   <Button>{t(d.SignUp)}</Button>
                 </Link>
+                <Example />
               </Stack>
             </Stack>
           </form>
