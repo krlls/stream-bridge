@@ -6,6 +6,7 @@ import { SignIn } from '../App/Pages/Auth/SignIn'
 import { Main } from '../App/Pages/Main'
 import { AuthLayout } from '../components/AuthLayout'
 import { SignUp } from '../App/Pages/Auth/SignUp'
+import { Header } from '../components/Header'
 
 export const router = createBrowserRouter([
   {
@@ -21,7 +22,12 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Main />,
+            element: (
+              <>
+                <Header />
+                <Main />
+              </>
+            ),
           },
         ],
       },

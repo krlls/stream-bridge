@@ -24,7 +24,7 @@ export namespace Api {
       export const URL = '/profile';
 
       export type Resp = Response<{
-        id: string,
+        id: number,
         login: string,
         name: string,
       }>;

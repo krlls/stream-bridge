@@ -2,29 +2,32 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { rest } from 'msw'
 import { Api } from 'api-types'
 
-import { SignIn } from './index.tsx'
-import { authUrl } from '../../../../data/user'
-import { withBaseUrl } from '../../../../utils/links.ts'
+import { withBaseUrl } from '../../utils/links.ts'
+import { userUrl } from '../../data/user'
+import { Header } from './index.tsx'
 
-const meta: Meta<typeof SignIn> = {
-  component: SignIn,
+const meta: Meta<typeof Header> = {
+  component: Header,
 }
 
 export default meta
-type Story = StoryObj<typeof SignIn>
+type Story = StoryObj<typeof Header>
 
 export const LoginForm: Story = {
   args: {
     //👇 The args you need here will depend on your component
   },
   parameters: {
+    layout: 'fullscreen',
     msw: {
       handlers: [
-        rest.post(withBaseUrl(authUrl(Api.Auth.Login.URL)), (_req, res, ctx) => {
+        rest.get(withBaseUrl(userUrl(Api.User.GetProfile.URL)), (_req, res, ctx) => {
           return res(
             ctx.status(200),
             ctx.json({
-              token: 'test',
+              id: 1,
+              login: 'ksmi@me.ru',
+              name: 'Kirill',
             }),
           )
         }),
