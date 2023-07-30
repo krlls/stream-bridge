@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import {
   Avatar,
   Box,
@@ -19,7 +19,11 @@ import { ToggleTheme } from '../ToggleTheme'
 import { resetToken, useGetUserQuery } from '../../data/user'
 import { useLocalization } from '../../hooks/useLocalization.ts'
 
-export const Header: FC = () => {
+type TProps = {
+  mobileMenu?: ReactNode,
+}
+
+export const Header: FC<TProps> = ({ mobileMenu }) => {
   const { data, isLoading, isError } = useGetUserQuery(undefined)
   const dispatch = useDispatch()
   const { t, d } = useLocalization()
@@ -27,6 +31,11 @@ export const Header: FC = () => {
   return (
     <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
       <Flex h={16} align='center' justify='space-between'>
+        {mobileMenu && (
+          <Box mr={2} display={['flex', 'flex', 'none', 'none']}>
+            {mobileMenu}
+          </Box>
+        )}
         <Box>Logo</Box>
         <Flex align='center'>
           {isLoading || isError ? (
