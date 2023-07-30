@@ -11,13 +11,14 @@ import {
   MenuItem,
   MenuList,
   Spinner,
-  useColorModeValue,
 } from '@chakra-ui/react'
 import { useDispatch } from 'react-redux'
 
 import { ToggleTheme } from '../ToggleTheme'
 import { resetToken, useGetUserQuery } from '../../data/user'
 import { useLocalization } from '../../hooks/useLocalization.ts'
+import { useThemeColors } from '../../hooks/useThemeColors.ts'
+import { variants } from '../../utils/size.ts'
 
 type TProps = {
   mobileMenu?: ReactNode,
@@ -26,13 +27,14 @@ type TProps = {
 export const Header: FC<TProps> = ({ mobileMenu }) => {
   const { data, isLoading, isError } = useGetUserQuery(undefined)
   const dispatch = useDispatch()
+  const { primary } = useThemeColors()
   const { t, d } = useLocalization()
 
   return (
-    <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+    <Box bg={primary} px={4} as={'header'}>
       <Flex h={16} align='center' justify='space-between'>
         {mobileMenu && (
-          <Box mr={2} display={['flex', 'flex', 'none', 'none']}>
+          <Box mr={2} display={variants('flex', 'none')}>
             {mobileMenu}
           </Box>
         )}
@@ -43,14 +45,14 @@ export const Header: FC<TProps> = ({ mobileMenu }) => {
           ) : (
             <Menu>
               <MenuButton>
-                <Avatar size='sm' marginStart={4} />
+                <Avatar size='sm' marginStart={4} name={data?.name} />
               </MenuButton>
               <MenuList>
                 <Flex justify='flex-end' px={2}>
                   <ToggleTheme />
                 </Flex>
                 <Center paddingBottom={4} flexDirection='column'>
-                  <Avatar size='xl' mb={4} />
+                  <Avatar size='xl' mb={4} name={data?.name} />
                   <Heading size='sm'>{data?.name}</Heading>
                 </Center>
                 <MenuDivider />

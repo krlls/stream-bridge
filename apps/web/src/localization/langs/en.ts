@@ -16,4 +16,5 @@ export const en = {
   Profile: 'Profile',
   Settings: 'Settings',
   LogOut: 'Log Out',
+  AddService: 'Add new',
 }
