@@ -18,4 +18,5 @@ export const ru: Dictionary = {
   Profile: 'Профиль',
   Settings: 'Настройки',
   LogOut: 'Выход',
+  AddService: 'Добавить',
 }
