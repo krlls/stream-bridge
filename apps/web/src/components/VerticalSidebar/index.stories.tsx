@@ -1,11 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { rest } from 'msw'
 import { Flex, Text } from '@chakra-ui/react'
-import { Api } from 'api-types'
 
-import { withBaseUrl } from '../../utils/links.ts'
-import { userUrl } from '../../data/user'
 import { VerticalSidebar } from './index.tsx'
+import { StreamingList } from '../StreamingList'
+import { StreamingListStory } from '../StreamingList/index.stories.tsx'
 
 const meta: Meta<typeof VerticalSidebar> = {
   component: VerticalSidebar,
@@ -32,19 +30,19 @@ export const VerticalSidebarStory: Story = {
   },
   parameters: {
     layout: 'fullscreen',
-    msw: {
-      handlers: [
-        rest.get(withBaseUrl(userUrl(Api.User.GetProfile.URL)), (_req, res, ctx) => {
-          return res(
-            ctx.status(200),
-            ctx.json({
-              id: 1,
-              login: 'ksmi@me.ru',
-              name: 'Kirill',
-            }),
-          )
-        }),
-      ],
-    },
   },
+}
+
+export const VerticalSidebarWithItemsStory: Story = {
+  ...VerticalSidebarStory,
+  parameters: {
+    layout: 'fullscreen',
+    msw: StreamingListStory.parameters?.msw,
+  },
+
+  render: (args) => (
+    <VerticalSidebar {...args}>
+      <StreamingList />
+    </VerticalSidebar>
+  ),
 }
