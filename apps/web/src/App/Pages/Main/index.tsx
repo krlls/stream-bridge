@@ -18,7 +18,7 @@ export const Main: FC<TProps> = () => {
   const dispatch = useDispatch()
 
   return (
-    <Center height='100%' flexDirection='column'>
+    <Center flex={1} flexDirection='column'>
       <Stack direction='row'>
         <Box>
           <a href='https://vitejs.dev' target='_blank'>

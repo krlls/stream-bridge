@@ -3,6 +3,7 @@ module.exports = {
   env: { browser: true, es2020: true },
   extends: [
     './base',
+    'plugin:storybook/recommended',
     'plugin:react-hooks/recommended',
   ],
   plugins: ['react-refresh'],

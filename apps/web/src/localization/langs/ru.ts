@@ -15,4 +15,7 @@ export const ru: Dictionary = {
   LoginFailed: 'Неудачная попытка входа',
   WrongLoginOrPassword: 'Некорректные логин или пароль',
   SignUp: 'Регистрация',
+  Profile: 'Профиль',
+  Settings: 'Настройки',
+  LogOut: 'Выход',
 }

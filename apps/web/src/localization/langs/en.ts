@@ -13,4 +13,7 @@ export const en = {
   LoginFailed: 'Login failed.',
   WrongLoginOrPassword: 'Wrong login or password',
   SignUp: 'Sign Up',
+  Profile: 'Profile',
+  Settings: 'Settings',
+  LogOut: 'Log Out',
 }
