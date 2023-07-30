@@ -17,10 +17,12 @@ import { useDispatch } from 'react-redux'
 
 import { ToggleTheme } from '../ToggleTheme'
 import { resetToken, useGetUserQuery } from '../../data/user'
+import { useLocalization } from '../../hooks/useLocalization.ts'
 
 export const Header: FC = () => {
   const { data, isLoading, isError } = useGetUserQuery(undefined)
   const dispatch = useDispatch()
+  const { t, d } = useLocalization()
 
   return (
     <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -43,9 +45,9 @@ export const Header: FC = () => {
                   <Heading size='sm'>{data?.name}</Heading>
                 </Center>
                 <MenuDivider />
-                <MenuItem>Profile</MenuItem>
-                <MenuItem>Settings</MenuItem>
-                <MenuItem onClick={() => dispatch(resetToken())}>Log Out</MenuItem>
+                <MenuItem>{t(d.Profile)}</MenuItem>
+                <MenuItem>{t(d.Settings)}</MenuItem>
+                <MenuItem onClick={() => dispatch(resetToken())}>{t(d.LogOut)}</MenuItem>
               </MenuList>
             </Menu>
           )}
