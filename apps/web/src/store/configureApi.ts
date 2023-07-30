@@ -2,11 +2,12 @@ import { createApi, fetchBaseQuery, retry } from '@reduxjs/toolkit/query/react'
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query'
 
 import { RootState } from './configureStore.ts'
+import { API_URL } from '../const.ts'
 
 const baseQuery = retry(
   async (args: string | FetchArgs, api, extraOptions) => {
     const result = await fetchBaseQuery({
-      baseUrl: 'http://localhost:3000/',
+      baseUrl: API_URL,
       prepareHeaders: (headers, { getState }) => {
         const token = (getState() as RootState).user.token
 
