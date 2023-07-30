@@ -45,14 +45,14 @@ export const Header: FC<TProps> = ({ mobileMenu }) => {
           ) : (
             <Menu>
               <MenuButton>
-                <Avatar size='sm' marginStart={4} />
+                <Avatar size='sm' marginStart={4} name={data?.name} />
               </MenuButton>
               <MenuList>
                 <Flex justify='flex-end' px={2}>
                   <ToggleTheme />
                 </Flex>
                 <Center paddingBottom={4} flexDirection='column'>
-                  <Avatar size='xl' mb={4} />
+                  <Avatar size='xl' mb={4} name={data?.name} />
                   <Heading size='sm'>{data?.name}</Heading>
                 </Center>
                 <MenuDivider />
