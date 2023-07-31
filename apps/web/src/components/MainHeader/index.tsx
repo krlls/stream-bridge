@@ -3,15 +3,12 @@ import { HamburgerIcon } from '@chakra-ui/icons'
 
 import { Header } from '../Header'
 import { AppDrawer } from '../AppDrawer'
-import { StreamingList } from '../StreamingList'
-import { useGetStreamingListQuery } from '../../data/streaming'
+import { UserStreamings } from '../UserStreamings'
 
 export const MainHeader: FC = () => {
-  const { data, isLoading, isError } = useGetStreamingListQuery()
-
   const headerMenu = (
     <AppDrawer trigger={<HamburgerIcon />}>
-      <StreamingList data={data} isLoading={isLoading} isError={isError} />
+      <UserStreamings />
     </AppDrawer>
   )
 
