@@ -29,10 +29,17 @@ export const ListOfPlaylists: FC<TProps> = ({ playlists = [], isError, isLoading
               rounded='md'
             />
           ))
-      : playlists.map(({ id, name }) => <PlaylistCard id={id} name={name} />)
+      : playlists.map(({ id, name }) => <PlaylistCard key={id + name} id={id} name={name} />)
 
   return (
-    <Stack display='flex' spacing={6} direction='row' flexWrap='wrap'>
+    <Stack
+      pb={8}
+      display='flex'
+      spacing={6}
+      direction='row'
+      flexWrap='wrap'
+      alignItems={variants('center', 'flex-start')}
+    >
       {list}
     </Stack>
   )
