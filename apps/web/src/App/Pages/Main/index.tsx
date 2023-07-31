@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react'
-import { Flex, useColorModeValue } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import * as CSS from 'csstype'
 
 import { VerticalSidebar } from '../../../components/VerticalSidebar'
@@ -14,7 +14,7 @@ export type TProps = {
 }
 
 export const Main: FC<TProps> = () => {
-  const { primary } = useThemeColors()
+  const { primary, secondary } = useThemeColors()
 
   return (
     <Page header={<MainHeader />}>
@@ -24,7 +24,7 @@ export const Main: FC<TProps> = () => {
       <Flex flex={1} background={primary}>
         <Flex
           flex={1}
-          background={useColorModeValue('white', 'gray.800')}
+          background={secondary}
           roundedTopStart={variants('lg', '2xl')}
           roundedTopEnd={variants<CSS.Property.BorderRadius>('lg', 0)}
         ></Flex>
