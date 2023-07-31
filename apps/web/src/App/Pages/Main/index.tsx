@@ -8,6 +8,7 @@ import { MainHeader } from '../../../components/MainHeader'
 import { variants } from '../../../utils/size.ts'
 import { useThemeColors } from '../../../hooks/useThemeColors.ts'
 import { UserStreamings } from '../../../components/UserStreamings'
+import { HelpCard } from '../../../components/HelpCard'
 
 export type TProps = {
   children?: ReactNode,
@@ -27,7 +28,11 @@ export const Main: FC<TProps> = () => {
           background={secondary}
           roundedTopStart={variants('lg', '2xl')}
           roundedTopEnd={variants<CSS.Property.BorderRadius>('lg', 0)}
-        ></Flex>
+          justify='center'
+          alignItems='center'
+        >
+          <HelpCard />
+        </Flex>
       </Flex>
     </Page>
   )
