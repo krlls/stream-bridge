@@ -17,6 +17,7 @@ export const en = {
   Settings: 'Settings',
   LogOut: 'Log Out',
   AddService: 'Add new',
+  Playlists: 'Playlists',
   CardWithActionTitle1: 'Choose a Service',
   CardWithActionText1: 'There is nothing here yet, select the first streaming service from the sidebar menu.',
   CardWithActionTitle2: 'Let\'s Get Started',

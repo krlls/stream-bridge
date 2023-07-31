@@ -1,3 +1,4 @@
+import { Center } from '@chakra-ui/react'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 import { App } from '../App/App.tsx'
@@ -6,6 +7,8 @@ import { SignIn } from '../App/Pages/Auth/SignIn'
 import { Main } from '../App/Pages/Main'
 import { AuthLayout } from '../components/AuthLayout'
 import { SignUp } from '../App/Pages/Auth/SignUp'
+import { HelpCard } from '../components/HelpCard'
+import { Playlists } from '../components/Playlists'
 
 export const router = createBrowserRouter([
   {
@@ -20,8 +23,21 @@ export const router = createBrowserRouter([
         element: <AuthLayout />,
         children: [
           {
-            index: true,
             element: <Main />,
+            children: [
+              {
+                index: true,
+                element: (
+                  <Center flex={1}>
+                    <HelpCard />
+                  </Center>
+                ),
+              },
+              {
+                path: '/streaming/:type',
+                element: <Playlists />,
+              },
+            ],
           },
         ],
       },
