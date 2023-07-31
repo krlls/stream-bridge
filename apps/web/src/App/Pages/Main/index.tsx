@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react'
 import { Flex } from '@chakra-ui/react'
 import * as CSS from 'csstype'
+import { Outlet } from 'react-router-dom'
 
 import { VerticalSidebar } from '../../../components/VerticalSidebar'
 import { Page } from '../../../components/Page'
@@ -8,7 +9,6 @@ import { MainHeader } from '../../../components/MainHeader'
 import { variants } from '../../../utils/size.ts'
 import { useThemeColors } from '../../../hooks/useThemeColors.ts'
 import { UserStreamings } from '../../../components/UserStreamings'
-import { HelpCard } from '../../../components/HelpCard'
 
 export type TProps = {
   children?: ReactNode,
@@ -31,7 +31,7 @@ export const Main: FC<TProps> = () => {
           justify='center'
           alignItems='center'
         >
-          <HelpCard />
+          <Outlet />
         </Flex>
       </Flex>
     </Page>
