@@ -1,4 +1,5 @@
 import { FC, ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Avatar,
   Box,
@@ -38,7 +39,9 @@ export const Header: FC<TProps> = ({ mobileMenu }) => {
             {mobileMenu}
           </Box>
         )}
-        <Box>Logo</Box>
+        <Box>
+          <Link to='/'>Logo</Link>
+        </Box>
         <Flex align='center'>
           {isLoading || isError ? (
             <Spinner />
