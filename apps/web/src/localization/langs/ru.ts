@@ -19,4 +19,8 @@ export const ru: Dictionary = {
   Settings: 'Настройки',
   LogOut: 'Выход',
   AddService: 'Добавить',
+  CardWithActionTitle1: 'Выберите сервис',
+  CardWithActionText1: 'Здесь пока ничего нет, выберите первый стриминг-сервис из бокового меню.',
+  CardWithActionTitle2: 'Давайте начнем',
+  CardWithActionText2: 'Чтобы начать импорт своей медиатеки подключите первый стриминг-сервис.',
 }

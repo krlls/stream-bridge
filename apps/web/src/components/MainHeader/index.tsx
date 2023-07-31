@@ -3,12 +3,12 @@ import { HamburgerIcon } from '@chakra-ui/icons'
 
 import { Header } from '../Header'
 import { AppDrawer } from '../AppDrawer'
-import { StreamingList } from '../StreamingList'
+import { UserStreamings } from '../UserStreamings'
 
 export const MainHeader: FC = () => {
   const headerMenu = (
     <AppDrawer trigger={<HamburgerIcon />}>
-      <StreamingList />
+      <UserStreamings />
     </AppDrawer>
   )
 

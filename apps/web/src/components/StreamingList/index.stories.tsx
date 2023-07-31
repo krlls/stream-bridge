@@ -1,11 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { rest } from 'msw'
 import { Box, Flex } from '@chakra-ui/react'
-import { Api } from 'api-types'
+import { EStreamingType } from 'api-types'
 
-import { withBaseUrl } from '../../utils/links.ts'
 import { StreamingList } from './index.tsx'
-import { streamingUrl } from '../../data/streaming'
 
 const randomInteger = (min: number, max: number) => {
   return Math.floor(min + Math.random() * (max + 1 - min))
@@ -13,6 +10,7 @@ const randomInteger = (min: number, max: number) => {
 
 const meta: Meta<typeof StreamingList> = {
   component: StreamingList,
+  excludeStories: /.*Data$/,
   decorators: [
     (Story) => (
       <Flex height='100vh'>
@@ -23,7 +21,7 @@ const meta: Meta<typeof StreamingList> = {
 }
 
 export default meta
-type Story = StoryObj<typeof StreamingList>
+export type Story = StoryObj<typeof StreamingList>
 
 const streamings = [
   'Spotify',
@@ -34,34 +32,36 @@ const streamings = [
   'Sound Cloud',
   'Some big streaming name',
 ]
+
+export const streamingListData = {
+  items: Array(30)
+    .fill(null)
+    .map((_, i) => ({
+      id: i + 1,
+      type: streamings[randomInteger(0, streamings.length - 1)] as EStreamingType,
+      playlists: randomInteger(80, 150),
+      tracks: randomInteger(150, 550),
+    })),
+}
+
 export const StreamingListStory: Story = {
-  render: (args) => (
-    <Box>
-      <StreamingList {...args} />
-    </Box>
-  ),
-  args: {
-    //👇 The args you need here will depend on your component
+  render: (args) => {
+    return (
+      <Box>
+        <StreamingList {...args} />
+      </Box>
+    )
   },
-  parameters: {
-    msw: {
-      handlers: [
-        rest.get(withBaseUrl(streamingUrl(Api.Streaming.List.URL)), (_req, res, ctx) => {
-          return res(
-            ctx.status(200),
-            ctx.json({
-              items: Array(30)
-                .fill(null)
-                .map((_, i) => ({
-                  id: i + 1,
-                  type: streamings[randomInteger(0, streamings.length - 1)] || '',
-                  playlists: randomInteger(80, 150),
-                  tracks: randomInteger(150, 550),
-                })),
-            }),
-          )
-        }),
-      ],
-    },
+  args: {
+    isLoading: false,
+    data: streamingListData,
+  },
+}
+
+export const StreamingListLoadingStory: Story = {
+  ...StreamingListStory,
+  args: {
+    ...StreamingListStory.args,
+    isLoading: true,
   },
 }
