@@ -1,3 +1,4 @@
+import { Center } from '@chakra-ui/react'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 import { App } from '../App/App.tsx'
@@ -26,7 +27,11 @@ export const router = createBrowserRouter([
             children: [
               {
                 index: true,
-                element: <HelpCard />,
+                element: (
+                  <Center flex={1}>
+                    <HelpCard />
+                  </Center>
+                ),
               },
               {
                 path: '/streaming/:type',

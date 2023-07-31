@@ -26,10 +26,9 @@ export const Main: FC<TProps> = () => {
         <Flex
           flex={1}
           background={secondary}
+          p={4}
           roundedTopStart={variants('lg', '2xl')}
           roundedTopEnd={variants<CSS.Property.BorderRadius>('lg', 0)}
-          justify='center'
-          alignItems='center'
         >
           <Outlet />
         </Flex>

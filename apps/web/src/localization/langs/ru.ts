@@ -19,6 +19,7 @@ export const ru: Dictionary = {
   Settings: 'Настройки',
   LogOut: 'Выход',
   AddService: 'Добавить',
+  Playlists: 'Плейлисты',
   CardWithActionTitle1: 'Выберите сервис',
   CardWithActionText1: 'Здесь пока ничего нет, выберите первый стриминг-сервис из бокового меню.',
   CardWithActionTitle2: 'Давайте начнем',
