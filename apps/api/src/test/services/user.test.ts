@@ -43,6 +43,24 @@ describe('User service tests', () => {
     expect(result).toHaveProperty('name', user.name)
   })
 
+  it('Find user by id with empty id', async () => {
+    await userService.createUser(user)
+
+    const result = await userService.findUserById(undefined as any as number)
+
+    expect(result).toHaveProperty('error')
+  })
+
+  it('Find user by id with wrong id ', async () => {
+    await userService.createUser(user)
+
+    const result1 = await userService.findUserById('12dd' as any as number)
+    const result2 = await userService.findUserById(3 as any as number)
+
+    expect(result1).toHaveProperty('error')
+    expect(result2).toHaveProperty('error')
+  })
+
   it('Update user works', async () => {
     const newUser = (await userService.createUser(user)) as UserDTO
     const toUpdate = new UpadteUserDTO({ id: newUser.id, login: 'ksmi2' })

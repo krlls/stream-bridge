@@ -54,37 +54,12 @@ describe('Track service tests', () => {
   })
 
   it('Get streamings by userId works', async () => {
-    // const streamingsLength = 10
+    const twoUser = (await userService.createUser(
+      new CreateUserDTO({ login: 'ksmi@ff.com', pass: '123456789', name: 'kirill2' }),
+    )) as any
+    await streamingService.createStreaming(testStreamingDTO(twoUser.id))
     await streamingService.createStreaming(testStreamingDTO(currentUser.id))
     await streamingService.createStreaming(testStreamingDTO(currentUser.id, EStreamingType.TIDAL))
-
-    const exportData = new ImportMediaDTO({
-      streamingType: EStreamingType.SPOTIFY,
-      userId: currentUser.id,
-    })
-
-    await playlistService.importPlaylists(exportData)
-
-    await playlistService.importPlaylists(
-      new ImportMediaDTO({
-        streamingType: EStreamingType.TIDAL,
-        userId: currentUser.id,
-      }),
-    )
-
-    const playlists = await playlistService.getAllUserPlaylists({
-      userId: currentUser.id,
-    })
-
-    if (isServiceError(playlists)) {
-      throw Error('No playlists')
-    }
-
-    const dto = new ImportTracksByPlaylistDTO({
-      playlistId: playlists[0].id,
-      userId: currentUser.id,
-    })
-    await trackService.importTracksByPlaylist(dto)
 
     const streamings = (await streamingService.getUserStreamings(currentUser.id)) as any[]
 

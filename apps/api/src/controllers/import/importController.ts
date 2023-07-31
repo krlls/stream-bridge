@@ -26,7 +26,7 @@ export class ImportController {
       return respond400(ctx, new ErrorDTO(Errors.STREAMING_NOT_FOUND))
     }
 
-    const user = await this.userService.findUserById(ctx.state.userId)
+    const user = await this.userService.findUserById(ctx.state.user?.userId)
 
     if (isServiceError(user)) {
       return respond401json(ctx, user)
@@ -41,7 +41,7 @@ export class ImportController {
   }
 
   async importTracksByPlaylist(ctx: RouterContext, params: Api.Import.Tracks.Req) {
-    const user = await this.userService.findUserById(ctx.state.userId)
+    const user = await this.userService.findUserById(ctx.state.user?.userId)
 
     if (isServiceError(user)) {
       return respond401json(ctx, user)

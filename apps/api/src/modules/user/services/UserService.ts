@@ -36,6 +36,10 @@ export class UserService implements IUserService {
   }
 
   async findUserById(userId: number) {
+    if (!userId) {
+      return new ErrorDTO(Errors.USER_NOT_FOUND)
+    }
+
     const user = await this.userRepository.findUserById(userId)
 
     if (!user) {
@@ -46,6 +50,10 @@ export class UserService implements IUserService {
   }
 
   async updateUser(update: UpadteUserDTO) {
+    if (!update.id) {
+      return new ErrorDTO(Errors.USER_NOT_FOUND)
+    }
+
     const user = await this.findUserById(update.id)
 
     if (!user) {

@@ -211,7 +211,7 @@ describe('Music library media controller tests', () => {
   })
 
   it('Get tracks by empty playlist', async () => {
-    const playlist = (await playlistsServise.createPlayList(testPlaylistDTO(currentUser.is, 1))) as any
+    const playlist = (await playlistsServise.createPlayList(testPlaylistDTO(currentUser.id, 1))) as any
     const response = await TestApp.get(musicUrl(Api.Music.Tracks.PATCH, '/spotify'))
       .set({
         Authorization: `Bearer ${testToken}`,

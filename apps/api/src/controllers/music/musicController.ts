@@ -26,7 +26,7 @@ export class MusicController {
       return respond400(ctx, new ErrorDTO(Errors.STREAMING_NOT_FOUND))
     }
 
-    const user = await this.userService.findUserById(ctx.state?.userId)
+    const user = await this.userService.findUserById(ctx.state.user?.userId)
 
     if (isServiceError(user)) {
       return respond401json(ctx, user)
@@ -43,7 +43,7 @@ export class MusicController {
   }
 
   async getTracks(ctx: RouterContext, params: Api.Music.Tracks.Req) {
-    const user = await this.userService.findUserById(ctx.state?.userId)
+    const user = await this.userService.findUserById(ctx.state.user?.userId)
 
     if (isServiceError(user)) {
       return respond401json(ctx, user)
