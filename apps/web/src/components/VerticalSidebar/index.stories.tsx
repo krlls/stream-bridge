@@ -3,7 +3,7 @@ import { Flex, Text } from '@chakra-ui/react'
 
 import { VerticalSidebar } from './index.tsx'
 import { StreamingList } from '../StreamingList'
-import { StreamingListStory } from '../StreamingList/index.stories.tsx'
+import { streamingListData } from '../StreamingList/index.stories.tsx'
 
 const meta: Meta<typeof VerticalSidebar> = {
   component: VerticalSidebar,
@@ -37,12 +37,13 @@ export const VerticalSidebarWithItemsStory: Story = {
   ...VerticalSidebarStory,
   parameters: {
     layout: 'fullscreen',
-    msw: StreamingListStory.parameters?.msw,
   },
-
+  args: {
+    ...({ isLoading: false, isError: false } as any),
+  },
   render: (args) => (
     <VerticalSidebar {...args}>
-      <StreamingList />
+      <StreamingList data={streamingListData} isLoading={false} isError={false} {...args} />
     </VerticalSidebar>
   ),
 }

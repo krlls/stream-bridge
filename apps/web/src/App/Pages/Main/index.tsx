@@ -8,6 +8,7 @@ import { Page } from '../../../components/Page'
 import { MainHeader } from '../../../components/MainHeader'
 import { variants } from '../../../utils/size.ts'
 import { useThemeColors } from '../../../hooks/useThemeColors.ts'
+import { useGetStreamingListQuery } from '../../../data/streaming'
 
 export type TProps = {
   children?: ReactNode,
@@ -15,11 +16,12 @@ export type TProps = {
 
 export const Main: FC<TProps> = () => {
   const { primary } = useThemeColors()
+  const { data, isLoading, isError } = useGetStreamingListQuery()
 
   return (
     <Page header={<MainHeader />}>
       <VerticalSidebar>
-        <StreamingList />
+        <StreamingList data={data} isLoading={isLoading} isError={isError} />
       </VerticalSidebar>
       <Flex flex={1} background={primary}>
         <Flex
