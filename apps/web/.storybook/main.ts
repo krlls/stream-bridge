@@ -17,6 +17,7 @@ const config = {
     getAbsolutePath('@storybook/addon-essentials'),
     getAbsolutePath('@storybook/addon-onboarding'),
     getAbsolutePath('@storybook/addon-interactions'),
+    getAbsolutePath('@storybook-addon-faker/addon'),
   ],
   framework: {
     name: getAbsolutePath('@storybook/react-vite'),

@@ -1,8 +1,9 @@
 import { FC } from 'react'
-import { Spinner, Text } from '@chakra-ui/react'
+import { Spinner } from '@chakra-ui/react'
 import { Navigate, useParams } from 'react-router-dom'
 
 import { useGetStreamingListQuery } from '../../data/streaming'
+import { ListOfPlaylists } from '../ListOfPlaylists'
 
 export const Playlists: FC = () => {
   const { data, isError, isLoading } = useGetStreamingListQuery()
@@ -20,5 +21,5 @@ export const Playlists: FC = () => {
     return <Navigate to='/' replace />
   }
 
-  return <Text>Playlists cmp {type}</Text>
+  return <ListOfPlaylists isLoading={true} isError={false} />
 }
