@@ -2,11 +2,14 @@ import { Dictionary } from '../types.ts'
 
 export const ru: Dictionary = {
   login: 'Вход',
+  registration: 'Регистрация',
   EmailAddress: 'Email адрес',
   Email: 'Email',
   Password: 'Пароль',
+  RepeatPassword: 'Повторите пароль',
   YourEmail: 'Ваш email',
   YourPassword: 'Ваш пароль',
+  YourRepeatPassword: 'Ваш повторенный пароль',
   EmailIsRequired: 'Email не может быть пустым',
   PasswordIsRequired: 'Пароль не может быть пустым',
   MinimumLengthShould: 'Минимальная длинна 4 символа',

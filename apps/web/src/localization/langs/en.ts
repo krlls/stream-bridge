@@ -1,10 +1,13 @@
 export const en = {
   login: 'Login',
+  registration: 'Registration',
   EmailAddress: 'Email address',
   Email: 'Email',
   Password: 'Password',
+  RepeatPassword: 'Repeat the password',
   YourEmail: 'Your email',
   YourPassword: 'Your password',
+  YourRepeatPassword: 'Your repeat the password',
   EmailIsRequired: 'Email is required',
   PasswordIsRequired: 'Password is required',
   MinimumLengthShould: 'Minimum length should be 4',
