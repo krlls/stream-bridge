@@ -1,9 +1,3 @@
-export { Api } from './api';
-export type {
-  ApiErrorResp,
-  Response,
-  Paginated,
-  EStreamingType,
-  Success,
-  Fail,
-} from './common';
+export { Api } from './api'
+export type { ApiErrorResp, Response, Paginated, Success, Fail } from './common'
+export { EStreamingType } from './common'
