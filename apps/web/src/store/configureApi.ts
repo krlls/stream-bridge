@@ -3,6 +3,7 @@ import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolk
 
 import { RootState } from './configureStore.ts'
 import { API_URL } from '../const.ts'
+import { parseErrorStatus } from '../utils/api.ts'
 
 const baseQuery = retry(
   async (args: string | FetchArgs, api, extraOptions) => {
@@ -19,7 +20,9 @@ const baseQuery = retry(
       },
     })(args, api, extraOptions)
 
-    if (result.error?.status === 401 || result.error?.status === 403) {
+    const error = parseErrorStatus(result)
+
+    if (error === 401 || error === 403) {
       retry.fail(result.error)
     }
 
@@ -42,10 +45,7 @@ const baseQueryWithHandlers: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQ
   }
 
   const error = {
-    status:
-      typeof result.error.status === 'number'
-        ? result.error.status
-        : (result.error.status === 'PARSING_ERROR' && result.error.originalStatus) || result.error.status,
+    status: parseErrorStatus(result),
     error: result.error,
   }
 
