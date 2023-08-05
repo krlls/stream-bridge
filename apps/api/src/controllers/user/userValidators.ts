@@ -7,7 +7,7 @@ const createUser = validatorFactory(
     login: Joi.string().required(),
     name: Joi.string().required(),
     pass: Joi.string().required(),
-  }),
+  }).required(),
 )
 
 const getProfile = validatorFactory(Joi.object().required().max(0))

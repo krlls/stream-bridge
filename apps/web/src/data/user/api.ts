@@ -26,8 +26,18 @@ export const userApi = api.injectEndpoints({
       transformResponse: (response: Success<Api.User.GetProfile.Resp>) => response,
       providesTags: [EApiTags.USER],
     }),
+
+    createUser: build.mutation<Success<Api.User.Create.Resp>, Api.User.Create.Req>({
+      query: (body) => ({
+        method: 'POST',
+        url: userUrl(Api.User.Create.URL),
+        body,
+      }),
+      transformResponse: (response: Success<Api.User.Create.Resp>) => response,
+      invalidatesTags: [EApiTags.USER, EApiTags.AUTH],
+    }),
   }),
   overrideExisting: false,
 })
 
-export const { useAuthMutation, useGetUserQuery } = userApi
+export const { useAuthMutation, useGetUserQuery, useCreateUserMutation } = userApi
