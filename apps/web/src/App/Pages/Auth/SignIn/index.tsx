@@ -20,6 +20,7 @@ import { Link } from 'react-router-dom'
 
 import { useAuthMutation } from '../../../../data/user'
 import { useLocalization } from '../../../../hooks/useLocalization.ts'
+import { RegularEmailValidation } from '../../../../utils/utils.ts'
 
 type Inputs = {
   email: string,
@@ -72,7 +73,7 @@ export const SignIn: FC = () => {
                     required: t(d.EmailIsRequired),
                     minLength: { value: 4, message: t(d.MinimumLengthShould) },
                     pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      value: RegularEmailValidation,
                       message: t(d.InvalidEmailAddress),
                     },
                   })}

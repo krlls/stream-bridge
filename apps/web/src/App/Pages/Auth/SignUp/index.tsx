@@ -14,10 +14,11 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react'
 import { Link, useNavigate } from 'react-router-dom'
-import { UnlockIcon } from '@chakra-ui/icons'
+import { SmallAddIcon } from '@chakra-ui/icons'
 
 import { useLocalization } from '../../../../hooks/useLocalization.ts'
 import { useCreateUserMutation } from '../../../../data/user'
+import { RegularEmailValidation } from '../../../../utils/utils.ts'
 
 type Inputs = {
   email: string,
@@ -82,7 +83,7 @@ export const SignUp: FC = () => {
                     required: t(d.EmailIsRequired),
                     minLength: { value: 4, message: t(d.MinimumLengthShould) },
                     pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      value: RegularEmailValidation,
                       message: t(d.InvalidEmailAddress),
                     },
                   })}
@@ -127,7 +128,7 @@ export const SignUp: FC = () => {
                   <Button>{t(d.ToLogin)}</Button>
                 </Link>
                 <Button colorScheme='teal' type='submit' disabled={!isValid}>
-                  <UnlockIcon marginRight={2} />
+                  <SmallAddIcon marginRight={2} />
                   {t(d.registration)}
                 </Button>
               </Stack>

@@ -6,7 +6,7 @@ export const en = {
   Email: 'Email',
   Name: 'Name',
   Password: 'Password',
-  RepeatPassword: 'Repeat the password',
+  RepeatPassword: 'Repeat password',
   YourEmail: 'Your email',
   YourPassword: 'Your password',
   EmailIsRequired: 'Email is required',
