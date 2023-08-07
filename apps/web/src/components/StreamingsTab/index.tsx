@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Skeleton } from '@chakra-ui/react'
+import { Skeleton, Stack, StackItem } from '@chakra-ui/react'
 
 import { ConnectStreaming } from '../ConnectStreaming'
 import { useUserStreamings } from '../../hooks/useUserStreamings.ts'
@@ -8,8 +8,16 @@ export const StreamingsTab: FC = () => {
   const { data, isLoading, isError } = useUserStreamings()
 
   if (isLoading || isError) {
-    return <Skeleton height={40} width='100%' />
+    return <Skeleton height='80px' width='100%' m={'4px'} rounded='md' />
   }
 
-  return (data || []).map(({ type, name }) => <ConnectStreaming type={type} name={name} isConnected />)
+  return (
+    <Stack spacing={4}>
+      {(data || []).map(({ type, name, isConnected }) => (
+        <StackItem>
+          <ConnectStreaming type={type} name={name} isConnected={isConnected} />
+        </StackItem>
+      ))}
+    </Stack>
+  )
 }
