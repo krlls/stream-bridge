@@ -59,7 +59,9 @@ export const Header: FC<TProps> = ({ mobileMenu }) => {
                   <Heading size='sm'>{data?.name}</Heading>
                 </Center>
                 <MenuDivider />
-                <MenuItem>{t(d.Profile)}</MenuItem>
+                <MenuItem>
+                  <Link to='/profile'> {t(d.Profile)}</Link>
+                </MenuItem>
                 <MenuItem>{t(d.Settings)}</MenuItem>
                 <MenuItem onClick={() => dispatch(resetToken())}>{t(d.LogOut)}</MenuItem>
               </MenuList>

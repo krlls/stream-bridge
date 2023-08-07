@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useRef, useState } from 'react'
+import { FC, ReactNode } from 'react'
 import { Flex } from '@chakra-ui/react'
 import * as CSS from 'csstype'
 import { Outlet } from 'react-router-dom'
@@ -6,9 +6,10 @@ import { Outlet } from 'react-router-dom'
 import { VerticalSidebar } from '../../../components/VerticalSidebar'
 import { Page } from '../../../components/Page'
 import { MainHeader } from '../../../components/MainHeader'
-import { variants } from '../../../utils/size.ts'
-import { useThemeColors } from '../../../hooks/useThemeColors.ts'
+import { variants } from '../../../utils/size'
+import { useThemeColors } from '../../../hooks/useThemeColors'
 import { UserStreamings } from '../../../components/UserStreamings'
+import { useGetRef } from '../../../hooks/useGetRef'
 
 export type TProps = {
   children?: ReactNode,
@@ -16,12 +17,7 @@ export type TProps = {
 
 export const Main: FC<TProps> = () => {
   const { primary, secondary } = useThemeColors()
-  const ref = useRef<HTMLDivElement>(null)
-  const [shouldUpdate, setShouldUpdate] = useState(true)
-
-  useEffect(() => {
-    if (shouldUpdate) setShouldUpdate(false)
-  }, [shouldUpdate])
+  const ref = useGetRef<HTMLDivElement>()
 
   return (
     <Page

@@ -24,4 +24,7 @@ export const ru: Dictionary = {
   CardWithActionText1: 'Здесь пока ничего нет, выберите первый стриминг-сервис из бокового меню.',
   CardWithActionTitle2: 'Давайте начнем',
   CardWithActionText2: 'Чтобы начать импорт своей медиатеки подключите первый стриминг-сервис.',
+  Streamings: 'Стриминги',
+  Connect: 'Подключить',
+  Update: 'Обновить',
 }
