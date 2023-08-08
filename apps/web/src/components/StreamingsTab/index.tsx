@@ -5,7 +5,7 @@ import { ConnectStreaming } from '../ConnectStreaming'
 import { useUserStreamings } from '../../hooks/useUserStreamings.ts'
 
 export const StreamingsTab: FC = () => {
-  const { data, isLoading, isError } = useUserStreamings()
+  const { data, isLoading, isError, refetch } = useUserStreamings()
 
   if (isLoading || isError) {
     return <Skeleton height='80px' width='100%' m={'4px'} rounded='md' />
@@ -14,8 +14,8 @@ export const StreamingsTab: FC = () => {
   return (
     <Stack spacing={4}>
       {(data || []).map(({ type, name, isConnected }) => (
-        <StackItem>
-          <ConnectStreaming type={type} name={name} isConnected={isConnected} />
+        <StackItem key={type}>
+          <ConnectStreaming type={type} name={name} isConnected={isConnected} reload={refetch} />
         </StackItem>
       ))}
     </Stack>

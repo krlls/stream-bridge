@@ -8,8 +8,19 @@ export const useUserStreamings = () => {
     data: availableData,
     isLoading: isAvailableLoading,
     isError: isAvailableError,
+    refetch: refetchAvailable,
   } = useGetAvailableStreamingsQuery('')
-  const { data: listData, isLoading: isListLoading, isError: isListError } = useGetStreamingListQuery()
+  const {
+    data: listData,
+    isLoading: isListLoading,
+    isError: isListError,
+    refetch: refetchList,
+  } = useGetStreamingListQuery()
+
+  const refetch = () => {
+    refetchAvailable()
+    refetchList()
+  }
 
   const makeUserStreamings = useCallback(() => {
     const available = new Map<string, Api.Streaming.List.Streaming>()
@@ -20,8 +31,13 @@ export const useUserStreamings = () => {
   }, [availableData, listData])
 
   if (isAvailableError || isListError || isAvailableLoading || isListLoading) {
-    return { data: [], isError: isAvailableError || isListError, isLoading: isAvailableLoading || isListLoading }
+    return {
+      data: [],
+      isError: isAvailableError || isListError,
+      isLoading: isAvailableLoading || isListLoading,
+      refetch,
+    }
   }
 
-  return { data: makeUserStreamings(), isError: false, isLoading: false }
+  return { data: makeUserStreamings(), isError: false, isLoading: false, refetch }
 }
