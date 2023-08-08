@@ -61,11 +61,12 @@ const baseQueryWithHandlers: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQ
 export enum EApiTags {
   USER = 'USER',
   AUTH = 'AUTH',
-  STREAMING = 'STREAMING',
+  USER_STREAMINGS = 'USER_STREAMINGS',
+  STREAMING_LIST = 'STREAMING_LIST',
 }
 
 export const api = createApi({
-  tagTypes: [EApiTags.USER, EApiTags.AUTH, EApiTags.STREAMING],
+  tagTypes: [EApiTags.USER, EApiTags.AUTH, EApiTags.USER_STREAMINGS, EApiTags.STREAMING_LIST],
   baseQuery: baseQueryWithHandlers,
   endpoints: () => ({}),
 })

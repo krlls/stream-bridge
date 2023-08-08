@@ -22,4 +22,7 @@ export const en = {
   CardWithActionText1: 'There is nothing here yet, select the first streaming service from the sidebar menu.',
   CardWithActionTitle2: 'Let\'s Get Started',
   CardWithActionText2: 'To begin importing your media library, connect the first streaming service.',
+  Streamings: 'Streamings',
+  Connect: 'Connect',
+  Update: 'Update',
 }

@@ -2,6 +2,7 @@ import { Avatar, Center, Skeleton, SkeletonCircle, Stack, StackDivider, Text } f
 import { FC, ReactNode } from 'react'
 import { SmallAddIcon, StarIcon } from '@chakra-ui/icons'
 import { Api, Success } from 'api-types'
+import { Link } from 'react-router-dom'
 
 import { useLocalization } from '../../hooks/useLocalization.ts'
 
@@ -20,7 +21,9 @@ export const StreamingList: FC<TProps> = ({ data, isLoading, isError, onEnter })
 
   return (
     <Stack spacing={4} divider={<StackDivider />}>
-      <Streaming image={<SmallAddIcon boxSize='2em' />} title={t(d.AddService)} />
+      <Link to='/Profile?tab=1'>
+        <Streaming image={<SmallAddIcon boxSize='2em' />} title={t(d.AddService)} />
+      </Link>
       {isLoading || isError
         ? Array(NUMBER_OF_LOADING)
             .fill(null)
