@@ -14,6 +14,7 @@ export class PlaylistEntityConverter implements Converter<PlaylistEntity, Playli
       external_id: from.external_id,
       import_id: from.import_id,
       streaming_type: from.streaming.type,
+      cover: from.cover,
     }
   }
 

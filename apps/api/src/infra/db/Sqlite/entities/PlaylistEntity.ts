@@ -17,6 +17,9 @@ export class PlaylistEntity extends BaseEntity {
   @Column()
   name: string
 
+  @Column({ nullable: true })
+  cover?: string
+
   @Column({ type: 'text', nullable: false })
   import_id: Uid
 

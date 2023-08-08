@@ -1,6 +1,16 @@
 import { FC } from 'react'
 import { StarIcon } from '@chakra-ui/icons'
-import { AspectRatio, Card, CardBody, CardHeader, Flex, Text, useColorModeValue } from '@chakra-ui/react'
+import {
+  AspectRatio,
+  Card,
+  CardBody,
+  CardHeader,
+  Flex,
+  Text,
+  Image,
+  useColorModeValue,
+  Skeleton,
+} from '@chakra-ui/react'
 
 import { variants } from '../../utils/size.ts'
 import { useThemeColors } from '../../hooks/useThemeColors.ts'
@@ -8,11 +18,13 @@ import { useThemeColors } from '../../hooks/useThemeColors.ts'
 export type TProps = {
   id: number,
   name: string,
+  cover?: string,
   onClick?(id: number): void,
 }
 
-export const PlaylistCard: FC<TProps> = ({ id, name, onClick }) => {
+export const PlaylistCard: FC<TProps> = ({ id, name, onClick, cover }) => {
   const { imagePlaceholder, subBackground } = useThemeColors()
+  const imagePlaceholderColor = useColorModeValue('gray.400', 'gray.500')
 
   return (
     <Card
@@ -41,7 +53,11 @@ export const PlaylistCard: FC<TProps> = ({ id, name, onClick }) => {
             rounded='md'
             shadow={useColorModeValue('none', 'md')}
           >
-            <StarIcon boxSize='3em' color={useColorModeValue('gray.400', 'gray.500')} />
+            {cover ? (
+              <Image src={cover} flex={1} fallback={<Skeleton flex={1} width={'100%'} height='100%' />} />
+            ) : (
+              <StarIcon boxSize='3em' color={imagePlaceholderColor} />
+            )}
           </Flex>
         </AspectRatio>
       </CardHeader>

@@ -8,6 +8,7 @@ export class PlaylistApiConverter implements Converter<SimplifiedPlaylist, Exter
     return new ExternalPlaylistDTO({
       name: from.name,
       id: from.id,
+      cover: from.images?.length ? from.images[0]?.url : undefined,
     })
   }
 }

@@ -198,6 +198,7 @@ export class PlaylistRepository implements IPlaylistRepository {
     playlist.name = playlistData.name
     playlist.external_id = playlistData.externalId
     playlist.import_id = playlistData.importId
+    playlist.cover = playlistData.cover
 
     return playlist
   }

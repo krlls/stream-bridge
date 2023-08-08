@@ -6,11 +6,13 @@ export class PlaylistDto {
   externalId: string
   name: string
   streamingType: EStreamingType
+  cover?: string
 
   constructor(playlist: Playlist) {
     this.id = playlist.id
     this.externalId = playlist.external_id
     this.streamingType = playlist.streaming_type
     this.name = playlist.name
+    this.cover = playlist.cover
   }
 }

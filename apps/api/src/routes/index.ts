@@ -56,6 +56,9 @@ export const routers = (app: any) => {
  *         name:
  *           type: string
  *           description: Playlist title
+ *         cover:
+ *           type: string
+ *           description: Cover image uri
  *         streamingType:
  *           type: string
  *           enum: [spotify]
