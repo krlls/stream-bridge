@@ -29,7 +29,7 @@ export const ListOfPlaylists: FC<TProps> = ({ playlists = [], isError, isLoading
               rounded='md'
             />
           ))
-      : playlists.map(({ id, name }) => <PlaylistCard key={id + name} id={id} name={name} />)
+      : playlists.map(({ id, name, cover }) => <PlaylistCard key={id + name} id={id} name={name} cover={cover} />)
 
   return (
     <Stack

@@ -165,6 +165,7 @@ export namespace Api {
         externalId: string,
         name: string,
         streamingType: EStreamingType,
+        cover?: string,
       }
 
       export type Resp = Response<Paginated<Playlist>>

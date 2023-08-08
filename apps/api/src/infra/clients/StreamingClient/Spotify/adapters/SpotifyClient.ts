@@ -88,7 +88,7 @@ export class SpotifyClient implements IClient {
     const paginatedPlaylists = await this.client.currentUser.playlists.playlists(limit, offset)
 
     if (!paginatedPlaylists) {
-      this.logger.error('getPlaylists', 'Playlists:')
+      this.logger.error('getPlaylists', 'empty result')
 
       return []
     }

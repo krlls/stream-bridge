@@ -4,10 +4,12 @@ import { Uid } from '../../../types/common'
 export class ExternalPlaylistDTO {
   external_id: string
   name: string
+  cover?: string
 
-  constructor(playlist: { id: string, name: string }) {
+  constructor(playlist: { id: string, name: string, cover?: string }) {
     this.external_id = playlist.id
     this.name = playlist.name
+    this.cover = playlist.cover
   }
 
   toCreate({
@@ -25,6 +27,7 @@ export class ExternalPlaylistDTO {
       importId,
       externalId: this.external_id,
       name: this.name,
+      cover: this.cover,
     })
   }
 }

@@ -7,4 +7,5 @@ export interface Playlist {
   name: string,
   import_id: Uid,
   streaming_type: EStreamingType,
+  cover?: string,
 }
