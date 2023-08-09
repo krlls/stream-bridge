@@ -1,41 +1,23 @@
-import { FC, useEffect } from 'react'
-import { Spinner } from '@chakra-ui/react'
-import { Navigate, useParams } from 'react-router-dom'
+import { FC } from 'react'
+import { Api } from 'api-types'
+import { capitalize } from 'lodash'
 
-import { useGetStreamingListQuery } from '../../data/streaming'
 import { Section } from '../Section'
 import { ListOfPlaylists } from '../ListOfPlaylists'
 import { useLocalization } from '../../hooks/useLocalization.ts'
-import { useLazyGetPlaylistsByStreamingQuery } from '../../data/music'
+import { useGetPlaylistsByStreamingQuery } from '../../data/music'
 
-export const Playlists: FC = () => {
-  const { data, isError, isLoading } = useGetStreamingListQuery()
-  const [getPlaylists, result] = useLazyGetPlaylistsByStreamingQuery()
-  const { type } = useParams()
+export type TProps = {
+  streaming: Api.Streaming.EApiStreamingType,
+}
+
+export const Playlists: FC<TProps> = ({ streaming }) => {
+  const { isError, data, isLoading } = useGetPlaylistsByStreamingQuery({ streamingType: streaming, offset: 0 })
   const { t, d } = useLocalization()
-  const streamingByType = data?.items.find((s) => s.type.toLowerCase() === type)
-
-  useEffect(() => {
-    if (streamingByType?.type) {
-      getPlaylists({ streamingType: streamingByType.type.toLowerCase(), offset: 0 })
-    }
-  }, [streamingByType?.type])
-
-  if (isError) {
-    return <Navigate to='/' replace />
-  }
-
-  if (isLoading || !data) {
-    return <Spinner />
-  }
-
-  if (!streamingByType) {
-    return <Navigate to='/' replace />
-  }
 
   return (
-    <Section title={`${streamingByType.type[0] + streamingByType.type.toLowerCase().slice(1)} / ${t(d.Playlists)}`}>
-      <ListOfPlaylists isLoading={result.isLoading} isError={isError} playlists={result.data?.items} />
+    <Section title={`${capitalize(streaming)} / ${t(d.Playlists)}`}>
+      <ListOfPlaylists isLoading={isLoading} isError={isError} playlists={data?.items} />
     </Section>
   )
 }

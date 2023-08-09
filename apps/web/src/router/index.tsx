@@ -8,8 +8,8 @@ import { Main } from '../App/Pages/Main'
 import { AuthLayout } from '../components/AuthLayout'
 import { SignUp } from '../App/Pages/Auth/SignUp'
 import { HelpCard } from '../components/HelpCard'
-import { Playlists } from '../components/Playlists'
 import { Profile } from '../App/Pages/Main/Profile'
+import { Streaming } from '../App/Pages/Streaming'
 
 export const router = createBrowserRouter([
   {
@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
               },
               {
                 path: '/streaming/:type',
-                element: <Playlists />,
+                element: <Streaming />,
               },
               {
                 path: '/profile',
