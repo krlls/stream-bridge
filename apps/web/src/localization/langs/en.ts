@@ -25,4 +25,7 @@ export const en = {
   Streamings: 'Streamings',
   Connect: 'Connect',
   Update: 'Update',
+  Import: 'Import',
+  Export: 'Export',
+  Tracks: 'Tracks',
 }

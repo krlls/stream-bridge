@@ -27,4 +27,7 @@ export const ru: Dictionary = {
   Streamings: 'Стриминги',
   Connect: 'Подключить',
   Update: 'Обновить',
+  Import: 'Импорт',
+  Export: 'Экспорт',
+  Tracks: 'Треки',
 }

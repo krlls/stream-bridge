@@ -1,6 +1,5 @@
 import { FC } from 'react'
 import { Api } from 'api-types'
-import { capitalize } from 'lodash'
 
 import { Section } from '../Section'
 import { ListOfPlaylists } from '../ListOfPlaylists'
@@ -16,7 +15,7 @@ export const Playlists: FC<TProps> = ({ streaming }) => {
   const { t, d } = useLocalization()
 
   return (
-    <Section title={`${capitalize(streaming)} / ${t(d.Playlists)}`}>
+    <Section title={t(d.Playlists)}>
       <ListOfPlaylists isLoading={isLoading} isError={isError} playlists={data?.items} />
     </Section>
   )
