@@ -77,4 +77,4 @@ export class StreamingLogger extends Logger {
   }
 }
 
-export const showNotEmpty = <A, B>(a: A, b: B) => (!isEmpty(a) ? a : !isEmpty(b) ? b : undefined)
+export const showNotEmpty = <A, B>(a: A, b: B) => (!isEmpty(a) ? a : !isEmpty(b) ? b : '')
