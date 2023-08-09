@@ -20,4 +20,4 @@ export const musicApi = api.injectEndpoints({
   overrideExisting: false,
 })
 
-export const { useLazyGetPlaylistsByStreamingQuery } = musicApi
+export const { useGetPlaylistsByStreamingQuery } = musicApi

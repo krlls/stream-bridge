@@ -1,10 +1,11 @@
-import { Avatar, Center, Skeleton, SkeletonCircle, Stack, StackDivider, Text } from '@chakra-ui/react'
+import { Center, Image, Skeleton, SkeletonCircle, Stack, StackDivider, Text } from '@chakra-ui/react'
 import { FC, ReactNode } from 'react'
-import { SmallAddIcon, StarIcon } from '@chakra-ui/icons'
+import { SmallAddIcon } from '@chakra-ui/icons'
 import { Api, Success } from 'api-types'
 import { Link } from 'react-router-dom'
 
 import { useLocalization } from '../../hooks/useLocalization.ts'
+import { streamingToLogo } from '../../utils/image.ts'
 
 type TProps = {
   data?: Success<Api.Streaming.List.Resp>,
@@ -22,7 +23,7 @@ export const StreamingList: FC<TProps> = ({ data, isLoading, isError, onEnter })
   return (
     <Stack spacing={4} divider={<StackDivider />}>
       <Link to='/Profile?tab=1'>
-        <Streaming image={<SmallAddIcon boxSize='2em' />} title={t(d.AddService)} />
+        <Streaming icon={<SmallAddIcon boxSize='2em' />} title={t(d.AddService)} />
       </Link>
       {isLoading || isError
         ? Array(NUMBER_OF_LOADING)
@@ -36,7 +37,7 @@ export const StreamingList: FC<TProps> = ({ data, isLoading, isError, onEnter })
         : data?.items.map((s) => (
             <Streaming
               key={s.id + s.type}
-              image={<Avatar mb={2} icon={<StarIcon />} />}
+              image={streamingToLogo(s.type)}
               title={s.type[0] + s.type.slice(1).toLowerCase()}
               onEnter={onEnter ? () => onEnter(s) : undefined}
             />
@@ -45,10 +46,20 @@ export const StreamingList: FC<TProps> = ({ data, isLoading, isError, onEnter })
   )
 }
 
-function Streaming({ image, title, onEnter }: { image: ReactNode, title: string, onEnter?(): void }) {
+function Streaming({
+  image,
+  title,
+  onEnter,
+  icon,
+}: {
+  image?: string,
+  title: string,
+  icon?: ReactNode,
+  onEnter?(): void,
+}) {
   return (
     <Center flexDirection='column' as={'button'} alignContent='center' onClick={onEnter}>
-      {image}
+      {icon ? icon : <Image width={'48px'} height={'48px'} src={image} mb={2} rounded='full' />}
       <Text lineHeight={1.4} noOfLines={2} fontSize='sm' maxWidth='97px'>
         {title}
       </Text>

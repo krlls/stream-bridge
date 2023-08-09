@@ -1,0 +1,5 @@
+.sub_header {
+  flex: 1;
+  background: linear-gradient(to left, #7928ca8f, #ff00808f);
+  -webkit-mask-image: -webkit-gradient(linear, left 30%, left bottom, from(rgba(0, 0, 0, 1)), to(rgba(0, 0, 0, 0)));
+}
