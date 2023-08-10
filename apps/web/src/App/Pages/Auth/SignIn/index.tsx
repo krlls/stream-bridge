@@ -20,6 +20,7 @@ import { Link } from 'react-router-dom'
 
 import { useAuthMutation } from '../../../../data/user'
 import { useLocalization } from '../../../../hooks/useLocalization.ts'
+import { MIN_EMAIL_LENGTH, MIN_PASS_LENGTH, RegularEmailValidation } from '../../../../utils/vaidation.ts'
 
 type Inputs = {
   email: string,
@@ -70,9 +71,9 @@ export const SignIn: FC = () => {
                   type='email'
                   {...register('email', {
                     required: t(d.EmailIsRequired),
-                    minLength: { value: 4, message: t(d.MinimumLengthShould) },
+                    minLength: { value: MIN_EMAIL_LENGTH, message: t(d.MinimumLengthShould) },
                     pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      value: RegularEmailValidation,
                       message: t(d.InvalidEmailAddress),
                     },
                   })}
@@ -88,7 +89,7 @@ export const SignIn: FC = () => {
                   type='password'
                   {...register('password', {
                     required: t(d.PasswordIsRequired),
-                    minLength: { value: 4, message: t(d.MinimumLengthShould) },
+                    minLength: { value: MIN_PASS_LENGTH, message: t(d.MinimumLengthShould) },
                   })}
                 />
                 <FormHelperText>{t(d.YourPassword)}</FormHelperText>
