@@ -19,7 +19,6 @@ module.exports = {
     'prettier',
   ],
   rules: {
-    'import/extensions': ['warn', { 'ts|tsx|js|jsx': 'never'}],
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-namespace': 'off',
