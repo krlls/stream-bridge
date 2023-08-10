@@ -1,24 +1,22 @@
 import { FC, useEffect } from 'react'
-import { Flex, Spinner, useToast } from '@chakra-ui/react'
-import { Navigate, useParams } from 'react-router-dom'
+import { Flex, useToast } from '@chakra-ui/react'
+import { useOutletContext } from 'react-router-dom'
 import { Api } from 'api-types'
 import { capitalize } from 'lodash'
 
-import { useGetStreamingListQuery, useImportPlaylistsMutation } from '../../../data/streaming'
-import { Playlists } from '../../../components/Playlists'
-import { StreamingSubHeader } from '../../../components/StreamingSubHeader'
-import { streamingToLogo } from '../../../utils/image.ts'
-import { convertStreamingType } from '../../../utils/api.ts'
-import { useLocalization } from '../../../hooks/useLocalization.ts'
+import { useImportPlaylistsMutation } from '../../../../data/streaming'
+import { Playlists } from '../../../../components/Playlists'
+import { StreamingSubHeader } from '../../../../components/StreamingSubHeader'
+import { streamingToLogo } from '../../../../utils/image.ts'
+import { convertStreamingType } from '../../../../utils/api.ts'
+import { useLocalization } from '../../../../hooks/useLocalization.ts'
+import { TOutletContext } from '../../../../components/StreamingLayout'
 
 export const Streaming: FC = () => {
-  const { data, isError, isLoading } = useGetStreamingListQuery()
   const [importPlaylists, importResult] = useImportPlaylistsMutation()
   const { t, d } = useLocalization()
-  const { type } = useParams()
   const toast = useToast()
-
-  const streamingByType = data?.items.find((s) => s.type.toLowerCase() === type)
+  const { streamingByType } = useOutletContext<TOutletContext>()
 
   useEffect(() => {
     if (!importResult.isSuccess && !importResult.isError) {
@@ -34,19 +32,8 @@ export const Streaming: FC = () => {
       duration: 5000,
       isClosable: true,
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importResult.isSuccess, importResult.isError])
-
-  if (isError) {
-    return <Navigate to='/' replace />
-  }
-
-  if (isLoading || !data) {
-    return <Spinner />
-  }
-
-  if (!streamingByType) {
-    return <Navigate to='/' replace />
-  }
 
   return (
     <Flex direction='column'>
