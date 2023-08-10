@@ -11,14 +11,18 @@ interface TProps {
   playlists: number,
   tracks: number,
   logo?: string,
+  isImporting: boolean,
+  onImport(): void,
 }
 
-export const StreamingSubHeader: FC<TProps> = ({ title, playlists, tracks, logo }) => {
+export const StreamingSubHeader: FC<TProps> = ({ title, playlists, tracks, logo, onImport, isImporting }) => {
   const { t, d } = useLocalization()
 
   const actions = (
     <ButtonGroup mt={4} isAttached variant='outline' size='sm'>
-      <Button leftIcon={playlists ? <RepeatIcon /> : <DownloadIcon />}>{playlists ? t(d.Update) : t(d.Import)}</Button>
+      <Button isLoading={isImporting} onClick={onImport} leftIcon={playlists ? <RepeatIcon /> : <DownloadIcon />}>
+        {playlists ? t(d.Update) : t(d.Import)}
+      </Button>
       <Button rightIcon={<ArrowForwardIcon />} disabled={!playlists}>
         {t(d.Export)}
       </Button>

@@ -38,4 +38,8 @@ export const ru: Dictionary = {
   Import: 'Импорт',
   Export: 'Экспорт',
   Tracks: 'Треки',
+  ImportPlaylistsSuccess: 'Импорт завершен',
+  ImportPlaylistsSuccessMessage: 'Сохранено {{saved}} плейлистов из {{exported}}',
+  ImportPlaylistsError: 'Ошибка импорта',
+  ImportPlaylistsErrorMessage: 'Что-то пошло не так, обновите токен приложения.',
 }

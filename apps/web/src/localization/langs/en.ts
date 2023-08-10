@@ -36,4 +36,8 @@ export const en = {
   Import: 'Import',
   Export: 'Export',
   Tracks: 'Tracks',
+  ImportPlaylistsSuccess: 'Import completed',
+  ImportPlaylistsSuccessMessage: '{{exported}} playlists saved out of {{saved}}',
+  ImportPlaylistsError: 'Import error',
+  ImportPlaylistsErrorMessage: 'Something went wrong, please refresh the application token.',
 }

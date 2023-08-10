@@ -63,10 +63,12 @@ export enum EApiTags {
   AUTH = 'AUTH',
   USER_STREAMINGS = 'USER_STREAMINGS',
   STREAMING_LIST = 'STREAMING_LIST',
+  PLAYLISTS = 'PLAYLISTS',
+  TRACKS = 'TRACKS',
 }
 
 export const api = createApi({
-  tagTypes: [EApiTags.USER, EApiTags.AUTH, EApiTags.USER_STREAMINGS, EApiTags.STREAMING_LIST],
+  tagTypes: [EApiTags.USER, EApiTags.AUTH, EApiTags.USER_STREAMINGS, EApiTags.STREAMING_LIST, EApiTags.PLAYLISTS],
   baseQuery: baseQueryWithHandlers,
   endpoints: () => ({}),
 })
