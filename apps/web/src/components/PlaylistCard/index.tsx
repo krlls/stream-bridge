@@ -41,6 +41,7 @@ export const PlaylistCard: FC<TProps> = ({ id, name, onClick, cover }) => {
       _hover={{
         shadow: useColorModeValue('none', 'xl'),
         transform: 'scale(1.05, 1.05)',
+        bg: useColorModeValue('gray.200', 'gray.720'),
       }}
     >
       <CardHeader display='flex' alignItems='center' justifyContent='center' p='12px'>
