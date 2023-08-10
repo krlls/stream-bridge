@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom'
 
 import { useAuthMutation } from '../../../../data/user'
 import { useLocalization } from '../../../../hooks/useLocalization.ts'
-import { RegularEmailValidation } from '../../../../utils/utils.ts'
+import { RegularEmailValidation } from '../../../../utils/vaidation.ts'
 
 type Inputs = {
   email: string,

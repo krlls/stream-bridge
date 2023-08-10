@@ -16,9 +16,9 @@ import {
 import { Link, useNavigate } from 'react-router-dom'
 import { SmallAddIcon } from '@chakra-ui/icons'
 
-import { useLocalization } from '../../../../hooks/useLocalization.ts'
+import { useLocalization } from '../../../../hooks/useLocalization'
 import { useCreateUserMutation } from '../../../../data/user'
-import { RegularEmailValidation } from '../../../../utils/utils.ts'
+import { MaximumLength, MinimalLength, RegularEmailValidation } from '../../../../utils/vaidation'
 
 type Inputs = {
   email: string,
@@ -68,7 +68,8 @@ export const SignUp: FC = () => {
                   placeholder={t(d.Name)}
                   {...register('name', {
                     required: t(d.NameIsRequired),
-                    minLength: { value: 1, message: t(d.MinimumLengthShould) },
+                    minLength: MinimalLength(t, d),
+                    maxLength: MaximumLength(t, d),
                   })}
                 />
                 <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
@@ -81,7 +82,8 @@ export const SignUp: FC = () => {
                   placeholder={t(d.Email)}
                   {...register('email', {
                     required: t(d.EmailIsRequired),
-                    minLength: { value: 4, message: t(d.MinimumLengthShould) },
+                    minLength: MinimalLength(t, d),
+                    maxLength: MaximumLength(t, d),
                     pattern: {
                       value: RegularEmailValidation,
                       message: t(d.InvalidEmailAddress),
@@ -98,7 +100,8 @@ export const SignUp: FC = () => {
                   placeholder={t(d.Password)}
                   {...register('password', {
                     required: t(d.PasswordIsRequired),
-                    minLength: { value: 4, message: t(d.MinimumLengthShould) },
+                    minLength: MinimalLength(t, d),
+                    maxLength: MaximumLength(t, d),
                     onChange: (e: SyntheticEvent<HTMLInputElement>) => setPassword(e.currentTarget.value),
                   })}
                 />
@@ -111,10 +114,11 @@ export const SignUp: FC = () => {
                   placeholder={t(d.RepeatPassword)}
                   {...register('repeatPassword', {
                     required: t(d.PasswordIsRequired),
-                    minLength: { value: 4, message: t(d.MinimumLengthShould) },
+                    minLength: MinimalLength(t, d),
+                    maxLength: MaximumLength(t, d),
                     validate: (val) => {
                       if (password !== val) {
-                        return 'Passwords not match'
+                        return t(d.PasswordsNotMatch)
                       }
 
                       return true
