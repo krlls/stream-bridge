@@ -25,6 +25,7 @@ export const PlaylistSubHeader: FC<TProps> = ({ title, tracks, cover, onImport, 
       image={cover}
       tags={[{ title: `${t(d.Tracks)} ${tracks}`, color: 'green' }]}
       topCmp={<NavBar iconClick={() => navigate('/Profile?tab=1')} right={false} />}
+      bgImage={cover}
     >
       <ButtonGroup mt={4} isAttached variant='outline' size='sm'>
         <Button onClick={onImport} isLoading={isImporting} leftIcon={tracks ? <RepeatIcon /> : <DownloadIcon />}>

@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { Navigate } from 'react-router-dom'
-import { Flex, Spinner } from '@chakra-ui/react'
+import { Box, Spinner } from '@chakra-ui/react'
 import { Api } from 'api-types'
 
 import { PlaylistSubHeader } from '../../../components/PlaylistSubHeader'
@@ -24,8 +24,8 @@ export const Playlist: FC = () => {
   const { name, cover } = playlist
 
   return (
-    <Flex flex={1}>
+    <Box flexGrow={1}>
       <PlaylistSubHeader title={name} cover={cover} tracks={0} isImporting={false} />
-    </Flex>
+    </Box>
   )
 }
