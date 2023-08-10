@@ -36,8 +36,12 @@ export const en = {
   Import: 'Import',
   Export: 'Export',
   Tracks: 'Tracks',
+  ImportConfirmationTitle: 'Confirm Import',
+  ImportConfirmationMessage: 'After confirmation, the import of all your playlists from {{streaming}} will begin.',
   ImportPlaylistsSuccess: 'Import completed',
   ImportPlaylistsSuccessMessage: '{{exported}} playlists saved out of {{saved}}',
   ImportPlaylistsError: 'Import error',
   ImportPlaylistsErrorMessage: 'Something went wrong, please refresh the application token.',
+  Apply: 'Apply',
+  Cancel: 'Cancel',
 }
