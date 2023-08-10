@@ -1,6 +1,6 @@
 import { Api, Success } from 'api-types'
 
-import { api } from '../../store/configureApi.ts'
+import { api, EApiTags } from '../../store/configureApi.ts'
 import { apiPatch } from '../../utils/links.ts'
 import { TGetPlaylists } from './types.ts'
 
@@ -15,6 +15,7 @@ export const musicApi = api.injectEndpoints({
         params: args,
       }),
       transformResponse: (response: Success<Api.Music.Playlists.Resp>) => response,
+      providesTags: [EApiTags.PLAYLISTS],
     }),
   }),
   overrideExisting: false,

@@ -1,4 +1,4 @@
-import { useTranslation, UseTranslationOptions } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 import { dictionary } from '../localization/langs'
 import { Dictionary } from '../localization/types'
@@ -9,7 +9,7 @@ export const useLocalization = () => {
   return {
     ...rest,
     _base: t,
-    t: (ns: keyof Dictionary, options?: UseTranslationOptions<undefined>) => t(ns, options),
+    t: (ns: keyof Dictionary, options?: Record<string, string | number>) => t(ns, options),
     d: dictionary,
   }
 }
