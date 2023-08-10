@@ -18,7 +18,15 @@ import { SmallAddIcon } from '@chakra-ui/icons'
 
 import { useLocalization } from '../../../../hooks/useLocalization'
 import { useCreateUserMutation } from '../../../../data/user'
-import { MaximumLength, MinimalLength, RegularEmailValidation } from '../../../../utils/vaidation'
+import {
+  MAX_EMAIL_LENGTH,
+  MAX_NAME_LENGTH,
+  MAX_PASS_LENGTH,
+  MIN_EMAIL_LENGTH,
+  MIN_NAME_LENGTH,
+  MIN_PASS_LENGTH,
+  RegularEmailValidation,
+} from '../../../../utils/vaidation'
 
 type Inputs = {
   email: string,
@@ -68,8 +76,8 @@ export const SignUp: FC = () => {
                   placeholder={t(d.Name)}
                   {...register('name', {
                     required: t(d.NameIsRequired),
-                    minLength: MinimalLength(t, d),
-                    maxLength: MaximumLength(t, d),
+                    minLength: { value: MIN_NAME_LENGTH, message: t(d.MinimumLengthShould) },
+                    maxLength: { value: MAX_NAME_LENGTH, message: t(d.MaximumLengthShould) },
                   })}
                 />
                 <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
@@ -82,8 +90,8 @@ export const SignUp: FC = () => {
                   placeholder={t(d.Email)}
                   {...register('email', {
                     required: t(d.EmailIsRequired),
-                    minLength: MinimalLength(t, d),
-                    maxLength: MaximumLength(t, d),
+                    minLength: { value: MIN_EMAIL_LENGTH, message: t(d.MinimumLengthShould) },
+                    maxLength: { value: MAX_EMAIL_LENGTH, message: t(d.MaximumLengthShould) },
                     pattern: {
                       value: RegularEmailValidation,
                       message: t(d.InvalidEmailAddress),
@@ -100,8 +108,8 @@ export const SignUp: FC = () => {
                   placeholder={t(d.Password)}
                   {...register('password', {
                     required: t(d.PasswordIsRequired),
-                    minLength: MinimalLength(t, d),
-                    maxLength: MaximumLength(t, d),
+                    minLength: { value: MIN_PASS_LENGTH, message: t(d.MinimumLengthShould) },
+                    maxLength: { value: MAX_PASS_LENGTH, message: t(d.MaximumLengthShould) },
                     onChange: (e: SyntheticEvent<HTMLInputElement>) => setPassword(e.currentTarget.value),
                   })}
                 />
@@ -114,18 +122,12 @@ export const SignUp: FC = () => {
                   placeholder={t(d.RepeatPassword)}
                   {...register('repeatPassword', {
                     required: t(d.PasswordIsRequired),
-                    minLength: MinimalLength(t, d),
-                    maxLength: MaximumLength(t, d),
-                    validate: (val) => {
-                      if (password !== val) {
-                        return t(d.PasswordsNotMatch)
-                      }
-
-                      return true
-                    },
+                    minLength: { value: MIN_PASS_LENGTH, message: t(d.MinimumLengthShould) },
+                    maxLength: { value: MAX_PASS_LENGTH, message: t(d.MaximumLengthShould) },
+                    validate: (val) => password === val || t(d.PasswordsNotMatch),
                   })}
                 />
-                <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
+                <FormErrorMessage>{errors.repeatPassword && errors.repeatPassword.message}</FormErrorMessage>
               </FormControl>
               <Stack direction='row' justify='end'>
                 <Link to='/auth/sign-in'>
