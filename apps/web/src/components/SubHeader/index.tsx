@@ -1,8 +1,9 @@
 import { FC, ReactNode } from 'react'
-import { Box, Fade, Flex, Heading, Image, Tag, TagLabel } from '@chakra-ui/react'
+import { Box, Fade, Flex, Heading, Tag, TagLabel } from '@chakra-ui/react'
 
 import { useThemeColors } from '../../hooks/useThemeColors.ts'
 import { variants } from '../../utils/size.ts'
+import { AppImage } from '../AppImage'
 
 interface TProps {
   title: string,
@@ -26,7 +27,7 @@ export const SubHeader: FC<TProps> = ({ children, title, image, tags, topCmp, bg
     >
       {!!bgImage && (
         <Fade in>
-          <Image position='absolute' width='100%' height={'100%'} src={bgImage} roundedTop='xl' />
+          <AppImage position='absolute' width='100%' height={'100%'} src={bgImage} roundedTop='xl' objectFit='cover' />
         </Fade>
       )}
       <Flex
@@ -51,7 +52,7 @@ export const SubHeader: FC<TProps> = ({ children, title, image, tags, topCmp, bg
                 height={variants('80px', '150px')}
                 mr={variants(4, 6)}
               >
-                <Image src={image} flex={1} bg='gray.400' rounded='xl' />
+                <AppImage src={image} flex={1} bg='gray.400' rounded='xl' />
               </Box>
             </Fade>
             <Flex justifyContent={'space-between'} flexDirection='column'>
@@ -62,7 +63,7 @@ export const SubHeader: FC<TProps> = ({ children, title, image, tags, topCmp, bg
                 {!!tags && (
                   <Box my={2} ml={0}>
                     {tags.map(({ title, color }) => (
-                      <Tag size='sm' variant='outline' colorScheme={color} mr={2}>
+                      <Tag size='sm' variant='outline' colorScheme={color} mr={2} key={title}>
                         <TagLabel>{title}</TagLabel>
                       </Tag>
                     ))}

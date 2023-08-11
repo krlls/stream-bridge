@@ -1,4 +1,4 @@
-import { Center, Image, Skeleton, SkeletonCircle, Stack, StackDivider, Text } from '@chakra-ui/react'
+import { Center, Skeleton, SkeletonCircle, Stack, StackDivider, Text } from '@chakra-ui/react'
 import { FC, ReactNode } from 'react'
 import { SmallAddIcon } from '@chakra-ui/icons'
 import { Api, Success } from 'api-types'
@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 
 import { useLocalization } from '../../hooks/useLocalization.ts'
 import { streamingToLogo } from '../../utils/image.ts'
+import { AppImage } from '../AppImage'
 
 type TProps = {
   data?: Success<Api.Streaming.List.Resp>,
@@ -59,7 +60,7 @@ function Streaming({
 }) {
   return (
     <Center flexDirection='column' as={'button'} alignContent='center' onClick={onEnter}>
-      {icon ? icon : <Image width={'48px'} height={'48px'} src={image} mb={2} rounded='full' />}
+      {icon ? icon : <AppImage width={'48px'} height={'48px'} src={image} mb={2} rounded='full' />}
       <Text lineHeight={1.4} noOfLines={2} fontSize='sm' maxWidth='97px'>
         {title}
       </Text>
