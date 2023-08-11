@@ -3,11 +3,14 @@ import { Fade, Image, ImageProps, Skeleton, useImage } from '@chakra-ui/react'
 
 type TProps = ImageProps
 
+const SVG = '.svg'
+
 export const AppImage: FC<TProps> = ({ ...props }) => {
   const [load, setLoad] = useState(false)
-  const status = useImage({ src: props.src })
+  const src = props.src
+  const status = useImage({ src })
 
-  if (props.src && props.src?.substring(props.src.length - 4, props.src.length) === '.svg') {
+  if (src && src?.substring(src.length - SVG.length, src.length) === SVG) {
     return <Image {...props} />
   }
 
