@@ -26,7 +26,7 @@ export const SubHeader: FC<TProps> = ({ children, title, image, tags, topCmp, bg
     >
       {!!bgImage && (
         <Fade in>
-          <Image position='absolute' width='100%' height={'100%'} src={bgImage} roundedTop='xl' />
+          <Image position='absolute' width='100%' height={'100%'} src={bgImage} roundedTop='xl' objectFit='cover' />
         </Fade>
       )}
       <Flex
@@ -62,7 +62,7 @@ export const SubHeader: FC<TProps> = ({ children, title, image, tags, topCmp, bg
                 {!!tags && (
                   <Box my={2} ml={0}>
                     {tags.map(({ title, color }) => (
-                      <Tag size='sm' variant='outline' colorScheme={color} mr={2}>
+                      <Tag size='sm' variant='outline' colorScheme={color} mr={2} key={title}>
                         <TagLabel>{title}</TagLabel>
                       </Tag>
                     ))}

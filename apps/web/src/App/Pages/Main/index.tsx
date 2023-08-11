@@ -1,6 +1,5 @@
 import { FC, ReactNode } from 'react'
 import { Flex } from '@chakra-ui/react'
-import * as CSS from 'csstype'
 import { Outlet } from 'react-router-dom'
 
 import { VerticalSidebar } from '../../../components/VerticalSidebar'
@@ -37,9 +36,10 @@ export const Main: FC<TProps> = () => {
           overflowY={'auto'}
           flex={1}
           background={secondary}
-          p={4}
-          roundedTopStart={variants('lg', '2xl')}
-          roundedTopEnd={variants<CSS.Property.BorderRadius>('lg', 0)}
+          px={variants(0, 4)}
+          pt={4}
+          rounded={variants('0', '2xl')}
+          roundedBottom={0}
         >
           <Outlet />
         </Flex>
