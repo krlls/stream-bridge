@@ -1,19 +1,10 @@
 import { FC } from 'react'
 import { StarIcon } from '@chakra-ui/icons'
-import {
-  AspectRatio,
-  Card,
-  CardBody,
-  CardHeader,
-  Flex,
-  Text,
-  Image,
-  useColorModeValue,
-  Skeleton,
-} from '@chakra-ui/react'
+import { AspectRatio, Card, CardBody, CardHeader, Flex, Text, useColorModeValue } from '@chakra-ui/react'
 
 import { variants } from '../../utils/size.ts'
 import { useThemeColors } from '../../hooks/useThemeColors.ts'
+import { AppImage } from '../AppImage'
 
 export type TProps = {
   id: number,
@@ -54,11 +45,7 @@ export const PlaylistCard: FC<TProps> = ({ id, name, onClick, cover }) => {
             rounded='md'
             shadow={useColorModeValue('none', 'md')}
           >
-            {cover ? (
-              <Image src={cover} flex={1} fallback={<Skeleton flex={1} width={'100%'} height='100%' />} />
-            ) : (
-              <StarIcon boxSize='3em' color={imagePlaceholderColor} />
-            )}
+            {cover ? <AppImage src={cover} flex={1} /> : <StarIcon boxSize='3em' color={imagePlaceholderColor} />}
           </Flex>
         </AspectRatio>
       </CardHeader>
