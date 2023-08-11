@@ -36,7 +36,7 @@ export const SubHeader: FC<TProps> = ({ children, title, image, tags, topCmp, bg
         p={variants(4, 6)}
         direction='column'
         zIndex={1}
-        backdropFilter={'blur(60px)'}
+        backdropFilter={bgImage ? 'blur(60px)' : undefined}
         bgGradient={bgImage ? `linear(to-b, rgba(255,255,255,0) 0%,  ${secondary} 95%)` : undefined}
       >
         <Flex mb={bgImage ? '40px' : undefined} direction={'column'}>
