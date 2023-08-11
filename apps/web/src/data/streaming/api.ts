@@ -40,6 +40,7 @@ export const streamingApi = api.injectEndpoints({
       }),
       transformResponse: (response: Success<Api.Import.Playlists.Resp>) => response,
       invalidatesTags: [EApiTags.PLAYLISTS],
+      extraOptions: { maxRetries: 0 },
     }),
   }),
   overrideExisting: false,

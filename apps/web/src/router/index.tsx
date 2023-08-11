@@ -9,7 +9,9 @@ import { AuthLayout } from '../components/AuthLayout'
 import { SignUp } from '../App/Pages/Auth/SignUp'
 import { HelpCard } from '../components/HelpCard'
 import { Profile } from '../App/Pages/Main/Profile'
-import { Streaming } from '../App/Pages/Streaming'
+import { Streaming } from '../App/Pages/Main/Streaming'
+import { Playlist } from '../App/Pages/Playlist'
+import { StreamingLayout } from '../components/StreamingLayout'
 
 export const router = createBrowserRouter([
   {
@@ -35,8 +37,18 @@ export const router = createBrowserRouter([
                 ),
               },
               {
-                path: '/streaming/:type',
-                element: <Streaming />,
+                path: 'streaming/:type',
+                element: <StreamingLayout />,
+                children: [
+                  {
+                    index: true,
+                    element: <Streaming />,
+                  },
+                  {
+                    path: 'playlist/:id',
+                    element: <Playlist />,
+                  },
+                ],
               },
               {
                 path: '/profile',

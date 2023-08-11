@@ -19,7 +19,7 @@ export type TProps = {
   children: ReactNode,
   title: string,
   message: string,
-  onOk(): void,
+  onOk?(): void,
   onCancel?(): void,
 }
 
@@ -33,7 +33,7 @@ export const PopoverConfirmation: FC<TProps> = ({ children, onCancel, onOk, titl
 
   const handleOk = (clb: VoidFunction) => () => {
     clb()
-    onOk()
+    onOk && onOk()
   }
 
   return (
