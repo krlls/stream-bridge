@@ -22,7 +22,7 @@ export const streamingApi = api.injectEndpoints({
         url: streamingUrl(Api.Streaming.Auth.PATCH, '/', type),
       }),
       transformResponse: (response: Success<Api.Streaming.Auth.Resp>) => response?.url,
-      invalidatesTags: [EApiTags.STREAMING_LIST, EApiTags.USER_STREAMINGS],
+      invalidatesTags: [EApiTags.STREAMING_LIST, EApiTags.USER_STREAMINGS, EApiTags.TRACKS, EApiTags.PLAYLISTS],
     }),
     getStreamingList: build.query<Success<Api.Streaming.List.Resp>, void>({
       query: () => ({
@@ -39,7 +39,7 @@ export const streamingApi = api.injectEndpoints({
         body,
       }),
       transformResponse: (response: Success<Api.Import.Playlists.Resp>) => response,
-      invalidatesTags: [EApiTags.PLAYLISTS],
+      invalidatesTags: [EApiTags.PLAYLISTS, EApiTags.TRACKS],
       extraOptions: { maxRetries: 0 },
     }),
   }),
