@@ -1,11 +1,7 @@
 import { FC, useState } from 'react'
 import { Fade, Image, ImageProps, Skeleton, useImage } from '@chakra-ui/react'
 
-// import Note from '../../assets/note.svg'
-
-type TOwnProps = object
-
-type TProps = TOwnProps & ImageProps
+type TProps = ImageProps
 
 export const AppImage: FC<TProps> = ({ ...props }) => {
   const [load, setLoad] = useState(false)
