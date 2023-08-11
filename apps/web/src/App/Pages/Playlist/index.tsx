@@ -4,14 +4,18 @@ import { Box, Spinner } from '@chakra-ui/react'
 import { Api } from 'api-types'
 
 import { PlaylistSubHeader } from '../../../components/PlaylistSubHeader'
-import { useGetPlaylistsByStreamingQuery } from '../../../data/music'
+import { useGetPlaylistsByStreamingQuery, useGetTracksByPlaylistQuery } from '../../../data/music'
 import { useSafeParams } from '../../../hooks/useSafeParams.ts'
+import { useImportTracksByPlaylistMutation } from '../../../data/streaming'
 
 export const Playlist: FC = () => {
   const { type, id } = useSafeParams<{ id: string, type: Api.Streaming.EApiStreamingType }>()
+  const playlistId = +id
   const { data, isError, isLoading } = useGetPlaylistsByStreamingQuery({ streamingType: type, offset: 0 })
+  const { data: tracksData } = useGetTracksByPlaylistQuery({ offset: 0, streamingType: type, playlistId })
+  const [importTracks, importResult] = useImportTracksByPlaylistMutation()
 
-  const playlist = data?.items.find((p) => p.id === +id)
+  const playlist = data?.items.find((p) => p.id === playlistId)
 
   if (isError || isLoading) {
     return <Spinner />
@@ -25,7 +29,13 @@ export const Playlist: FC = () => {
 
   return (
     <Box flexGrow={1}>
-      <PlaylistSubHeader title={name} cover={cover} tracks={0} isImporting={false} />
+      <PlaylistSubHeader
+        title={name}
+        cover={cover}
+        tracks={tracksData?.items.length || 0}
+        isImporting={importResult.isLoading}
+        onImport={() => importTracks({ playlistId })}
+      />
     </Box>
   )
 }
