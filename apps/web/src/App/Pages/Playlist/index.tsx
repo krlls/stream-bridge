@@ -28,7 +28,7 @@ export const Playlist: FC = () => {
           exported: importResult.data?.exported || '0',
           saved: importResult.data?.saved || '0',
         }),
-        error: t(d.ImportError),
+        error: t(d.ImportErrorMessage),
       },
     },
   )
