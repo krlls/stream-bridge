@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react'
-import { Box, Flex, Heading, Image, Tag, TagLabel } from '@chakra-ui/react'
+import { Box, Fade, Flex, Heading, Image, Tag, TagLabel } from '@chakra-ui/react'
 
 import { useThemeColors } from '../../hooks/useThemeColors.ts'
 import { variants } from '../../utils/size.ts'
@@ -20,10 +20,15 @@ export const SubHeader: FC<TProps> = ({ children, title, image, tags, topCmp, bg
     <Flex
       width='100%'
       bgGradient={`linear(to-b, ${primary}, ${secondary} 80%)`}
-      bgImage={bgImage}
       backgroundSize='cover'
       roundedTop='xl'
+      position='relative'
     >
+      {!!bgImage && (
+        <Fade in>
+          <Image position='absolute' width='100%' height={'100%'} src={bgImage} roundedTop='xl' />
+        </Fade>
+      )}
       <Flex
         border='none'
         roundedTop='xl'
@@ -37,16 +42,18 @@ export const SubHeader: FC<TProps> = ({ children, title, image, tags, topCmp, bg
         <Flex mb={bgImage ? '40px' : undefined} direction={'column'}>
           {topCmp}
           <Flex>
-            <Box
-              shadow={bgImage ? '2xl' : undefined}
-              display='flex'
-              minWidth={variants('80px', '150px')}
-              width={variants('80px', '150px')}
-              height={variants('80px', '150px')}
-              mr={variants(4, 6)}
-            >
-              <Image src={image} flex={1} bg='gray.400' rounded='xl' />
-            </Box>
+            <Fade in>
+              <Box
+                shadow={bgImage ? '2xl' : undefined}
+                display='flex'
+                minWidth={variants('80px', '150px')}
+                width={variants('80px', '150px')}
+                height={variants('80px', '150px')}
+                mr={variants(4, 6)}
+              >
+                <Image src={image} flex={1} bg='gray.400' rounded='xl' />
+              </Box>
+            </Fade>
             <Flex justifyContent={'space-between'} flexDirection='column'>
               <Box>
                 <Heading size='xl' noOfLines={1} textShadow='1px 1px black'>
