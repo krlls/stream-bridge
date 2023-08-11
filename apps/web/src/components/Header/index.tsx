@@ -19,6 +19,7 @@ import { resetToken, useGetUserQuery } from '../../data/user'
 import { useLocalization } from '../../hooks/useLocalization.ts'
 import { useThemeColors } from '../../hooks/useThemeColors.ts'
 import { variants } from '../../utils/size.ts'
+import { Logo } from '../Logo'
 
 type TProps = {
   mobileMenu?: ReactNode,
@@ -39,7 +40,9 @@ export const Header: FC<TProps> = ({ mobileMenu }) => {
           </Box>
         )}
         <Box>
-          <Link to='/'>Logo</Link>
+          <Link to='/'>
+            <Logo />
+          </Link>
         </Box>
         <Flex align='center'>
           {isLoading || isError ? (
