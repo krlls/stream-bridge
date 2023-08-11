@@ -1,7 +1,6 @@
-import { FC, useEffect } from 'react'
-import { Flex, useToast } from '@chakra-ui/react'
+import { FC } from 'react'
+import { Flex } from '@chakra-ui/react'
 import { useOutletContext } from 'react-router-dom'
-import { Api } from 'api-types'
 import { capitalize } from 'lodash'
 
 import { useImportPlaylistsMutation } from '../../../../data/streaming'
@@ -11,29 +10,32 @@ import { streamingToLogo } from '../../../../utils/image.ts'
 import { convertStreamingType } from '../../../../utils/api.ts'
 import { useLocalization } from '../../../../hooks/useLocalization.ts'
 import { TOutletContext } from '../../../../components/StreamingLayout'
+import { useImportToast } from '../../../../hooks/useImportToast.ts'
 
 export const Streaming: FC = () => {
   const [importPlaylists, importResult] = useImportPlaylistsMutation()
   const { t, d } = useLocalization()
-  const toast = useToast()
   const { streamingByType } = useOutletContext<TOutletContext>()
 
-  useEffect(() => {
-    if (!importResult.isSuccess && !importResult.isError) {
-      return
-    }
-
-    toast({
-      title: importResult.isSuccess ? t(d.ImportPlaylistsSuccess) : t(d.ImportPlaylistsError),
-      description: importResult.isSuccess
-        ? t(d.ImportPlaylistsSuccessMessage, { exported: importResult.data.exported, saved: importResult.data.saved })
-        : t(d.ImportPlaylistsErrorMessage),
-      status: importResult.isSuccess ? 'success' : 'error',
-      duration: 5000,
-      isClosable: true,
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [importResult.isSuccess, importResult.isError])
+  useImportToast(
+    {
+      isSuccess: importResult.isSuccess,
+      isError: importResult.isError,
+    },
+    {
+      title: {
+        error: t(d.ImportError),
+        success: t(d.ImportSuccess),
+      },
+      description: {
+        error: t(d.ImportErrorMessage),
+        success: t(d.ImportPlaylistsSuccessMessage, {
+          exported: importResult.data?.exported || '0',
+          saved: importResult.data?.saved || '0',
+        }),
+      },
+    },
+  )
 
   return (
     <Flex direction='column'>
@@ -45,7 +47,7 @@ export const Streaming: FC = () => {
         tracks={streamingByType.tracks}
         logo={streamingToLogo(streamingByType.type)}
       />
-      <Playlists streaming={streamingByType.type.toLowerCase() as Api.Streaming.EApiStreamingType} />
+      <Playlists streaming={convertStreamingType(streamingByType.type).toApi()} />
     </Flex>
   )
 }
