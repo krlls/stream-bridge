@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { useOutletContext } from 'react-router-dom'
-import { Api } from 'api-types'
 import { capitalize } from 'lodash'
 
 import { useImportPlaylistsMutation } from '../../../../data/streaming'
@@ -48,7 +47,7 @@ export const Streaming: FC = () => {
         tracks={streamingByType.tracks}
         logo={streamingToLogo(streamingByType.type)}
       />
-      <Playlists streaming={streamingByType.type.toLowerCase() as Api.Streaming.EApiStreamingType} />
+      <Playlists streaming={convertStreamingType(streamingByType.type).toApi()} />
     </Flex>
   )
 }
