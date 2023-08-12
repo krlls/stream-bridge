@@ -10,6 +10,7 @@ import { UserEntity } from '../entities/UserEntity'
 import { Streaming } from '../../../../modules/streaming/entities/Streaming'
 import { CreateStreamingDTO } from '../../../../modules/streaming/dtos/CreateStreamingDTO'
 import { CreateStreamingTokenDTO } from '../../../../modules/streaming/dtos/CreateStreamingTokenDTO'
+import { TrackEntity } from '../entities/TrackEntity'
 
 @injectable()
 export class StreamingRepository implements IStreamingRepository {
@@ -84,16 +85,22 @@ export class StreamingRepository implements IStreamingRepository {
   }
 
   async getUserStreamings(userId: number): Promise<Streaming[]> {
-    const streamings = await this.repository
-      .createQueryBuilder('streaming_entity')
-      .loadRelationCountAndMap('streaming_entity.playlistsCount', 'streaming_entity.playlists')
-      .loadRelationCountAndMap('streaming_entity.tracksCount', 'streaming_entity.tracks')
-      .where('streaming_entity.userid = :userid', { userid: userId })
-      .getMany()
+    const resStreamings = await this.repository
+      .createQueryBuilder('s')
+      .loadRelationCountAndMap('s.playlistsCount', 's.playlists')
+      .addSelect((subQuery) => {
+        return subQuery.select('COUNT(t.id)', 'tracksCount').from(TrackEntity, 't').where('t.streamingId = s.id')
+      }, 'tracksCount')
+      .where('s.userid = :userid', { userid: userId })
+      .getRawAndEntities()
 
-    if (!streamings) {
+    if (!resStreamings) {
       return []
     }
+
+    const streamings: StreamingEntity[] = resStreamings.entities.map(
+      (e, i) => ({ ...e, tracksCount: resStreamings.raw[i]?.tracksCount as number }) as StreamingEntity,
+    )
 
     return streamings.map(this.streamingEntityConverter.from)
   }
