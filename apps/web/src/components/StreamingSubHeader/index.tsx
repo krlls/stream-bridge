@@ -1,6 +1,6 @@
 import { FC } from 'react'
-import { Button, ButtonGroup } from '@chakra-ui/react'
-import { ArrowForwardIcon, DownloadIcon, RepeatIcon } from '@chakra-ui/icons'
+import { Button, ButtonGroup, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
+import { ArrowForwardIcon, DownloadIcon, HamburgerIcon, RepeatIcon } from '@chakra-ui/icons'
 import { useNavigate } from 'react-router-dom'
 
 import { SubHeader } from '../SubHeader'
@@ -32,6 +32,12 @@ export const StreamingSubHeader: FC<TProps> = ({ title, playlists, tracks, logo,
       topCmp={<NavBar iconClick={() => navigate('/Profile?tab=1')} left={false} />}
     >
       <ButtonGroup mt={4} isAttached variant='outline' size='sm'>
+        <Menu>
+          <MenuButton isDisabled={isImporting} as={IconButton} icon={<HamburgerIcon />} />
+          <MenuList>
+            <MenuItem onClick={onImport}>{playlists ? t(d.UpdatePlaylists) : t(d.ImportPlaylists)}</MenuItem>
+          </MenuList>
+        </Menu>
         <PopoverConfirmation
           onOk={onImport}
           title={t(d.ImportConfirmationTitle)}

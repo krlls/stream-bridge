@@ -36,6 +36,8 @@ export const ru: Dictionary = {
   Connect: 'Подключить',
   Update: 'Обновить',
   Import: 'Импорт',
+  UpdatePlaylists: 'Обновить инфо о плейлистах',
+  ImportPlaylists: 'Импорт инфо о плейлистах',
   Export: 'Экспорт',
   Tracks: 'Треки',
   ImportConfirmationTitle: 'Подтвердите импорт',

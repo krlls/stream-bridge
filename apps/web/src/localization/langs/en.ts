@@ -34,6 +34,8 @@ export const en = {
   Connect: 'Connect',
   Update: 'Update',
   Import: 'Import',
+  UpdatePlaylists: 'Update only playlists',
+  ImportPlaylists: 'Import only playlists',
   Export: 'Export',
   Tracks: 'Tracks',
   ImportConfirmationTitle: 'Confirm Import',
