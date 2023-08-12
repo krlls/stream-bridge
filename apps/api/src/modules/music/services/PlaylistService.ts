@@ -15,6 +15,8 @@ import { isServiceError } from '../../../utils/errors'
 import { GetUserPlaylistsDto } from '../dtos/GetUserPlaylistsDto'
 import { limits } from '../../common/const'
 import { PlaylistDto } from '../dtos/PlaylistDto'
+import { ImportTracksDTO } from '../dtos/ImportTracksDTO'
+import { ImportLibResultDTO } from '../dtos/ImportLibResultDTO'
 
 @injectable()
 export class PlaylistService implements IPlaylistService {
@@ -100,5 +102,53 @@ export class PlaylistService implements IPlaylistService {
     }
 
     return new ImportResultDTO(result)
+  }
+
+  async importAllMedia(toImport: ImportMediaDTO) {
+    const streaming = await this.streamingRepository.getStreaming(toImport.userId, toImport.streamingType)
+
+    if (!streaming) {
+      return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
+    }
+
+    const { expiresIn, refresh_token, token } = streaming
+
+    if (!expiresIn || !refresh_token || !token) {
+      return new ErrorDTO(Errors.WRONG_CREDENTIALS)
+    }
+
+    const credentials = new StreamingCredentialsDTO({
+      token,
+      expiresIn,
+      refreshToken: refresh_token,
+    })
+
+    const playlistsResult = await this.importPlaylists(toImport)
+
+    if (isServiceError(playlistsResult)) {
+      return playlistsResult
+    }
+
+    const playlists = await this.playlistRepository.getPlaylistsByUserId(
+      new GetUserPlaylistsDto({ userId: toImport.userId }),
+    )
+
+    const importData = playlists.map(
+      (p) =>
+        new ImportTracksDTO({
+          streamingType: toImport.streamingType,
+          userId: toImport.userId,
+          playlistId: p.id,
+          playlistExternalId: p.external_id,
+        }),
+    )
+
+    const tracksResult = await this.musicImporter.importTracksByPlaylists(credentials, importData)
+
+    if (isServiceError(tracksResult)) {
+      return new ErrorDTO(Errors.IMPORT_TRACKS_ERROR)
+    }
+
+    return new ImportLibResultDTO({ tracks: tracksResult, playlists: playlistsResult })
   }
 }
