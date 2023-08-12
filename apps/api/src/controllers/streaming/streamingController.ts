@@ -40,7 +40,7 @@ export class StreamingController {
     const saveTokenData = new SaveStreamingTokenDTO({
       streamingType,
       code: params.code,
-      userId: ctx.state.userId,
+      userId: ctx.state.user?.userId,
     })
 
     const result = await this.streamingService.saveToken(saveTokenData)
@@ -59,7 +59,7 @@ export class StreamingController {
       return respond400(ctx, new ErrorDTO(Errors.STREAMING_NOT_FOUND))
     }
 
-    const user = await this.userService.findUserById(ctx.state.userId)
+    const user = await this.userService.findUserById(ctx.state.user?.userId)
 
     if (isServiceError(user)) {
       return respond401json(ctx, user)
@@ -85,7 +85,7 @@ export class StreamingController {
   }
 
   async list(ctx: RouterContext) {
-    const user = await this.userService.findUserById(ctx.state.userId)
+    const user = await this.userService.findUserById(ctx.state.user?.userId)
 
     if (isServiceError(user)) {
       return respond401json(ctx, user)
@@ -107,7 +107,7 @@ export class StreamingController {
       return respond400(ctx, new ErrorDTO(Errors.STREAMING_NOT_FOUND))
     }
 
-    const user = await this.userService.findUserById(ctx.state.userId)
+    const user = await this.userService.findUserById(ctx.state.user?.userId)
 
     if (isServiceError(user)) {
       return respond401json(ctx, user)
