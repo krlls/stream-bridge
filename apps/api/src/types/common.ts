@@ -4,6 +4,7 @@ export interface Converter<F, T> {
 }
 
 export type Uid = string
+export type Nullable<T> = T | null | undefined
 
 export enum E_NODE_ENV {
   TEST = 'test',

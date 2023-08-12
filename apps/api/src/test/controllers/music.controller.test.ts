@@ -79,6 +79,43 @@ describe('Music library media controller tests', () => {
     expect(JSON.parse(response.text).items).toHaveLength(50)
   })
 
+  it('Get playlist works', async () => {
+    const playlistId = 1
+    const response = await TestApp.get(musicUrl(Api.Music.Playlist.PATCH, '/', Api.Streaming.EApiStreamingType.SPOTIFY))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .query({
+        id: playlistId,
+      })
+
+    expect(response.status).toBe(200)
+    expect(JSON.parse(response.text).id).toEqual(playlistId)
+  })
+
+  it('Get playlist 404', async () => {
+    const playlistId = 1345
+    const response = await TestApp.get(musicUrl(Api.Music.Playlist.PATCH, '/', Api.Streaming.EApiStreamingType.SPOTIFY))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .query({
+        id: playlistId,
+      })
+
+    expect(response.status).toBe(404)
+  })
+
+  it('Get playlist 400', async () => {
+    const response = await TestApp.get(
+      musicUrl(Api.Music.Playlist.PATCH, '/', Api.Streaming.EApiStreamingType.SPOTIFY),
+    ).set({
+      Authorization: `Bearer ${testToken}`,
+    })
+
+    expect(response.status).toBe(400)
+  })
+
   it('Get tracks works', async () => {
     const response = await TestApp.get(musicUrl(Api.Music.Tracks.PATCH, '/spotify'))
       .set({

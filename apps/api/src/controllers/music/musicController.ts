@@ -2,7 +2,7 @@ import { RouterContext } from 'koa-router'
 import { inject, injectable } from 'inversify'
 import { Api } from 'api-types'
 
-import { respond200json, respond400, respond401json } from '../../utils/response'
+import { respond200json, respond400, respond401json, respond404 } from '../../utils/response'
 import { TYPES } from '../../types/const'
 import { convertStreamingName } from '../../utils/transform'
 import { ErrorDTO } from '../../modules/common/dtos/errorDTO'
@@ -40,6 +40,28 @@ export class MusicController {
     }
 
     return respond200json<Api.Music.Playlists.Resp>(ctx, { items: playlists })
+  }
+
+  async getPlaylist(ctx: RouterContext, { id }: Api.Music.Playlist.Req) {
+    const streamingType = convertStreamingName(ctx.params?.type || '')
+
+    if (!streamingType) {
+      return respond400(ctx, new ErrorDTO(Errors.STREAMING_NOT_FOUND))
+    }
+
+    const user = await this.userService.findUserById(ctx.state?.userId)
+
+    if (isServiceError(user)) {
+      return respond401json(ctx, user)
+    }
+
+    const playlist = await this.playlistService.getPlaylistById(id)
+
+    if (isServiceError(playlist)) {
+      return respond404(ctx, playlist)
+    }
+
+    return respond200json<Api.Music.Playlist.Resp>(ctx, playlist)
   }
 
   async getTracks(ctx: RouterContext, params: Api.Music.Tracks.Req) {

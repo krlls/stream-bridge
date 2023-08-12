@@ -150,6 +150,23 @@ export namespace Api {
   export namespace Music {
     export const PREFIX = '/music'
 
+    export type Playlist = {
+      id: number,
+      externalId: string,
+      name: string,
+      streamingType: EStreamingType,
+      cover?: string,
+    }
+
+    export type Track = {
+      id: number,
+      playlistId: number,
+      externalId: string,
+      name: string,
+      artist: string,
+      album: string,
+    }
+
     export namespace Playlists {
       export const PATCH = '/playlists'
       export const STREAMING_TYPE = '/:type'
@@ -160,15 +177,19 @@ export namespace Api {
         limit?: number,
       }
 
-      export type Playlist = {
+      export type Resp = Response<Paginated<Playlist>>
+    }
+
+    export namespace Playlist {
+      export const PATCH = '/playlist'
+      export const STREAMING_TYPE = '/:type'
+      export const URL = PATCH + STREAMING_TYPE
+
+      export type Req = {
         id: number,
-        externalId: string,
-        name: string,
-        streamingType: EStreamingType,
-        cover?: string,
       }
 
-      export type Resp = Response<Paginated<Playlist>>
+      export type Resp = Response<Playlist>
     }
 
     export namespace Tracks {
@@ -180,15 +201,6 @@ export namespace Api {
         playlistId: number,
         offset: number,
         limit?: number,
-      }
-
-      export type Track = {
-        id: number,
-        playlistId: number,
-        externalId: string,
-        name: string,
-        artist: string,
-        album: string,
       }
 
       export type Resp = Response<Paginated<Track>>

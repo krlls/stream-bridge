@@ -16,6 +16,10 @@ router.get(Api.Music.Playlists.URL, checkAuth, musicValidators.getPlaylists, (ct
   musicController.getPlaylists(ctx, ctx.request.query as any),
 )
 
+router.get(Api.Music.Playlist.URL, checkAuth, musicValidators.getPlaylist, (ctx) =>
+  musicController.getPlaylist(ctx, ctx.request.query as any),
+)
+
 export const musicRouter = router
 
 /**
@@ -63,6 +67,50 @@ export const musicRouter = router
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Playlist'
+ *
+ *       500:
+ *         description: Some server error occurred.
+ *
+ *       400:
+ *         description: Request validation error occurred or an error during the business logic execution.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - $ref: '#/components/schemas/ValidationError'
+ *                 - $ref: '#/components/schemas/ErrorResult'
+ */
+
+/**
+ * @swagger
+ * /music/playlist/{streamingType}:
+ *   get:
+ *     tags:
+ *      - Music
+ *     summary: Get playlist
+ *     description: Get playlist by id.
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *      - name: streamingType
+ *        in: path
+ *        description: The type of streaming service for which the playlist will be retrieved.
+ *        required: true
+ *        schema:
+ *          type: string
+ *      - name: id
+ *        in: query
+ *        description: Playlist id.
+ *        schema:
+ *          type: integer
+ *
+ *     responses:
+ *       200:
+ *         description: Successful response with playlist.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Playlist'
  *
  *       500:
  *         description: Some server error occurred.

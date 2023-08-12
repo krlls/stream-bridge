@@ -9,6 +9,12 @@ const getPlaylists = validatorFactory(
   }).required(),
 )
 
+const getPlaylist = validatorFactory(
+  Joi.object({
+    id: Joi.number().required(),
+  }).required(),
+)
+
 const getTracks = validatorFactory(
   Joi.object({
     playlistId: Joi.number().required(),
@@ -19,5 +25,6 @@ const getTracks = validatorFactory(
 
 export const musicValidators = {
   getPlaylists,
+  getPlaylist,
   getTracks,
 }
