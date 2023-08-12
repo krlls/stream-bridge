@@ -4,7 +4,7 @@ import { Box, Spinner } from '@chakra-ui/react'
 import { Api } from 'api-types'
 
 import { PlaylistSubHeader } from '../../../../components/PlaylistSubHeader'
-import { useGetPlaylistsByStreamingQuery, useGetTracksByPlaylistQuery } from '../../../../data/music'
+import { useGetPlaylistByIdQuery, useGetTracksByPlaylistQuery } from '../../../../data/music'
 import { useSafeParams } from '../../../../hooks/useSafeParams.ts'
 import { useImportTracksByPlaylistMutation } from '../../../../data/streaming'
 import { useImportToast } from '../../../../hooks/useImportToast.ts'
@@ -13,11 +13,10 @@ import { useLocalization } from '../../../../hooks/useLocalization.ts'
 export const Playlist: FC = () => {
   const { type, id } = useSafeParams<{ id: string, type: Api.Streaming.EApiStreamingType }>()
   const playlistId = +id
-  const { data, isError, isLoading } = useGetPlaylistsByStreamingQuery({ streamingType: type, offset: 0 })
+  const { data, isError, isLoading } = useGetPlaylistByIdQuery({ streamingType: type, id: playlistId })
   const { data: tracksData } = useGetTracksByPlaylistQuery({ offset: 0, streamingType: type, playlistId })
   const [importTracks, importResult] = useImportTracksByPlaylistMutation()
   const { t, d } = useLocalization()
-  const playlist = data?.items.find((p) => p.id === playlistId)
 
   useImportToast(
     { isError: importResult.isError, isSuccess: importResult.isSuccess },
@@ -37,11 +36,11 @@ export const Playlist: FC = () => {
     return <Spinner />
   }
 
-  if (!playlist) {
+  if (!data) {
     return <Navigate to='/' replace />
   }
 
-  const { name, cover } = playlist
+  const { name, cover } = data
 
   return (
     <Box flexGrow={1}>

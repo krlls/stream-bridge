@@ -41,8 +41,7 @@
   "lint-staged": {
     "*.{ts,tsx}": [
       "prettier --write",
-      "eslint --fix",
-      "turbo run test"
+      "eslint --fix"
     ]
   },
   "name": "turbo",

@@ -15,7 +15,20 @@ export const musicApi = api.injectEndpoints({
         params: args,
       }),
       transformResponse: (response: Success<Api.Music.Playlists.Resp>) => response,
-      providesTags: [EApiTags.PLAYLISTS],
+      providesTags: (res) =>
+        res ? [...(res.items.map((r) => ({ type: EApiTags.PLAYLISTS, id: r.id })) || [])] : [EApiTags.PLAYLISTS],
+    }),
+    getPlaylistById: query<
+      Success<Api.Music.Playlist.Resp>,
+      Api.Music.Playlist.Req & { streamingType: Api.Streaming.EApiStreamingType }
+    >({
+      query: ({ streamingType, ...args }) => ({
+        method: 'GET',
+        url: musicUrl(Api.Music.Playlist.PATCH, `/${streamingType}`),
+        params: args,
+      }),
+      transformResponse: (response: Success<Api.Music.Playlist.Resp>) => response,
+      providesTags: (res) => (res ? [{ type: EApiTags.PLAYLISTS, id: res.id }] : [EApiTags.PLAYLISTS]),
     }),
     getTracksByPlaylist: query<
       Success<Api.Music.Tracks.Resp>,
@@ -32,4 +45,4 @@ export const musicApi = api.injectEndpoints({
   overrideExisting: false,
 })
 
-export const { useGetPlaylistsByStreamingQuery, useGetTracksByPlaylistQuery } = musicApi
+export const { useGetPlaylistsByStreamingQuery, useGetTracksByPlaylistQuery, useGetPlaylistByIdQuery } = musicApi
