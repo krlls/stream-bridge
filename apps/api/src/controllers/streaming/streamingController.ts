@@ -5,7 +5,7 @@ import { Api } from 'api-types'
 import { respond200json, respond400, respond401json, respond403 } from '../../utils/response'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
 import { TYPES } from '../../types/const'
-import { convertStreamingName } from '../../utils/transform'
+import { convertStreamingName, getUserId } from '../../utils/transform'
 import { ErrorDTO } from '../../modules/common/dtos/errorDTO'
 import { Errors } from '../../types/common'
 import { isServiceError, isSpotifyAuthError } from '../../utils/errors'
@@ -85,13 +85,8 @@ export class StreamingController {
   }
 
   async list(ctx: RouterContext) {
-    const user = await this.userService.findUserById(ctx.state.user?.userId)
-
-    if (isServiceError(user)) {
-      return respond401json(ctx, user)
-    }
-
-    const streamings = await this.streamingService.getUserStreamings(user.id)
+    const userId = getUserId(ctx)
+    const streamings = await this.streamingService.getUserStreamings(userId)
 
     if (isServiceError(streamings)) {
       return respond400(ctx, streamings)
@@ -101,19 +96,14 @@ export class StreamingController {
   }
 
   async delete(ctx: RouterContext) {
+    const userId = getUserId(ctx)
     const streamingType = convertStreamingName(ctx.params?.type || '')
 
     if (!streamingType) {
       return respond400(ctx, new ErrorDTO(Errors.STREAMING_NOT_FOUND))
     }
 
-    const user = await this.userService.findUserById(ctx.state.user?.userId)
-
-    if (isServiceError(user)) {
-      return respond401json(ctx, user)
-    }
-
-    const deleteResult = await this.streamingService.removeStreamingByType(user.id, streamingType)
+    const deleteResult = await this.streamingService.removeStreamingByType(userId, streamingType)
 
     if (isServiceError(deleteResult)) {
       return respond400(ctx, deleteResult)

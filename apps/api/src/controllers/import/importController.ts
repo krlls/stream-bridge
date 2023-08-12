@@ -4,7 +4,7 @@ import { Api } from 'api-types'
 
 import { respond200json, respond400, respond401json } from '../../utils/response'
 import { TYPES } from '../../types/const'
-import { convertStreamingName } from '../../utils/transform'
+import { convertStreamingName, getUserId } from '../../utils/transform'
 import { ErrorDTO } from '../../modules/common/dtos/errorDTO'
 import { Errors } from '../../types/common'
 import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistService'
@@ -20,19 +20,14 @@ export class ImportController {
   @inject(TYPES.TrackService) private trackService: ITrackService
   @inject(TYPES.UserService) private userService: IUserService
   async importPlaylists(ctx: RouterContext, params: Api.Import.Playlists.Req) {
+    const userId = getUserId(ctx)
     const streamingType = convertStreamingName(params.streamingType || '')
 
     if (!streamingType) {
       return respond400(ctx, new ErrorDTO(Errors.STREAMING_NOT_FOUND))
     }
 
-    const user = await this.userService.findUserById(ctx.state.user?.userId)
-
-    if (isServiceError(user)) {
-      return respond401json(ctx, user)
-    }
-
-    const importData = new ImportMediaDTO({ streamingType, userId: user.id })
+    const importData = new ImportMediaDTO({ streamingType, userId })
     const importPlaylistsResult = await this.playlistService.importPlaylists(importData)
 
     return isServiceError(importPlaylistsResult)
@@ -41,7 +36,8 @@ export class ImportController {
   }
 
   async importTracksByPlaylist(ctx: RouterContext, params: Api.Import.Tracks.Req) {
-    const user = await this.userService.findUserById(ctx.state.user?.userId)
+    const userId = getUserId(ctx)
+    const user = await this.userService.findUserById(userId)
 
     if (isServiceError(user)) {
       return respond401json(ctx, user)

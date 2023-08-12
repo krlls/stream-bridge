@@ -2,13 +2,12 @@ import { RouterContext } from 'koa-router'
 import { inject, injectable } from 'inversify'
 import { Api } from 'api-types'
 
-import { respond200json, respond400, respond401json, respond404 } from '../../utils/response'
+import { respond200json, respond400, respond404 } from '../../utils/response'
 import { TYPES } from '../../types/const'
-import { convertStreamingName } from '../../utils/transform'
+import { convertStreamingName, getUserId } from '../../utils/transform'
 import { ErrorDTO } from '../../modules/common/dtos/errorDTO'
 import { Errors } from '../../types/common'
 import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistService'
-import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { ITrackService } from '../../modules/music/interfaces/TrackService'
 import { isServiceError } from '../../utils/errors'
 import { GetUserPlaylistsDto } from '../../modules/music/dtos/GetUserPlaylistsDto'
@@ -18,21 +17,15 @@ import { GetTracksByPlaylistDTO } from '../../modules/music/dtos/GetTracksByPlay
 export class MusicController {
   @inject(TYPES.PlaylistService) private playlistService: IPlaylistService
   @inject(TYPES.TrackService) private trackService: ITrackService
-  @inject(TYPES.UserService) private userService: IUserService
   async getPlaylists(ctx: RouterContext, params: Api.Music.Playlists.Req) {
+    const userId = getUserId(ctx)
     const streamingType = convertStreamingName(ctx.params?.type || '')
 
     if (!streamingType) {
       return respond400(ctx, new ErrorDTO(Errors.STREAMING_NOT_FOUND))
     }
 
-    const user = await this.userService.findUserById(ctx.state.user?.userId)
-
-    if (isServiceError(user)) {
-      return respond401json(ctx, user)
-    }
-
-    const data = new GetUserPlaylistsDto({ ...params, userId: user.id })
+    const data = new GetUserPlaylistsDto({ ...params, userId })
     const playlists = await this.playlistService.getUserPlaylists(data)
 
     if (isServiceError(playlists)) {
@@ -49,12 +42,6 @@ export class MusicController {
       return respond400(ctx, new ErrorDTO(Errors.STREAMING_NOT_FOUND))
     }
 
-    const user = await this.userService.findUserById(ctx.state.user?.userId)
-
-    if (isServiceError(user)) {
-      return respond401json(ctx, user)
-    }
-
     const playlist = await this.playlistService.getPlaylistById(id)
 
     if (isServiceError(playlist)) {
@@ -65,13 +52,9 @@ export class MusicController {
   }
 
   async getTracks(ctx: RouterContext, params: Api.Music.Tracks.Req) {
-    const user = await this.userService.findUserById(ctx.state.user?.userId)
+    const userId = getUserId(ctx)
 
-    if (isServiceError(user)) {
-      return respond401json(ctx, user)
-    }
-
-    const data = new GetTracksByPlaylistDTO({ ...params, userId: user.id })
+    const data = new GetTracksByPlaylistDTO({ ...params, userId })
     const tracks = await this.trackService.getTracksByPlaylist(data)
 
     if (isServiceError(tracks)) {

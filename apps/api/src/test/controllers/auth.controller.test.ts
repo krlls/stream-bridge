@@ -4,6 +4,8 @@ import { Api } from 'api-types'
 import { TestApp } from '../index.test'
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
 import { authUrl, testUserData, userUrl } from '../helpers/test.helpers'
+import { createSignedJwt } from '../../utils/crypto'
+import { testsWithToken } from '../helpers/testMany'
 
 describe('Auth controllers tests', () => {
   beforeEach(async () => {
@@ -54,5 +56,28 @@ describe('Auth controllers tests', () => {
     const response = await TestApp.post(authUrl(Api.Auth.Login.URL)).send(authData)
 
     expect(response.status).toBe(400)
+  })
+
+  it('Test endpoints with wrong user id', async () => {
+    const userToken = await createSignedJwt({ userId: 89 })
+
+    return testsWithToken(userToken || '')()
+  })
+
+  it('Test endpoints with zero user id', async () => {
+    const userToken = await createSignedJwt({ userId: 0 })
+
+    return testsWithToken(userToken || '')()
+  })
+  it('Test endpoints with empty user id', async () => {
+    const userToken = await createSignedJwt({})
+
+    return testsWithToken(userToken || '')()
+  })
+
+  it('Test endpoints with undefined user id', async () => {
+    const userToken = await createSignedJwt({ userId: undefined })
+
+    return testsWithToken(userToken || '')()
   })
 })

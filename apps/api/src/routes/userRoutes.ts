@@ -2,16 +2,17 @@ import Router from 'koa-router'
 import { Api } from 'api-types'
 
 import { userValidators, UserController } from '../controllers/user'
-import { appContainer } from '../inversify.config'
+import { appContainer, authChecker } from '../inversify.config'
 import { TYPES } from '../types/const'
-import { checkAuth } from '../utils/crypto'
 
 const router = new Router()
 
 const userController = appContainer.get<UserController>(TYPES.UserController)
 
 router.post(Api.User.Create.URL, userValidators.createUser, (ctx) => userController.createUser(ctx, ctx.request.body))
-router.get(Api.User.GetProfile.URL, userValidators.getProfile, checkAuth, (ctx) => userController.profile(ctx))
+router.get(Api.User.GetProfile.URL, userValidators.getProfile, ...authChecker.createMiddleware(), (ctx) =>
+  userController.profile(ctx),
+)
 
 export const userRouter = router
 
