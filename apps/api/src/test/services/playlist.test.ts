@@ -5,7 +5,7 @@ import { appContainer } from '../../inversify.config'
 import { TYPES } from '../../types/const'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
-import { PLAYLISTS, testPlaylistDTO, testStreamingDTO, testUserData } from '../helpers/test.helpers'
+import { PLAYLISTS, testPlaylistDTO, testStreamingDTO, testUserData, TRACKS } from '../helpers/test.helpers'
 import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistService'
 import { CreatePlaylistDTO } from '../../modules/music/dtos/CreatePlaylistDTO'
 import { UserDTO } from '../../modules/user/dtos/UserDTO'
@@ -138,6 +138,28 @@ describe('Playlist service tests', () => {
 
     expect(exportResult).toEqual({ exported: PLAYLISTS, saved: PLAYLISTS })
     expect(exportResult.exported).toBe(exportResult.saved)
+  })
+
+  it('Import all media works', async () => {
+    if (isServiceError(currentUser)) {
+      throw Error('User not created')
+    }
+
+    const streaming = await streamingService.createStreaming(testStreamingDTO(currentUser.id))
+
+    if (isServiceError(streaming)) {
+      throw Error('Streaming not created')
+    }
+
+    const exportData = new ImportMediaDTO({
+      streamingType: EStreamingType.SPOTIFY,
+      userId: currentUser.id,
+    })
+
+    const exportResult = (await playlistService.importAllMedia(exportData)) as any
+
+    expect(exportResult.playlists).toEqual({ exported: PLAYLISTS, saved: PLAYLISTS })
+    expect(exportResult.tracks).toEqual({ exported: TRACKS * PLAYLISTS, saved: TRACKS * PLAYLISTS })
   })
 
   it('Re-exporting playlists does not create duplicates', async () => {
