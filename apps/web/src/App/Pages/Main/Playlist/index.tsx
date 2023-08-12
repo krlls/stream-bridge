@@ -3,12 +3,12 @@ import { Navigate } from 'react-router-dom'
 import { Box, Spinner } from '@chakra-ui/react'
 import { Api } from 'api-types'
 
-import { PlaylistSubHeader } from '../../../components/PlaylistSubHeader'
-import { useGetPlaylistsByStreamingQuery, useGetTracksByPlaylistQuery } from '../../../data/music'
-import { useSafeParams } from '../../../hooks/useSafeParams.ts'
-import { useImportTracksByPlaylistMutation } from '../../../data/streaming'
-import { useImportToast } from '../../../hooks/useImportToast.ts'
-import { useLocalization } from '../../../hooks/useLocalization.ts'
+import { PlaylistSubHeader } from '../../../../components/PlaylistSubHeader'
+import { useGetPlaylistsByStreamingQuery, useGetTracksByPlaylistQuery } from '../../../../data/music'
+import { useSafeParams } from '../../../../hooks/useSafeParams.ts'
+import { useImportTracksByPlaylistMutation } from '../../../../data/streaming'
+import { useImportToast } from '../../../../hooks/useImportToast.ts'
+import { useLocalization } from '../../../../hooks/useLocalization.ts'
 
 export const Playlist: FC = () => {
   const { type, id } = useSafeParams<{ id: string, type: Api.Streaming.EApiStreamingType }>()

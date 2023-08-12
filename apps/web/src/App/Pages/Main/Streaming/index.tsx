@@ -38,7 +38,7 @@ export const Streaming: FC = () => {
   )
 
   return (
-    <Flex direction='column'>
+    <Flex flex={1} direction='column'>
       <StreamingSubHeader
         onImport={() => importPlaylists({ streamingType: convertStreamingType(streamingByType.type).toApi() })}
         isImporting={importResult.isLoading}
