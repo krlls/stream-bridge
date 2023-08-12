@@ -10,7 +10,7 @@ import { SignUp } from '../App/Pages/Auth/SignUp'
 import { HelpCard } from '../components/HelpCard'
 import { Profile } from '../App/Pages/Main/Profile'
 import { Streaming } from '../App/Pages/Main/Streaming'
-import { Playlist } from '../App/Pages/Playlist'
+import { Playlist } from '../App/Pages/Main/Playlist'
 import { StreamingLayout } from '../components/StreamingLayout'
 
 export const router = createBrowserRouter([

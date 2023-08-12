@@ -7,6 +7,7 @@ import { TYPES } from '../../types/const'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
 import { isServiceError } from '../../utils/errors'
+import { getUserId } from '../../utils/transform'
 
 @injectable()
 export class UserController {
@@ -28,8 +29,7 @@ export class UserController {
   }
 
   async profile(ctx: RouterContext) {
-    const userId = ctx.state.user.userId
-
+    const userId = getUserId(ctx)
     const profile = await this.userService.findUserById(userId)
 
     if (isServiceError(profile)) {

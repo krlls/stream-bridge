@@ -8,7 +8,7 @@ import { PlaylistDto } from '../dtos/PlaylistDto'
 
 export interface IPlaylistService {
   createPlayList(playlist: CreatePlaylistDTO): Promise<ServiceResultDTO<Playlist>>,
-  getPlaylistById(id: number): Promise<ServiceResultDTO<Playlist | null>>,
+  getPlaylistById(id: number): Promise<ServiceResultDTO<PlaylistDto>>,
   getPlaylistByExternalId(externalId: string): Promise<ServiceResultDTO<Playlist | null>>,
   getUserPlaylists(getPlaylists: GetUserPlaylistsDto): Promise<ServiceResultDTO<PlaylistDto[]>>,
   getAllUserPlaylists(getPlaylists: GetUserPlaylistsDto): Promise<ServiceResultDTO<PlaylistDto[]>>,

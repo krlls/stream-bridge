@@ -25,4 +25,6 @@ export const TYPES = {
   Client: Symbol.for('Client'),
   ClientApiFactory: Symbol.for('ClientApiFactory'),
   ClientApi: Symbol.for('ClientApi'),
+
+  AuthChecker: Symbol.for('AuthChecker'),
 }

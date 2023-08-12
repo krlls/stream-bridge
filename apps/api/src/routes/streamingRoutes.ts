@@ -1,10 +1,9 @@
 import Router from 'koa-router'
 import { Api } from 'api-types'
 
-import { appContainer } from '../inversify.config'
+import { appContainer, authChecker } from '../inversify.config'
 import { TYPES } from '../types/const'
 import { StreamingController, streamingValidators } from '../controllers/streaming'
-import { checkAuth } from '../utils/crypto'
 
 const router = new Router()
 
@@ -13,10 +12,12 @@ const streamingController = appContainer.get<StreamingController>(TYPES.Streamin
 router.get(Api.Streaming.Token.URL, streamingValidators.setToken, (ctx) =>
   streamingController.token(ctx, ctx.request.query as any),
 )
-router.get(Api.Streaming.Auth.URL, checkAuth, (ctx) => streamingController.getAuthUrl(ctx))
-router.get(Api.Streaming.List.URL, checkAuth, (ctx) => streamingController.list(ctx))
-router.get(Api.Streaming.Available.URL, checkAuth, (ctx) => streamingController.getAvailableStreamings(ctx))
-router.delete(Api.Streaming.Delete.URL, checkAuth, (ctx) => streamingController.delete(ctx))
+router.get(Api.Streaming.Auth.URL, ...authChecker.createMiddleware(), (ctx) => streamingController.getAuthUrl(ctx))
+router.get(Api.Streaming.List.URL, ...authChecker.createMiddleware(), (ctx) => streamingController.list(ctx))
+router.get(Api.Streaming.Available.URL, ...authChecker.createMiddleware(), (ctx) =>
+  streamingController.getAvailableStreamings(ctx),
+)
+router.delete(Api.Streaming.Delete.URL, ...authChecker.createMiddleware(), (ctx) => streamingController.delete(ctx))
 
 export const streamingRouter = router
 

@@ -11,7 +11,7 @@ import { convertStreamingType } from '../../utils/api.ts'
 export type TProps = {
   isLoading: boolean,
   isError: boolean,
-  playlists?: Api.Music.Playlists.Playlist[],
+  playlists?: Api.Music.Playlist[],
 }
 
 const PLAYLIST_TO_LOADING = 10

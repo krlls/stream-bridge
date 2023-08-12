@@ -41,7 +41,7 @@ export class PlaylistService implements IPlaylistService {
       return new ErrorDTO(Errors.PLAYLIST_NOT_FOUND)
     }
 
-    return playlist
+    return new PlaylistDto(playlist)
   }
 
   async getPlaylistByExternalId(externalId: string) {

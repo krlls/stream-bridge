@@ -47,7 +47,7 @@ export const respond401json = <A extends string, B>(ctx: RouterContext, body?: R
   ctx.body = body
 }
 
-export const respond404 = (ctx: RouterContext, body?: string) => {
+export const respond404 = <A extends string, B>(ctx: RouterContext, body?: Record<A, B> | string) => {
   ctx.status = 404
   ctx.body = body || ''
 }

@@ -36,6 +36,10 @@ export class UserService implements IUserService {
   }
 
   async findUserById(userId: number) {
+    if (!userId) {
+      return new ErrorDTO(Errors.USER_NOT_FOUND)
+    }
+
     const user = await this.userRepository.findUserById(userId)
 
     if (!user) {

@@ -49,7 +49,7 @@ export const streamingApi = api.injectEndpoints({
         body,
       }),
       transformResponse: (response: Success<Api.Import.Tracks.Resp>) => response,
-      invalidatesTags: [EApiTags.TRACKS],
+      invalidatesTags: [EApiTags.TRACKS, EApiTags.USER_STREAMINGS],
       extraOptions: { maxRetries: 0 },
     }),
   }),

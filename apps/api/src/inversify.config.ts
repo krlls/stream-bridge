@@ -33,6 +33,7 @@ import { IMusicImporter } from './modules/music/interfaces/IMusicImporter'
 import { StreamingController } from './controllers/streaming'
 import { ImportController } from './controllers/import'
 import { MusicController } from './controllers/music'
+import { AuthChecker } from './utils/crypto'
 
 const appContainer = new Container()
 
@@ -58,6 +59,8 @@ appContainer.bind<PlaylistEntityConverter>(TYPES.PlaylistEntityConverter).to(Pla
 appContainer.bind<TrackEntityConverter>(TYPES.TrackEntityConverter).to(TrackEntityConverter)
 appContainer.bind<StreamingEntityConverter>(TYPES.StreamingEntityConverter).to(StreamingEntityConverter)
 
+appContainer.bind<AuthChecker>(TYPES.AuthChecker).to(AuthChecker)
+
 appContainer.bind<IMusicImporter>(TYPES.MusicImporter).to(MusicImporter)
 
 appContainer.bind<IStreamingClient>(TYPES.Client).to(StreamingClient)
@@ -67,5 +70,7 @@ appContainer
   .toFactory<IClient, [EStreamingType]>(
     (ctx) => (type: EStreamingType) => ctx.container.getNamed<IClient>(TYPES.ClientApi, type),
   )
+
+export const authChecker = appContainer.get<AuthChecker>(TYPES.AuthChecker)
 
 export { appContainer }
