@@ -15,8 +15,7 @@ export const musicApi = api.injectEndpoints({
         params: args,
       }),
       transformResponse: (response: Success<Api.Music.Playlists.Resp>) => response,
-      providesTags: (res) =>
-        res ? [...(res.items.map((r) => ({ type: EApiTags.PLAYLISTS, id: r.id })) || [])] : [EApiTags.PLAYLISTS],
+      providesTags: [EApiTags.PLAYLISTS],
     }),
     getPlaylistById: query<
       Success<Api.Music.Playlist.Resp>,
@@ -28,7 +27,7 @@ export const musicApi = api.injectEndpoints({
         params: args,
       }),
       transformResponse: (response: Success<Api.Music.Playlist.Resp>) => response,
-      providesTags: (res) => (res ? [{ type: EApiTags.PLAYLISTS, id: res.id }] : [EApiTags.PLAYLISTS]),
+      providesTags: [EApiTags.PLAYLISTS],
     }),
     getTracksByPlaylist: query<
       Success<Api.Music.Tracks.Resp>,
