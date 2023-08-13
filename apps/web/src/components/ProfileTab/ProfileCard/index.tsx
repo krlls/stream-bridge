@@ -17,7 +17,6 @@ import {
   Spinner,
 } from '@chakra-ui/react'
 
-import { variants } from '../../../utils/size.ts'
 import { useLocalization } from '../../../hooks/useLocalization.ts'
 
 export type TProps = {
@@ -43,7 +42,7 @@ export const ProfileCard: FC<TProps> = ({ name, login, streamings, playlists, tr
   )
 
   return (
-    <Card minWidth={variants('100%', '300px')} variant='outline'>
+    <Card variant='outline' minWidth='300px'>
       <CardBody p={4}>
         <Center flexDirection='column'>
           <Avatar mb={4} name={name} size='2xl' />
