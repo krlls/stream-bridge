@@ -1,9 +1,9 @@
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { useOutletContext } from 'react-router-dom'
 import { capitalize } from 'lodash'
 
-import { useImportPlaylistsMutation } from '../../../../data/streaming'
+import { useImportAllMediaMutation, useImportPlaylistsMutation } from '../../../../data/streaming'
 import { Playlists } from '../../../../components/Playlists'
 import { StreamingSubHeader } from '../../../../components/StreamingSubHeader'
 import { streamingToLogo } from '../../../../utils/image.ts'
@@ -14,8 +14,10 @@ import { useImportToast } from '../../../../hooks/useImportToast.ts'
 
 export const Streaming: FC = () => {
   const [importPlaylists, importResult] = useImportPlaylistsMutation()
+  const [importMedia, importMediaResult] = useImportAllMediaMutation()
   const { t, d } = useLocalization()
   const { streamingByType } = useOutletContext<TOutletContext>()
+  const apiStreamingType = useMemo(() => convertStreamingType(streamingByType.type).toApi(), [streamingByType.type])
 
   useImportToast(
     {
@@ -40,8 +42,9 @@ export const Streaming: FC = () => {
   return (
     <Flex flex={1} direction='column'>
       <StreamingSubHeader
-        onImport={() => importPlaylists({ streamingType: convertStreamingType(streamingByType.type).toApi() })}
-        isImporting={importResult.isLoading}
+        onImport={() => importPlaylists({ streamingType: apiStreamingType })}
+        onImportMedia={() => importMedia({ streamingType: apiStreamingType })}
+        isImporting={importResult.isLoading || importMediaResult.isLoading}
         title={capitalize(streamingByType.type)}
         playlists={streamingByType.playlists}
         tracks={streamingByType.tracks}

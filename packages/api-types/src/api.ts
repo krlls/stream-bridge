@@ -150,7 +150,7 @@ export namespace Api {
       export const URL = '/lib'
 
       export type Req = {
-        streamingType: EStreamingType,
+        streamingType: Streaming.EApiStreamingType,
       }
 
       export type Resp = Response<{

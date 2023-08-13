@@ -15,9 +15,18 @@ interface TProps {
   logo?: string,
   isImporting: boolean,
   onImport(): void,
+  onImportMedia(): void,
 }
 
-export const StreamingSubHeader: FC<TProps> = ({ title, playlists, tracks, logo, onImport, isImporting }) => {
+export const StreamingSubHeader: FC<TProps> = ({
+  title,
+  playlists,
+  tracks,
+  logo,
+  onImport,
+  isImporting,
+  onImportMedia,
+}) => {
   const { t, d } = useLocalization()
   const navigate = useNavigate()
 
@@ -39,7 +48,7 @@ export const StreamingSubHeader: FC<TProps> = ({ title, playlists, tracks, logo,
           </MenuList>
         </Menu>
         <PopoverConfirmation
-          onOk={onImport}
+          onOk={onImportMedia}
           title={t(d.ImportConfirmationTitle)}
           message={t(d.ImportConfirmationMessage, { streaming: title })}
         >

@@ -52,6 +52,16 @@ export const streamingApi = api.injectEndpoints({
       invalidatesTags: [EApiTags.TRACKS, EApiTags.USER_STREAMINGS],
       extraOptions: { maxRetries: 0 },
     }),
+    importAllMedia: build.mutation<Success<Api.Import.Lib.Resp>, Api.Import.Lib.Req>({
+      query: (body) => ({
+        method: 'POST',
+        url: importUrl(Api.Import.Lib.URL),
+        body,
+      }),
+      transformResponse: (response: Success<Api.Import.Lib.Resp>) => response,
+      invalidatesTags: [EApiTags.TRACKS, EApiTags.PLAYLISTS, EApiTags.USER_STREAMINGS],
+      extraOptions: { maxRetries: 0 },
+    }),
   }),
   overrideExisting: false,
 })
@@ -62,4 +72,5 @@ export const {
   useGetConnectStreamingLinkMutation,
   useImportPlaylistsMutation,
   useImportTracksByPlaylistMutation,
+  useImportAllMediaMutation,
 } = streamingApi
