@@ -61,7 +61,7 @@ export const Header: FC<TProps> = ({ mobileMenu }) => {
                 <MenuItem>
                   <Link to='/profile'> {t(d.Profile)}</Link>
                 </MenuItem>
-                <MenuItem>{t(d.Settings)}</MenuItem>
+                <MenuItem isDisabled>{t(d.Settings)}</MenuItem>
                 <MenuItem onClick={() => dispatch(resetToken())}>{t(d.LogOut)}</MenuItem>
               </MenuList>
             </Menu>
