@@ -145,6 +145,25 @@ export namespace Api {
         deleted: number,
       }>
     }
+
+    export namespace Lib {
+      export const URL = '/lib'
+
+      export type Req = {
+        streamingType: Streaming.EApiStreamingType,
+      }
+
+      export type Resp = Response<{
+        tracks: {
+          exported: number,
+          saved: number,
+        },
+        playlists: {
+          exported: number,
+          saved: number,
+        },
+      }>
+    }
   }
 
   export namespace Music {

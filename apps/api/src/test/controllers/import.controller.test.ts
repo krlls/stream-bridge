@@ -3,7 +3,7 @@ import { Api } from 'api-types'
 
 import { TestApp } from '../index.test'
 import { SqliteDB } from '../../infra/db/Sqlite/SetupConnection'
-import { authUrl, importUrl, testStreamingDTO, testUserData, userUrl } from '../helpers/test.helpers'
+import { authUrl, importUrl, PLAYLISTS, testStreamingDTO, testUserData, TRACKS, userUrl } from '../helpers/test.helpers'
 import { appContainer } from '../../inversify.config'
 import { IStreamingService } from '../../modules/streaming/interfaces/IStreamingService'
 import { TYPES } from '../../types/const'
@@ -85,5 +85,22 @@ describe('Import media controller tests', () => {
 
     expect(playlistsResponse.status).toBe(200)
     expect(playlistsResponse.text).toMatchSnapshot()
+  })
+
+  it('Import all media works', async () => {
+    const streamingDTO = testStreamingDTO(currentUser.id)
+    await streamingService.createStreaming(streamingDTO)
+
+    const resp = await TestApp.post(importUrl(Api.Import.Lib.URL))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .send({
+        streamingType: Api.Streaming.EApiStreamingType.SPOTIFY,
+      })
+
+    expect(resp.status).toBe(200)
+    expect(JSON.parse(resp.text).playlists).toEqual({ exported: PLAYLISTS, saved: PLAYLISTS })
+    expect(JSON.parse(resp.text).tracks).toEqual({ exported: PLAYLISTS * TRACKS, saved: PLAYLISTS * TRACKS })
   })
 })

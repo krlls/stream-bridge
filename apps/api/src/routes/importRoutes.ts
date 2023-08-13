@@ -15,6 +15,9 @@ router.post(Api.Import.Playlists.URL, ...authChecker.createMiddleware(), importV
 router.post(Api.Import.Tracks.URL, ...authChecker.createMiddleware(), importValidators.importTracksByPlaylist, (ctx) =>
   importController.importTracksByPlaylist(ctx, ctx.request.body),
 )
+router.post(Api.Import.Lib.URL, ...authChecker.createMiddleware(), importValidators.importMedia, (ctx) =>
+  importController.importLib(ctx, ctx.request.body),
+)
 
 export const importRouter = router
 
@@ -119,6 +122,65 @@ export const importRouter = router
  *                imported:
  *                  type: number
  *                  description: Number of tracks imported successfully.
+ *
+ *       500:
+ *         description: Internal server error. Something went wrong on the server side.
+ *
+ *       400:
+ *         description: Request validation error or business logic execution error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - $ref: '#/components/schemas/ValidationError'
+ *                 - $ref: '#/components/schemas/ErrorResult'
+ *       401:
+ *         description: Unauthorized. Authentication token is missing or invalid.
+ */
+
+/**
+ * @swagger
+ * /import/lib:
+ *   post:
+ *     tags:
+ *      - Import
+ *     summary: Import all streaming library
+ *     description: Import all tracks and playlists from streaming by type.
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *              - streamingType
+ *             properties:
+ *              streamingType:
+ *                type: string
+ *                enum: [spotify, tidal]
+ *                description: Streaming type.
+ *     responses:
+ *       200:
+ *         description: Import result
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                tracks:
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      imported:
+ *                        type: number
+ *                playlists:
+ *                 schema:
+ *                   type: object
+ *                   properties:
+ *                     imported:
+ *                       type: number
  *
  *       500:
  *         description: Internal server error. Something went wrong on the server side.
