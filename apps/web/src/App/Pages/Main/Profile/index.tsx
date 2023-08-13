@@ -1,30 +1,41 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
+import { useSearchParams } from 'react-router-dom'
 
 import { useThemeColors } from '../../../../hooks/useThemeColors'
 import { useLocalization } from '../../../../hooks/useLocalization.ts'
 import { StreamingsTab } from '../../../../components/StreamingsTab'
+import { ProfileTab } from '../../../../components/ProfileTab'
 
 export const Profile: FC = () => {
   const { secondary } = useThemeColors()
   const { t, d } = useLocalization()
-  const [tabIndex, setTabindex] = useState(1)
+  const [tabIndex, setTabindex] = useState(0)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const tabId = +(searchParams.get('tab') || 0)
 
-  const tabs = [
-    { id: 1, name: t(d.Profile), isDisabled: true, ClientTab: () => null },
-    { id: 2, name: t(d.Streamings), isDisabled: false, ClientTab: StreamingsTab },
-  ]
+  const tabs = useMemo(
+    () => [
+      { id: 0, name: t(d.Profile), ClientTab: ProfileTab },
+      { id: 1, name: t(d.Streamings), ClientTab: StreamingsTab },
+    ],
+    [d.Profile, d.Streamings, t],
+  )
 
   useEffect(() => {
-    const enabledTabIndex = tabs.findIndex(({ isDisabled }) => !isDisabled) || 0
-    setTabindex(enabledTabIndex)
-  }, [])
+    tabId && tabs[tabId] && setTabindex(tabId)
+  }, [tabId, tabs])
+
+  const handleSetTab = (index: number) => {
+    setSearchParams('')
+    setTabindex(index)
+  }
 
   return (
     <Tabs flex={1} index={tabIndex}>
       <TabList bg={secondary}>
-        {tabs.map(({ name, isDisabled, id }, i) => (
-          <Tab key={id} isDisabled={isDisabled} children={name} onClick={() => setTabindex(i)} />
+        {tabs.map(({ name, id }, i) => (
+          <Tab key={id} children={name} onClick={() => handleSetTab(i)} />
         ))}
       </TabList>
       <TabPanels>

@@ -49,4 +49,5 @@ export const ru: Dictionary = {
   ImportErrorMessage: 'Что-то пошло не так, обновите токен приложения.',
   Apply: 'Подтвердить',
   Cancel: 'Отменить',
+  ProfileSettings: 'Настройки профиля',
 }

@@ -47,4 +47,5 @@ export const en = {
   ImportErrorMessage: 'Something went wrong, please refresh the application token.',
   Apply: 'Apply',
   Cancel: 'Cancel',
+  ProfileSettings: 'Profile settings',
 }

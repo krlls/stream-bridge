@@ -56,7 +56,7 @@ export const StreamingSubHeader: FC<TProps> = ({
             {playlists ? t(d.Update) : t(d.Import)}
           </Button>
         </PopoverConfirmation>
-        <Button rightIcon={<ArrowForwardIcon />} disabled={!playlists}>
+        <Button isDisabled rightIcon={<ArrowForwardIcon />} disabled={!playlists}>
           {t(d.Export)}
         </Button>
       </ButtonGroup>

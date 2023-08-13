@@ -133,7 +133,7 @@ export const SignUp: FC = () => {
                 <Link to='/auth/sign-in'>
                   <Button>{t(d.ToLogin)}</Button>
                 </Link>
-                <Button colorScheme='teal' type='submit' disabled={!isValid}>
+                <Button colorScheme='teal' type='submit' isDisabled={!isValid}>
                   <SmallAddIcon marginRight={2} />
                   {t(d.registration)}
                 </Button>
