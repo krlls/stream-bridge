@@ -135,7 +135,7 @@ export const ProfileData: FC<TProps> = ({ name, login }) => {
   return (
     <Card variant='outline' flex={1} minWidth={variants('100px', '300px')}>
       <CardHeader>
-        <Heading size='lg'>Редактировать профиль</Heading>
+        <Heading size='lg'>{t(d.ProfileSettings)}</Heading>
       </CardHeader>
       <CardBody p={4}>
         <form noValidate>
