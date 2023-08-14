@@ -17,7 +17,6 @@ export const userApi = api.injectEndpoints({
       transformResponse: (response: Success<Api.Auth.Login.Resp>) => response.token,
       invalidatesTags: [EApiTags.USER, EApiTags.AUTH],
     }),
-
     getUser: build.query<Success<Api.User.GetProfile.Resp>, undefined>({
       query: () => ({
         method: 'GET',
@@ -26,7 +25,6 @@ export const userApi = api.injectEndpoints({
       transformResponse: (response: Success<Api.User.GetProfile.Resp>) => response,
       providesTags: [EApiTags.USER],
     }),
-
     createUser: build.mutation<Success<Api.User.Create.Resp>, Api.User.Create.Req>({
       query: (body) => ({
         method: 'POST',
@@ -36,8 +34,17 @@ export const userApi = api.injectEndpoints({
       transformResponse: (response: Success<Api.User.Create.Resp>) => response,
       invalidatesTags: [EApiTags.USER, EApiTags.AUTH],
     }),
+    updateUser: build.mutation<Success<Api.User.Update.Resp>, Api.User.Update.Req>({
+      query: (body) => ({
+        method: 'PATCH',
+        url: userUrl(Api.User.Update.URL),
+        body,
+      }),
+      transformResponse: (response: Success<Api.User.Update.Resp>) => response,
+      invalidatesTags: [EApiTags.USER, EApiTags.AUTH],
+    }),
   }),
   overrideExisting: false,
 })
 
-export const { useAuthMutation, useGetUserQuery, useCreateUserMutation } = userApi
+export const { useAuthMutation, useGetUserQuery, useCreateUserMutation, useUpdateUserMutation } = userApi

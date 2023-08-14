@@ -3,7 +3,7 @@ import { Flex, SkeletonCircle, SkeletonText, Stack } from '@chakra-ui/react'
 import { useDispatch } from 'react-redux'
 
 import { variants } from '../../utils/size.ts'
-import { resetToken, useGetUserQuery } from '../../data/user'
+import { resetToken, useGetUserQuery, useUpdateUserMutation } from '../../data/user'
 import { ProfileCard } from './ProfileCard'
 import { useGetCalculatedUserStats } from '../../hooks/useGetCalculatedUserStats.ts'
 import { ProfileData } from './ProfileData'
@@ -11,6 +11,7 @@ import { ProfileData } from './ProfileData'
 export const ProfileTab: FC = () => {
   const { data, isLoading } = useGetUserQuery(undefined)
   const { result, isLoading: statLoading, isError: statError } = useGetCalculatedUserStats()
+  const [updateUser, updateResult] = useUpdateUserMutation()
   const dispatch = useDispatch()
 
   if (isLoading || !data) {
@@ -40,7 +41,14 @@ export const ProfileTab: FC = () => {
         tracks={result?.tracks || 0}
         logOut={() => dispatch(resetToken())}
       />
-      <ProfileData name={name} login={login} id={id} isLoading={false} />
+      <ProfileData
+        name={name}
+        login={login}
+        id={id}
+        isLoading={false}
+        updateUser={({ login, name, pass }) => updateUser({ login, name, pass })}
+        updateResult={{ isError: updateResult.isError, isLoading: updateResult.isLoading }}
+      />
     </Stack>
   )
 }

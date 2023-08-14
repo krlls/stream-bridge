@@ -24,9 +24,9 @@ export namespace Api {
       export const URL = '/update'
 
       export type Req = {
-        login: string,
-        name: string,
-        pass: string,
+        login?: string,
+        name?: string,
+        pass?: string,
       }
 
       export type Resp = Response<{
