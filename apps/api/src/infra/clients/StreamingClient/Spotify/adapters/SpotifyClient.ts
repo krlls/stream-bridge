@@ -59,9 +59,11 @@ export class SpotifyClient implements IClient {
   }
 
   async prepare(credentials: StreamingCredentialsDTO) {
-    const client = SpotifyApi.withAccessToken(serverConfig.spotifyClientId, this.credentialsConverter.from(credentials))
-
     try {
+      const client = SpotifyApi.withAccessToken(
+        serverConfig.spotifyClientId,
+        this.credentialsConverter.from(credentials),
+      )
       const user = await client.currentUser.profile()
 
       if (!user || !user.id) {
@@ -79,6 +81,11 @@ export class SpotifyClient implements IClient {
       if (!newToken) {
         return new StreamingPrepareResultDTO(EPrepareResult.ERROR)
       }
+
+      const client = SpotifyApi.withAccessToken(
+        serverConfig.spotifyClientId,
+        this.credentialsConverter.from({ streamingId: credentials.streamingId, ...newToken }),
+      )
 
       const user = await client.currentUser.profile()
 
@@ -185,7 +192,7 @@ export class SpotifyClient implements IClient {
 
   async updateToken(refreshToken: string) {
     try {
-      const tokenData: AxiosResponse<ITokenResp> = await axios.request({
+      const tokenData: AxiosResponse<Omit<ITokenResp, 'refresh_token'>> = await axios.request({
         method: 'POST',
         url: '/api/token',
         baseURL: this.baseUrl,
@@ -199,11 +206,11 @@ export class SpotifyClient implements IClient {
         },
       })
 
-      this.logger.info('updateToken', tokenData.data.refresh_token.slice(-10))
+      this.logger.info('updateToken', tokenData.data.access_token.slice(-10))
 
-      return this.tokenConverter.from(tokenData.data)
+      return this.tokenConverter.from({ refresh_token: refreshToken, ...tokenData.data })
     } catch (e: any) {
-      this.logger.error('getToken', e?.response?.status, e?.response?.statusText)
+      this.logger.error('updateToken', e?.response?.status, e?.response?.statusText)
 
       return null
     }
