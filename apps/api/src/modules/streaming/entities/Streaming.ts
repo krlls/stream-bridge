@@ -6,6 +6,7 @@ export interface Streaming {
   token?: string,
   refresh_token?: string,
   expiresIn?: number,
+  expires?: number,
 
   playlists?: number,
   tracks?: number,

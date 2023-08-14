@@ -8,6 +8,7 @@ import { CreatePlaylistDTO } from '../../modules/music/dtos/CreatePlaylistDTO'
 import { EStreamingType } from '../../types/common'
 import { CreateStreamingDTO } from '../../modules/streaming/dtos/CreateStreamingDTO'
 import { genUid } from '../../utils/app'
+import { calcExpires } from '../../utils/transform'
 
 export const userUrl: (...args: string[]) => string = createPatch.bind(null, Api.User.PREFIX)
 export const authUrl: (...args: string[]) => string = createPatch.bind(null, Api.Auth.PREFIX)
@@ -59,6 +60,7 @@ export const testStreamingDTO = (userId: number, type?: EStreamingType) =>
     refreshToken: faker.string.uuid(),
     type: type || EStreamingType.SPOTIFY,
     expiresIn: 3600,
+    expires: calcExpires(3600),
   })
 
 export const getRandomTracks = ({ userId, playlistId }: { userId: number, playlistId: number }, size: number) =>

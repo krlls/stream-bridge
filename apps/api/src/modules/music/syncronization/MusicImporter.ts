@@ -130,7 +130,10 @@ export class MusicImporter implements IMusicImporter {
     return { ...counter, ...deleted }
   }
 
-  private async updateStreaming(streamingId: number, data: { accessToken: string, expiresIn: number }) {
+  private async updateStreaming(
+    streamingId: number,
+    data: { accessToken: string, expiresIn: number, expires: number },
+  ) {
     const result = await this.streamingRepository.updateStreamingWithToken(
       streamingId,
       new UpdateStreamingTokenDTO(data),

@@ -15,6 +15,7 @@ export class StreamingEntityConverter implements Converter<StreamingEntity, Stre
       expiresIn: from.expiresIn,
       playlists: from.playlistsCount,
       tracks: from.tracksCount,
+      expires: from.expires,
     }
   }
 

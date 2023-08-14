@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify'
+import { every } from 'lodash'
 
 import { IPlaylistService } from '../interfaces/IPlaylistService'
 import { IPlaylistRepository } from '../interfaces/IPlaylistRepository'
@@ -17,6 +18,7 @@ import { limits } from '../../common/const'
 import { PlaylistDto } from '../dtos/PlaylistDto'
 import { ImportTracksDTO } from '../dtos/ImportTracksDTO'
 import { ImportLibResultDTO } from '../dtos/ImportLibResultDTO'
+import { Streaming } from '../../streaming/entities/Streaming'
 
 @injectable()
 export class PlaylistService implements IPlaylistService {
@@ -72,23 +74,19 @@ export class PlaylistService implements IPlaylistService {
   async importPlaylists(toImport: ImportMediaDTO) {
     const { userId } = toImport
 
-    const streaming = await this.streamingRepository.getStreaming(toImport.userId, toImport.streamingType)
+    const streamingResp = await this.streamingRepository.getStreaming(toImport.userId, toImport.streamingType)
+    const streaming = this.checkStreamingAfterImport(streamingResp)
 
-    if (!streaming) {
-      return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
-    }
-
-    const { expiresIn, refresh_token, token, id } = streaming
-
-    if (!expiresIn || !refresh_token || !token) {
-      return new ErrorDTO(Errors.WRONG_CREDENTIALS)
+    if (isServiceError(streaming)) {
+      return streaming
     }
 
     const credentials = new StreamingCredentialsDTO({
-      id,
-      token,
-      expiresIn,
-      refreshToken: refresh_token,
+      id: streaming.id,
+      token: streaming.token,
+      expiresIn: streaming.expiresIn,
+      expires: streaming.expires,
+      refreshToken: streaming.refresh_token,
     })
 
     const result = await this.musicImporter.importPlaylists({
@@ -106,23 +104,19 @@ export class PlaylistService implements IPlaylistService {
   }
 
   async importAllMedia(toImport: ImportMediaDTO) {
-    const streaming = await this.streamingRepository.getStreaming(toImport.userId, toImport.streamingType)
+    const streamingResp = await this.streamingRepository.getStreaming(toImport.userId, toImport.streamingType)
+    const streaming = this.checkStreamingAfterImport(streamingResp)
 
-    if (!streaming) {
-      return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
-    }
-
-    const { expiresIn, refresh_token, token, id } = streaming
-
-    if (!expiresIn || !refresh_token || !token) {
-      return new ErrorDTO(Errors.WRONG_CREDENTIALS)
+    if (isServiceError(streaming)) {
+      return streaming
     }
 
     const credentials = new StreamingCredentialsDTO({
-      id,
-      token,
-      expiresIn,
-      refreshToken: refresh_token,
+      id: streaming.id,
+      token: streaming.token,
+      expiresIn: streaming.expiresIn,
+      expires: streaming.expires,
+      refreshToken: streaming.refresh_token,
     })
 
     const playlistsResult = await this.importPlaylists(toImport)
@@ -152,5 +146,19 @@ export class PlaylistService implements IPlaylistService {
     }
 
     return new ImportLibResultDTO({ tracks: tracksResult, playlists: playlistsResult })
+  }
+
+  private checkStreamingAfterImport(streaming?: Streaming | null): Required<Streaming> | ErrorDTO {
+    if (!streaming) {
+      return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
+    }
+
+    const { expiresIn, refresh_token, token, expires } = streaming
+
+    if (!every([expiresIn, refresh_token, token, expires])) {
+      return new ErrorDTO(Errors.WRONG_CREDENTIALS)
+    }
+
+    return streaming as Required<Streaming>
   }
 }

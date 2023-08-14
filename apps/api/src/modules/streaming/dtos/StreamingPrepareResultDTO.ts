@@ -5,6 +5,7 @@ export class StreamingPrepareResultDTO {
   data?: {
     accessToken: string,
     expiresIn: number,
+    expires: number,
   }
 
   constructor(
@@ -12,6 +13,7 @@ export class StreamingPrepareResultDTO {
     data?: {
       accessToken: string,
       expiresIn: number,
+      expires: number,
     },
   ) {
     this.result = result
@@ -20,6 +22,7 @@ export class StreamingPrepareResultDTO {
       : {
           accessToken: data.accessToken,
           expiresIn: data.expiresIn,
+          expires: data.expires,
         }
   }
 }

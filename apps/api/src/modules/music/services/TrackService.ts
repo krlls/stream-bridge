@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify'
+import { every } from 'lodash'
 
 import { TYPES } from '../../../types/const'
 import { ErrorDTO } from '../../common/dtos/errorDTO'
@@ -19,6 +20,7 @@ import { GetUserPlaylistsDto } from '../dtos/GetUserPlaylistsDto'
 import { GetTracksByPlaylistDTO } from '../dtos/GetTracksByPlaylistDTO'
 import { limits } from '../../common/const'
 import { TrackDTO } from '../dtos/TrackDto'
+import { Streaming } from '../../streaming/entities/Streaming'
 
 @injectable()
 export class TrackService implements ITrackService {
@@ -58,23 +60,19 @@ export class TrackService implements ITrackService {
   }
 
   async importTracks(toImport: ImportMediaDTO) {
-    const streaming = await this.streamingRepository.getStreaming(toImport.userId, toImport.streamingType)
+    const streamingResp = await this.streamingRepository.getStreaming(toImport.userId, toImport.streamingType)
+    const streaming = this.checkStreamingAfterImport(streamingResp)
 
-    if (!streaming) {
-      return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
-    }
-
-    const { expiresIn, refresh_token, token, id } = streaming
-
-    if (!expiresIn || !refresh_token || !token) {
-      return new ErrorDTO(Errors.WRONG_CREDENTIALS)
+    if (isServiceError(streaming)) {
+      return streaming
     }
 
     const credentials = new StreamingCredentialsDTO({
-      id,
-      token,
-      expiresIn,
-      refreshToken: refresh_token,
+      id: streaming.id,
+      token: streaming.token,
+      expiresIn: streaming.expiresIn,
+      expires: streaming.expires,
+      refreshToken: streaming.refresh_token,
     })
 
     const playlistsData = new GetUserPlaylistsDto({ userId: toImport.userId })
@@ -110,11 +108,20 @@ export class TrackService implements ITrackService {
       return new ErrorDTO(Errors.PLAYLIST_NOT_FOUND)
     }
 
-    const streaming = await this.streamingRepository.getStreaming(userId, playlist.streaming_type)
+    const streamingResp = await this.streamingRepository.getStreaming(userId, playlist.streaming_type)
+    const streaming = this.checkStreamingAfterImport(streamingResp)
 
-    if (!streaming) {
-      return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
+    if (isServiceError(streaming)) {
+      return streaming
     }
+
+    const credentials = new StreamingCredentialsDTO({
+      id: streaming.id,
+      token: streaming.token,
+      expiresIn: streaming.expiresIn,
+      expires: streaming.expires,
+      refreshToken: streaming.refresh_token,
+    })
 
     if (!playlist) {
       return new ErrorDTO(Errors.PLAYLIST_NOT_FOUND)
@@ -124,24 +131,11 @@ export class TrackService implements ITrackService {
       return new ErrorDTO(Errors.PLAYLIST_NOT_MATCH)
     }
 
-    const { expiresIn, refresh_token, token, id } = streaming
-
-    if (!expiresIn || !refresh_token || !token) {
-      return new ErrorDTO(Errors.WRONG_CREDENTIALS)
-    }
-
     const data = new ImportTracksDTO({
       streamingType: playlist.streaming_type,
       userId: playlist.user_id,
       playlistId: playlist.id,
       playlistExternalId: playlist.external_id,
-    })
-
-    const credentials = new StreamingCredentialsDTO({
-      id,
-      token,
-      expiresIn,
-      refreshToken: refresh_token,
     })
 
     const importResult = await this.musicImporter.importTracksByPlaylists(credentials, [data])
@@ -161,5 +155,19 @@ export class TrackService implements ITrackService {
     }
 
     return track
+  }
+
+  private checkStreamingAfterImport(streaming?: Streaming | null): Required<Streaming> | ErrorDTO {
+    if (!streaming) {
+      return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
+    }
+
+    const { expiresIn, refresh_token, token, expires } = streaming
+
+    if (!every([expiresIn, refresh_token, token, expires])) {
+      return new ErrorDTO(Errors.WRONG_CREDENTIALS)
+    }
+
+    return streaming as Required<Streaming>
   }
 }

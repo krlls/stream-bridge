@@ -23,6 +23,9 @@ export class StreamingEntity extends BaseEntity {
   @Column({ type: 'int', nullable: true })
   expiresIn?: number
 
+  @Column({ type: 'int', nullable: true })
+  expires?: number
+
   @ManyToOne(() => UserEntity, (user) => user.streamings, {
     nullable: false,
     onDelete: 'CASCADE',
