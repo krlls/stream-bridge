@@ -10,12 +10,16 @@ import { ImportTracksDTO } from '../dtos/ImportTracksDTO'
 import { ITracksRepository } from '../interfaces/ITracksRepository'
 import { ErrorDTO } from '../../common/dtos/errorDTO'
 import { genUid } from '../../../utils/app'
+import { IStreamingRepository } from '../../streaming/interfaces/IStreamingRepository'
+import { ImportLogger } from '../../../utils/logger'
+import { CreateStreamingTokenDTO } from '../../streaming/dtos/CreateStreamingTokenDTO'
 
 @injectable()
 export class MusicImporter implements IMusicImporter {
   @inject(TYPES.PlaylistRepository)
   private playlistRepository: IPlaylistRepository
   @inject(TYPES.TrackRepository) private trackRepository: ITracksRepository
+  @inject(TYPES.StreamingRepository) private streamingRepository: IStreamingRepository
   @inject(TYPES.Client) private streamingClient: IStreamingClient
 
   async importPlaylists({
@@ -31,12 +35,10 @@ export class MusicImporter implements IMusicImporter {
   }) {
     const importId = genUid()
 
-    this.streamingClient.set(streamingType, credentials)
+    const prepareError = await this.prepareClient(streamingType, credentials)
 
-    const prepareRes = await this.streamingClient.prepare()
-
-    if (prepareRes.result === EPrepareResult.ERROR) {
-      return new ErrorDTO(Errors.PREPARE_CLIENT_ERROR)
+    if (prepareError) {
+      return prepareError
     }
 
     const counter = { exported: 0, saved: 0 }
@@ -74,12 +76,10 @@ export class MusicImporter implements IMusicImporter {
       return { exported: 0, saved: 0 }
     }
 
-    this.streamingClient.set(data[0].streamingType, credentials)
+    const prepareError = await this.prepareClient(data[0].streamingType, credentials)
 
-    const prepareRes = await this.streamingClient.prepare()
-
-    if (prepareRes.result === EPrepareResult.ERROR) {
-      return new ErrorDTO(Errors.PREPARE_CLIENT_ERROR)
+    if (prepareError) {
+      return prepareError
     }
 
     const results = []
@@ -128,5 +128,58 @@ export class MusicImporter implements IMusicImporter {
     const deleted = await this.trackRepository.purgeMismatchedTracksByImportId(playlistId, importId)
 
     return { ...counter, ...deleted }
+  }
+
+  private async updateStreaming(streamingId: number, data: CreateStreamingTokenDTO) {
+    const result = await this.streamingRepository.updateStreamingWithToken(streamingId, data)
+
+    if (result) {
+      ImportLogger.info('updateStreaming', streamingId, 'success')
+
+      return
+    }
+
+    ImportLogger.error('updateStreaming', streamingId)
+  }
+
+  private async prepareClient(type: EStreamingType, credentials: StreamingCredentialsDTO) {
+    ImportLogger.info('prepareClient', type)
+    this.streamingClient.set(type, credentials)
+
+    if (this.needsUpdate(credentials.expires)) {
+      await this.updateToken(credentials)
+    }
+
+    const prepareRes = await this.streamingClient.prepare()
+
+    if (prepareRes.result === EPrepareResult.ERROR) {
+      ImportLogger.error('prepareClient', type, 'error')
+
+      return new ErrorDTO(Errors.PREPARE_CLIENT_ERROR)
+    }
+
+    if (prepareRes.data) {
+      await this.updateStreaming(credentials.streamingId, prepareRes.data)
+    }
+
+    return
+  }
+
+  private async updateToken(credentials: StreamingCredentialsDTO) {
+    const newToken = await this.streamingClient.updateToken()
+
+    if (!newToken) {
+      ImportLogger.error('Failed to update the token')
+
+      return
+    }
+
+    await this.updateStreaming(credentials.streamingId, newToken)
+
+    return
+  }
+
+  private needsUpdate(expires: number) {
+    return expires < Date.now()
   }
 }

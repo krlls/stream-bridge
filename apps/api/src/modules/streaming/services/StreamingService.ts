@@ -66,6 +66,7 @@ export class StreamingService implements IStreamingService {
         refreshToken: tokenResp.refreshToken,
         type: data.streamingType,
         expiresIn: tokenResp.expiresIn,
+        expires: tokenResp.expires,
       })
 
       const newStreaming = await this.streamingRepository.createStreaming(createData)

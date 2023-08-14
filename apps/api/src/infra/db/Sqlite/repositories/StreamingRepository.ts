@@ -9,8 +9,8 @@ import { StreamingEntity } from '../entities/StreamingEntity'
 import { UserEntity } from '../entities/UserEntity'
 import { Streaming } from '../../../../modules/streaming/entities/Streaming'
 import { CreateStreamingDTO } from '../../../../modules/streaming/dtos/CreateStreamingDTO'
-import { CreateStreamingTokenDTO } from '../../../../modules/streaming/dtos/CreateStreamingTokenDTO'
 import { TrackEntity } from '../entities/TrackEntity'
+import { UpdateStreamingTokenDTO } from '../../../../modules/streaming/dtos/UpdateStreamingTokenDTO'
 
 @injectable()
 export class StreamingRepository implements IStreamingRepository {
@@ -40,6 +40,7 @@ export class StreamingRepository implements IStreamingRepository {
     streamingToSave.token = steamingData.token
     streamingToSave.refresh_token = steamingData.refreshToken
     streamingToSave.expiresIn = steamingData.expiresIn
+    streamingToSave.expires = steamingData.expires
     streamingToSave.user = user
 
     const streaming = await this.repository.save(streamingToSave)
@@ -64,7 +65,7 @@ export class StreamingRepository implements IStreamingRepository {
     return this.streamingEntityConverter.from(streaming)
   }
 
-  async updateStreamingWithToken(streamingId: number, data: CreateStreamingTokenDTO): Promise<Streaming | null> {
+  async updateStreamingWithToken(streamingId: number, data: UpdateStreamingTokenDTO): Promise<Streaming | null> {
     const streaming = await this.repository.findOneBy({ id: streamingId })
 
     if (!streaming) {
@@ -74,6 +75,7 @@ export class StreamingRepository implements IStreamingRepository {
     streaming.token = data.token
     streaming.refresh_token = data.refreshToken
     streaming.expiresIn = data.expiresIn
+    streaming.expires = data.expires
 
     const result = await this.repository.save(streaming)
 

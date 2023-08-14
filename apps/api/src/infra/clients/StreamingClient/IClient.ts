@@ -12,4 +12,5 @@ export interface IClient {
   getTracksByPlaylist(data: { playlistId: string, offset: number }): Promise<ExternalTrackDTO[]>,
   getLoginUrl(state: string): string | null,
   getToken(code: string): Promise<CreateStreamingTokenDTO | null>,
+  updateToken(refreshToken: string): Promise<CreateStreamingTokenDTO | null>,
 }

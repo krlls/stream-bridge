@@ -9,6 +9,7 @@ export class CredentialsConverter implements Converter<StreamingCredentialsDTO, 
       access_token: from.token,
       refresh_token: from.refreshToken,
       expires_in: from.expiresIn,
+      expires: from.expires,
       token_type: 'Bearer',
     }
   }

@@ -9,3 +9,5 @@ export const convertStreamingName = (name: string): EStreamingType | undefined =
   ({
     [Api.Streaming.EApiStreamingType.SPOTIFY]: EStreamingType.SPOTIFY,
   })[name]
+
+export const calcExpires = (expiresIn: number) => Date.now() + expiresIn * 1000
