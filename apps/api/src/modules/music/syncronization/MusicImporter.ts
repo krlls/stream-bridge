@@ -11,8 +11,8 @@ import { ITracksRepository } from '../interfaces/ITracksRepository'
 import { ErrorDTO } from '../../common/dtos/errorDTO'
 import { genUid } from '../../../utils/app'
 import { IStreamingRepository } from '../../streaming/interfaces/IStreamingRepository'
-import { UpdateStreamingTokenDTO } from '../../streaming/dtos/UpdateStreamingTokenDTO'
 import { ImportLogger } from '../../../utils/logger'
+import { CreateStreamingTokenDTO } from '../../streaming/dtos/CreateStreamingTokenDTO'
 
 @injectable()
 export class MusicImporter implements IMusicImporter {
@@ -130,14 +130,8 @@ export class MusicImporter implements IMusicImporter {
     return { ...counter, ...deleted }
   }
 
-  private async updateStreaming(
-    streamingId: number,
-    data: { accessToken: string, expiresIn: number, expires: number },
-  ) {
-    const result = await this.streamingRepository.updateStreamingWithToken(
-      streamingId,
-      new UpdateStreamingTokenDTO(data),
-    )
+  private async updateStreaming(streamingId: number, data: CreateStreamingTokenDTO) {
+    const result = await this.streamingRepository.updateStreamingWithToken(streamingId, data)
 
     if (result) {
       ImportLogger.info('updateStreaming', streamingId, 'success')
@@ -152,6 +146,10 @@ export class MusicImporter implements IMusicImporter {
     ImportLogger.info('prepareClient', type)
     this.streamingClient.set(type, credentials)
 
+    if (this.needsUpdate(credentials.expires)) {
+      await this.updateToken(credentials)
+    }
+
     const prepareRes = await this.streamingClient.prepare()
 
     if (prepareRes.result === EPrepareResult.ERROR) {
@@ -165,5 +163,23 @@ export class MusicImporter implements IMusicImporter {
     }
 
     return
+  }
+
+  private async updateToken(credentials: StreamingCredentialsDTO) {
+    const newToken = await this.streamingClient.updateToken()
+
+    if (!newToken) {
+      ImportLogger.error('Failed to update the token')
+
+      return
+    }
+
+    await this.updateStreaming(credentials.streamingId, newToken)
+
+    return
+  }
+
+  private needsUpdate(expires: number) {
+    return expires < Date.now()
   }
 }

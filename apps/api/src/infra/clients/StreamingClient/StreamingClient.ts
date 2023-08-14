@@ -32,7 +32,13 @@ export class StreamingClient implements IStreamingClient {
     const prepareResult = await this.client.prepare(this.credentials)
 
     if (prepareResult.data) {
-      this.updateCredentials(prepareResult.data)
+      this.credentials = new StreamingCredentialsDTO({
+        token: prepareResult.data.token,
+        refreshToken: prepareResult.data.refreshToken,
+        expiresIn: prepareResult.data.expiresIn,
+        id: this.credentials.streamingId,
+        expires: prepareResult.data.expires,
+      })
     }
 
     return prepareResult
@@ -54,22 +60,6 @@ export class StreamingClient implements IStreamingClient {
     return this.client.getToken(code)
   }
   async updateToken(): Promise<CreateStreamingTokenDTO | null> {
-    const newToken = await this.client.updateToken(this.credentials.refreshToken)
-
-    if (newToken) {
-      this.updateCredentials(newToken)
-    }
-
-    return newToken
-  }
-
-  private updateCredentials(data: CreateStreamingTokenDTO) {
-    this.credentials = new StreamingCredentialsDTO({
-      id: this.credentials.streamingId,
-      token: data.token,
-      refreshToken: data.refreshToken,
-      expiresIn: data.expiresIn,
-      expires: data.expires,
-    })
+    return this.client.updateToken(this.credentials.refreshToken)
   }
 }
