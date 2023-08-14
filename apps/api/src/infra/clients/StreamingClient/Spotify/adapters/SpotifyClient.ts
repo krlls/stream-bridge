@@ -68,7 +68,12 @@ export class SpotifyClient implements IClient {
       this.logger.error('prepare', e?.message)
 
       const { credentials, token } = await this.refreshCredentials(credentialsDto)
-      this._client = await this.setupClient(credentials)
+
+      try {
+        this._client = await this.setupClient(credentials)
+      } catch (_) {
+        return new StreamingPrepareResultDTO(EPrepareResult.ERROR)
+      }
 
       return new StreamingPrepareResultDTO(EPrepareResult.SUCCESS, token)
     }
