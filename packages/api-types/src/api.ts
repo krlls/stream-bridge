@@ -20,6 +20,22 @@ export namespace Api {
       }>
     }
 
+    export namespace Update {
+      export const URL = '/update'
+
+      export type Req = {
+        login: string,
+        name: string,
+        pass: string,
+      }
+
+      export type Resp = Response<{
+        id: number,
+        login: string,
+        name: string,
+      }>
+    }
+
     export namespace GetProfile {
       export const URL = '/profile'
 

@@ -35,7 +35,7 @@ describe('Auth controllers tests', () => {
     }
     const response = await TestApp.post(authUrl(Api.Auth.Login.URL)).send(authData)
 
-    expect(response.status).toBe(403)
+    expect(response.status).toBe(401)
     expect(JSON.parse(response.text)).toHaveProperty('error')
   })
 
@@ -46,7 +46,7 @@ describe('Auth controllers tests', () => {
     }
     const response = await TestApp.post(authUrl(Api.Auth.Login.URL)).send(authData)
 
-    expect(response.status).toBe(403)
+    expect(response.status).toBe(401)
     expect(JSON.parse(response.text)).toHaveProperty('error')
     expect(response.text).toMatchSnapshot()
   })

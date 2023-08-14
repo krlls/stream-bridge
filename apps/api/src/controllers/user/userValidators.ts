@@ -10,9 +10,20 @@ const createUser = validatorFactory(
   }).required(),
 )
 
+const updateUser = validatorFactory(
+  Joi.object({
+    login: Joi.string(),
+    name: Joi.string(),
+    pass: Joi.string(),
+  })
+    .or('login', 'name', 'pass')
+    .required(),
+)
+
 const getProfile = validatorFactory(Joi.object().required().max(0))
 
 export const userValidators = {
   createUser,
   getProfile,
+  updateUser,
 }

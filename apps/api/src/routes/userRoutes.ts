@@ -10,8 +10,13 @@ const router = new Router()
 const userController = appContainer.get<UserController>(TYPES.UserController)
 
 router.post(Api.User.Create.URL, userValidators.createUser, (ctx) => userController.createUser(ctx, ctx.request.body))
+
 router.get(Api.User.GetProfile.URL, userValidators.getProfile, ...authChecker.createMiddleware(), (ctx) =>
   userController.profile(ctx),
+)
+
+router.patch(Api.User.Update.URL, userValidators.updateUser, ...authChecker.createMiddleware(), (ctx) =>
+  userController.updateUser(ctx, ctx.request.body),
 )
 
 export const userRouter = router
@@ -61,6 +66,68 @@ export const userRouter = router
  *                login:
  *                  type: string
  *                  description: User's login name.
+ *                name:
+ *                  type: string
+ *                  description: User's name.
+ *
+ *       500:
+ *         description: Internal server error. Something went wrong on the server side.
+ *         content:
+ *           application/json:
+ *             schema:
+ *              oneOf:
+ *                 - $ref: '#/components/schemas/ErrorResult'
+ *                 - $ref: '#/components/schemas/ValidationError'
+ *
+ *       400:
+ *         description: Request validation error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ValidationError'
+ */
+
+/**
+ * @swagger
+ * /user/update:
+ *   patch:
+ *     tags:
+ *      - User
+ *     summary: Update user data
+ *     description: Update user info.
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *              login:
+ *                type: string
+ *                description: User's login name.
+ *              name:
+ *                type: string
+ *                description: User's name.
+ *              pass:
+ *                type: string
+ *                description: User's password.
+ *
+ *     responses:
+ *       200:
+ *         description: Update result
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                id:
+ *                  type: number
+ *                  description: The unique identifier of the user.
+ *                login:
+ *                  type: string
+ *                  description: User's login.
  *                name:
  *                  type: string
  *                  description: User's name.
