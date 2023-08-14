@@ -56,8 +56,8 @@ export class UserRepository implements IUserRepository {
     return this.userEntityConverter.from(user)
   }
 
-  async updateUser({ id, login, name }: UpdateUser) {
-    const updatedUser = await this.repository.update({ id }, { login, name })
+  async updateUser({ id, login, name, hash }: UpdateUser) {
+    const updatedUser = await this.repository.update({ id }, { login, name, hash })
 
     if (!updatedUser.affected) {
       return null
