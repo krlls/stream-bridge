@@ -1,12 +1,25 @@
 import { EPrepareResult } from '../clients/IStreamingClient'
-import { CreateStreamingTokenDTO } from './CreateStreamingTokenDTO'
 
 export class StreamingPrepareResultDTO {
   result: EPrepareResult
-  data?: CreateStreamingTokenDTO
+  data?: {
+    accessToken: string,
+    expiresIn: number,
+  }
 
-  constructor(result: EPrepareResult, data?: CreateStreamingTokenDTO) {
+  constructor(
+    result: EPrepareResult,
+    data?: {
+      accessToken: string,
+      expiresIn: number,
+    },
+  ) {
     this.result = result
-    this.data = !data ? undefined : data
+    this.data = !data
+      ? undefined
+      : {
+          accessToken: data.accessToken,
+          expiresIn: data.expiresIn,
+        }
   }
 }
