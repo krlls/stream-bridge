@@ -29,7 +29,19 @@ export class StreamingClient implements IStreamingClient {
   }
 
   async prepare(): Promise<StreamingPrepareResultDTO> {
-    return this.client.prepare(this.credentials)
+    const prepareResult = await this.client.prepare(this.credentials)
+
+    if (prepareResult.data) {
+      this.credentials = new StreamingCredentialsDTO({
+        token: prepareResult.data.token,
+        refreshToken: prepareResult.data.refreshToken,
+        expiresIn: prepareResult.data.expiresIn,
+        id: this.credentials.streamingId,
+        expires: prepareResult.data.expires,
+      })
+    }
+
+    return prepareResult
   }
 
   async getPlaylists(offset: number): Promise<ExternalPlaylistDTO[]> {
@@ -46,5 +58,8 @@ export class StreamingClient implements IStreamingClient {
 
   async getToken(code: string): Promise<CreateStreamingTokenDTO | null> {
     return this.client.getToken(code)
+  }
+  async updateToken(): Promise<CreateStreamingTokenDTO | null> {
+    return this.client.updateToken(this.credentials.refreshToken)
   }
 }

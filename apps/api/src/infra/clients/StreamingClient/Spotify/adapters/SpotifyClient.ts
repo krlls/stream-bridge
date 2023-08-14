@@ -39,6 +39,7 @@ export class SpotifyClient implements IClient {
     Api.Streaming.Token.PATCH,
     '/' + Api.Streaming.EApiStreamingType.SPOTIFY,
   )
+
   private get authHeader() {
     const { spotifyClientId, spotifyClientSecret } = serverConfig
 
@@ -73,7 +74,23 @@ export class SpotifyClient implements IClient {
     } catch (e: any) {
       this.logger.error('prepare', e?.message)
 
-      return new StreamingPrepareResultDTO(EPrepareResult.ERROR)
+      const newToken = await this.updateToken(credentials.refreshToken)
+
+      if (!newToken) {
+        return new StreamingPrepareResultDTO(EPrepareResult.ERROR)
+      }
+
+      const user = await client.currentUser.profile()
+
+      if (!user || !user.id) {
+        return new StreamingPrepareResultDTO(EPrepareResult.ERROR)
+      }
+
+      this._client = client
+
+      this.logger.warn('prepare update token', newToken.token.slice(-10))
+
+      return new StreamingPrepareResultDTO(EPrepareResult.SUCCESS, newToken)
     }
   }
 
@@ -157,6 +174,32 @@ export class SpotifyClient implements IClient {
       })
 
       this.logger.info('getToken', tokenData.data.refresh_token.slice(-10))
+
+      return this.tokenConverter.from(tokenData.data)
+    } catch (e: any) {
+      this.logger.error('getToken', e?.response?.status, e?.response?.statusText)
+
+      return null
+    }
+  }
+
+  async updateToken(refreshToken: string) {
+    try {
+      const tokenData: AxiosResponse<ITokenResp> = await axios.request({
+        method: 'POST',
+        url: '/api/token',
+        baseURL: this.baseUrl,
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          Authorization: this.authHeader,
+        },
+        data: {
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken,
+        },
+      })
+
+      this.logger.info('updateToken', tokenData.data.refresh_token.slice(-10))
 
       return this.tokenConverter.from(tokenData.data)
     } catch (e: any) {
