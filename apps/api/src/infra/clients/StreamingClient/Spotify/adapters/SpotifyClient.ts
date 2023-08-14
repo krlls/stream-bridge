@@ -214,6 +214,13 @@ export class SpotifyClient implements IClient {
   }
 
   private async setupClient(credentials: StreamingCredentialsDTO) {
-    return SpotifyApi.withAccessToken(serverConfig.spotifyClientId, this.credentialsConverter.from(credentials))
+    const client = SpotifyApi.withAccessToken(serverConfig.spotifyClientId, this.credentialsConverter.from(credentials))
+    const profile = await client.currentUser.profile()
+
+    if (profile) {
+      return client
+    }
+
+    throw Error('No client!')
   }
 }
