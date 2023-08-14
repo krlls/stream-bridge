@@ -47,7 +47,11 @@ export const ProfileTab: FC = () => {
         id={id}
         isLoading={false}
         updateUser={({ login, name, pass }) => updateUser({ login, name, pass })}
-        updateResult={{ isError: updateResult.isError, isLoading: updateResult.isLoading }}
+        updateResult={{
+          isError: updateResult.isError,
+          isLoading: updateResult.isLoading,
+          isSuccess: updateResult.isSuccess,
+        }}
       />
     </Stack>
   )

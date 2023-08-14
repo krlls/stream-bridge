@@ -27,13 +27,14 @@ import {
   MIN_PASS_LENGTH,
   RegularEmailValidation,
 } from '../../../utils/vaidation.ts'
+import { useUpdateProfileToast } from '../../../hooks/useUpdateProfileToast'
 
 export type TProps = {
   id: number,
   name: string,
   login: string,
   isLoading: boolean,
-  updateResult: { isError: boolean, isLoading: boolean },
+  updateResult: { isError: boolean, isLoading: boolean, isSuccess: boolean },
   updateUser(update: { name?: string, login?: string, pass?: string }): void,
 }
 
@@ -77,6 +78,8 @@ export const ProfileData: FC<TProps> = ({ name, login, updateUser, updateResult 
   const groupSize = variants('0', '400px')
   const updateHandler = ({ email, password, name }: Inputs) =>
     updateUser({ login: email || undefined, pass: password || undefined, name: name || undefined })
+
+  useUpdateProfileToast(updateResult.isSuccess, updateResult.isError)
 
   const InfoFields: TField[] = useMemo(
     () => [
