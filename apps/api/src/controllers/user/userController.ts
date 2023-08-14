@@ -8,6 +8,7 @@ import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
 import { isServiceError } from '../../utils/errors'
 import { getUserId } from '../../utils/transform'
+import { UpdateUserDTO } from '../../modules/user/dtos/UpdateUserDTO'
 
 @injectable()
 export class UserController {
@@ -37,5 +38,18 @@ export class UserController {
     }
 
     return respond200json(ctx, profile)
+  }
+
+  async updateUser(ctx: RouterContext, params: Api.User.Update.Req) {
+    const userId = getUserId(ctx)
+
+    const dto = new UpdateUserDTO({ id: userId, ...params })
+    const result = await this.userService.updateUser(dto)
+
+    if (isServiceError(result)) {
+      return respond400(ctx, result)
+    }
+
+    return respond200json(ctx, result)
   }
 }

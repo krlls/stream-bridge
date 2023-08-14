@@ -9,7 +9,7 @@ const app = new Koa()
 
 app.use(
   cors({
-    allowMethods: ['get', 'post', 'patch', 'delete', 'update'],
+    allowMethods: ['GET', 'POST', 'PATCH', 'DELETE'],
     origin: serverConfig.isProduction ? serverConfig.appUrl : '*',
   }),
 )

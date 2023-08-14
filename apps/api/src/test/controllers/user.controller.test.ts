@@ -78,4 +78,50 @@ describe('With auth controllers', () => {
     expect(JSON.parse(response.text)).toHaveProperty('name', testUserData.name)
     expect(response.text).toMatchSnapshot()
   })
+
+  it('Update profile works', async () => {
+    const newData = { login: 'ksmi2', pass: '123456789944', name: 'Kirill 123' }
+    const response = await TestApp.patch(userUrl(Api.User.Update.URL))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .send(newData)
+
+    const respLogin = await TestApp.post(authUrl(Api.Auth.Login.URL)).send({ login: newData.login, pass: newData.pass })
+
+    expect(response.status).toBe(200)
+    expect(JSON.parse(response.text)).toHaveProperty('name', newData.name)
+    expect(JSON.parse(response.text)).toHaveProperty('login', newData.login)
+
+    expect(respLogin.status).toBe(200)
+    expect(JSON.parse(respLogin.text)).toHaveProperty('token')
+  })
+
+  it('Update profile 400', async () => {
+    const newData = { someLogin: 'ksmi2', pass: '1234564', badName: 'Kirill' }
+    const response = await TestApp.patch(userUrl(Api.User.Update.URL))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .send(newData)
+
+    const respLogin = await TestApp.post(authUrl(Api.Auth.Login.URL)).send({
+      login: newData.someLogin,
+      pass: newData.pass,
+    })
+
+    expect(response.status).toBe(400)
+    expect(respLogin.status).toBe(401)
+  })
+
+  it('Update profile 400 with empty body', async () => {
+    const newData = {}
+    const response = await TestApp.patch(userUrl(Api.User.Update.URL))
+      .set({
+        Authorization: `Bearer ${testToken}`,
+      })
+      .send(newData)
+
+    expect(response.status).toBe(400)
+  })
 })

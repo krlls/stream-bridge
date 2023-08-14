@@ -50,4 +50,8 @@ export const ru: Dictionary = {
   Apply: 'Подтвердить',
   Cancel: 'Отменить',
   ProfileSettings: 'Настройки профиля',
+  UpdateProfileSuccess: 'Данные профиля успешно обновлены',
+  UpdateProfileSuccessMessage: 'Вы успешно обновили данные своего профиля',
+  UpdateProfileError: 'Возникла ошибка при обновлении профиля',
+  UpdateProfileErrorMessage: 'Пожалуйста, проверьте корректность введенных данных',
 }

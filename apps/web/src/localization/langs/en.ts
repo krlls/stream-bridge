@@ -48,4 +48,8 @@ export const en = {
   Apply: 'Apply',
   Cancel: 'Cancel',
   ProfileSettings: 'Profile settings',
+  UpdateProfileSuccess: 'Profile data has been successfully updated',
+  UpdateProfileSuccessMessage: 'You have successfully updated your profile data',
+  UpdateProfileError: 'An error occurred while updating the profile',
+  UpdateProfileErrorMessage: 'Please check the correctness of the entered data',
 }

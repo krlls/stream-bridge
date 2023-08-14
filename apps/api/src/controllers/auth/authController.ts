@@ -2,7 +2,7 @@ import { RouterContext } from 'koa-router'
 import { inject, injectable } from 'inversify'
 import { Api } from 'api-types'
 
-import { respond200json, respond403 } from '../../utils/response'
+import { respond200json, respond401json } from '../../utils/response'
 import { TYPES } from '../../types/const'
 import { isServiceError } from '../../utils/errors'
 import { IAuthService } from '../../modules/auth/interfaces/IAuthService'
@@ -16,7 +16,7 @@ export class AuthController {
     const loginResult = await this.authService.login(loginData)
 
     if (isServiceError(loginResult)) {
-      return respond403(ctx, loginResult)
+      return respond401json(ctx, loginResult)
     }
 
     return respond200json(ctx, loginResult)

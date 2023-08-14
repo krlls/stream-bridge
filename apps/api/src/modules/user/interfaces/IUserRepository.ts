@@ -3,7 +3,7 @@ import { User } from '../entities/User'
 export interface IUserRepository {
   createUser: (createUser: CreateUser) => Promise<User | null>,
   findUserById: (userId: number) => Promise<User | null>,
-  findUserByLogin: (userlogin: string) => Promise<User | null>,
+  findUserByLogin: (userLogin: string) => Promise<User | null>,
   updateUser: (update: UpdateUser) => Promise<User | null>,
 }
 
@@ -17,4 +17,5 @@ export type UpdateUser = {
   id: number,
   name?: string,
   login?: string,
+  hash?: string,
 }

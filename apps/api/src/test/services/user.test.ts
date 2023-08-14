@@ -7,9 +7,12 @@ import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateUserDTO } from '../../modules/user/dtos/CreateUserDTO'
 import { testUserData } from '../helpers/test.helpers'
 import { UserDTO } from '../../modules/user/dtos/UserDTO'
-import { UpadteUserDTO } from '../../modules/user/dtos/UpdateUserDTO'
+import { UpdateUserDTO } from '../../modules/user/dtos/UpdateUserDTO'
+import { IAuthService } from '../../modules/auth/interfaces/IAuthService'
+import { LoginDTO } from '../../modules/auth/dtos/LoginDTO'
 
 const userService = appContainer.get<IUserService>(TYPES.UserService)
+const authService = appContainer.get<IAuthService>(TYPES.AuthService)
 describe('User service tests', () => {
   const user = new CreateUserDTO(testUserData)
 
@@ -45,7 +48,7 @@ describe('User service tests', () => {
 
   it('Update user works', async () => {
     const newUser = (await userService.createUser(user)) as UserDTO
-    const toUpdate = new UpadteUserDTO({ id: newUser.id, login: 'ksmi2' })
+    const toUpdate = new UpdateUserDTO({ id: newUser.id, login: 'ksmi2' })
     const result = await userService.updateUser(toUpdate)
 
     expect(result).toHaveProperty('login', toUpdate.login)
@@ -53,9 +56,21 @@ describe('User service tests', () => {
   })
 
   it('Update none exist user', async () => {
-    const toUpdate = new UpadteUserDTO({ id: 10, login: 'ksmi2' })
+    const toUpdate = new UpdateUserDTO({ id: 10, login: 'ksmi2' })
     const result = await userService.updateUser(toUpdate)
 
     expect(result).toHaveProperty('error')
+  })
+
+  it('Update pass works', async () => {
+    const newPass = '123456789'
+    const newUser = (await userService.createUser(user)) as UserDTO
+    const toUpdate = new UpdateUserDTO({ id: newUser.id, pass: newPass })
+    const result = await userService.updateUser(toUpdate)
+
+    const loginResp = await authService.login(new LoginDTO(newUser.login, newPass))
+
+    expect(result).not.toHaveProperty('error')
+    expect(loginResp).toHaveProperty('token')
   })
 })
