@@ -78,13 +78,14 @@ export class PlaylistService implements IPlaylistService {
       return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
     }
 
-    const { expiresIn, refresh_token, token } = streaming
+    const { expiresIn, refresh_token, token, id } = streaming
 
     if (!expiresIn || !refresh_token || !token) {
       return new ErrorDTO(Errors.WRONG_CREDENTIALS)
     }
 
     const credentials = new StreamingCredentialsDTO({
+      id,
       token,
       expiresIn,
       refreshToken: refresh_token,
@@ -111,13 +112,14 @@ export class PlaylistService implements IPlaylistService {
       return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
     }
 
-    const { expiresIn, refresh_token, token } = streaming
+    const { expiresIn, refresh_token, token, id } = streaming
 
     if (!expiresIn || !refresh_token || !token) {
       return new ErrorDTO(Errors.WRONG_CREDENTIALS)
     }
 
     const credentials = new StreamingCredentialsDTO({
+      id,
       token,
       expiresIn,
       refreshToken: refresh_token,

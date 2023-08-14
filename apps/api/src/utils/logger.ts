@@ -77,4 +77,18 @@ export class StreamingLogger extends Logger {
   }
 }
 
+export class ImportLogger extends Logger {
+  static info(...args: any) {
+    return StreamingLogger.logInfo('IMPORT', ...args)
+  }
+
+  static warn(...args: any) {
+    return StreamingLogger.logWarn('IMPORT', ...args)
+  }
+
+  static error(...args: any) {
+    return StreamingLogger.logError('IMPORT', ...args)
+  }
+}
+
 export const showNotEmpty = <A, B>(a: A, b: B) => (!isEmpty(a) ? a : !isEmpty(b) ? b : '')

@@ -64,13 +64,14 @@ export class TrackService implements ITrackService {
       return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
     }
 
-    const { expiresIn, refresh_token, token } = streaming
+    const { expiresIn, refresh_token, token, id } = streaming
 
     if (!expiresIn || !refresh_token || !token) {
       return new ErrorDTO(Errors.WRONG_CREDENTIALS)
     }
 
     const credentials = new StreamingCredentialsDTO({
+      id,
       token,
       expiresIn,
       refreshToken: refresh_token,
@@ -123,7 +124,7 @@ export class TrackService implements ITrackService {
       return new ErrorDTO(Errors.PLAYLIST_NOT_MATCH)
     }
 
-    const { expiresIn, refresh_token, token } = streaming
+    const { expiresIn, refresh_token, token, id } = streaming
 
     if (!expiresIn || !refresh_token || !token) {
       return new ErrorDTO(Errors.WRONG_CREDENTIALS)
@@ -137,6 +138,7 @@ export class TrackService implements ITrackService {
     })
 
     const credentials = new StreamingCredentialsDTO({
+      id,
       token,
       expiresIn,
       refreshToken: refresh_token,
