@@ -58,46 +58,24 @@ export class SpotifyClient implements IClient {
     return this._client
   }
 
-  async prepare(credentials: StreamingCredentialsDTO) {
+  async prepare(credentialsDto: StreamingCredentialsDTO) {
     try {
-      const client = SpotifyApi.withAccessToken(
-        serverConfig.spotifyClientId,
-        this.credentialsConverter.from(credentials),
-      )
-      const user = await client.currentUser.profile()
+      const { credentials, token } = await this.invalidateCredentials(credentialsDto)
+      this._client = await this.setupClient(credentials)
 
-      if (!user || !user.id) {
-        return new StreamingPrepareResultDTO(EPrepareResult.ERROR)
-      }
-
-      this._client = client
-
-      return new StreamingPrepareResultDTO(EPrepareResult.SUCCESS)
+      return new StreamingPrepareResultDTO(EPrepareResult.SUCCESS, token)
     } catch (e: any) {
       this.logger.error('prepare', e?.message)
 
-      const newToken = await this.updateToken(credentials.refreshToken)
+      const { credentials, token } = await this.refreshCredentials(credentialsDto)
 
-      if (!newToken) {
+      try {
+        this._client = await this.setupClient(credentials)
+      } catch (_) {
         return new StreamingPrepareResultDTO(EPrepareResult.ERROR)
       }
 
-      const client = SpotifyApi.withAccessToken(
-        serverConfig.spotifyClientId,
-        this.credentialsConverter.from({ streamingId: credentials.streamingId, ...newToken }),
-      )
-
-      const user = await client.currentUser.profile()
-
-      if (!user || !user.id) {
-        return new StreamingPrepareResultDTO(EPrepareResult.ERROR)
-      }
-
-      this._client = client
-
-      this.logger.warn('prepare update token', newToken.token.slice(-10))
-
-      return new StreamingPrepareResultDTO(EPrepareResult.SUCCESS, newToken)
+      return new StreamingPrepareResultDTO(EPrepareResult.SUCCESS, token)
     }
   }
 
@@ -206,13 +184,48 @@ export class SpotifyClient implements IClient {
         },
       })
 
-      this.logger.info('updateToken', tokenData.data.access_token.slice(-10))
+      this.logger.info('Spotify api update token', tokenData.data.access_token.slice(-10))
 
       return this.tokenConverter.from({ refresh_token: refreshToken, ...tokenData.data })
     } catch (e: any) {
-      this.logger.error('updateToken', e?.response?.status, e?.response?.statusText)
+      this.logger.error('Spotify api update token error', e?.response?.status, e?.response?.statusText)
 
       return null
     }
+  }
+
+  private needsUpdate(expires: number) {
+    return expires < Date.now()
+  }
+
+  private async invalidateCredentials(credentials: StreamingCredentialsDTO) {
+    if (!this.needsUpdate(credentials.expires)) {
+      return { credentials, token: undefined }
+    }
+
+    return this.refreshCredentials(credentials)
+  }
+
+  private async refreshCredentials(credentials: StreamingCredentialsDTO) {
+    const newToken = await this.updateToken(credentials.refreshToken)
+
+    if (!newToken) {
+      return { credentials }
+    }
+
+    this.logger.warn('Refresh token', newToken.token.slice(-10))
+
+    return { credentials: new StreamingCredentialsDTO({ id: credentials.streamingId, ...newToken }), token: newToken }
+  }
+
+  private async setupClient(credentials: StreamingCredentialsDTO) {
+    const client = SpotifyApi.withAccessToken(serverConfig.spotifyClientId, this.credentialsConverter.from(credentials))
+    const profile = await client.currentUser.profile()
+
+    if (profile) {
+      return client
+    }
+
+    throw Error('No client!')
   }
 }

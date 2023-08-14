@@ -133,22 +133,14 @@ export class MusicImporter implements IMusicImporter {
   private async updateStreaming(streamingId: number, data: CreateStreamingTokenDTO) {
     const result = await this.streamingRepository.updateStreamingWithToken(streamingId, data)
 
-    if (result) {
-      ImportLogger.info('updateStreaming', streamingId, 'success')
-
-      return
-    }
-
-    ImportLogger.error('updateStreaming', streamingId)
+    result
+      ? ImportLogger.info('updateStreaming', streamingId, 'success')
+      : ImportLogger.error('updateStreaming', streamingId)
   }
 
   private async prepareClient(type: EStreamingType, credentials: StreamingCredentialsDTO) {
     ImportLogger.info('prepareClient', type)
     this.streamingClient.set(type, credentials)
-
-    if (this.needsUpdate(credentials.expires)) {
-      await this.updateToken(credentials)
-    }
 
     const prepareRes = await this.streamingClient.prepare()
 
@@ -163,23 +155,5 @@ export class MusicImporter implements IMusicImporter {
     }
 
     return
-  }
-
-  private async updateToken(credentials: StreamingCredentialsDTO) {
-    const newToken = await this.streamingClient.updateToken()
-
-    if (!newToken) {
-      ImportLogger.error('Failed to update the token')
-
-      return
-    }
-
-    await this.updateStreaming(credentials.streamingId, newToken)
-
-    return
-  }
-
-  private needsUpdate(expires: number) {
-    return expires < Date.now()
   }
 }
