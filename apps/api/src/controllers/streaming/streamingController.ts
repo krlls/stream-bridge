@@ -9,7 +9,7 @@ import { convertStreamingName, getUserId } from '../../utils/transform'
 import { ErrorDTO } from '../../modules/common/dtos/errorDTO'
 import { Errors } from '../../types/common'
 import { isServiceError, isSpotifyAuthError } from '../../utils/errors'
-import { checkStreamingToken } from '../../utils/crypto'
+import { checkStreamingToken, getDataFromToken } from '../../utils/crypto'
 import { IUserService } from '../../modules/user/interfaces/IUserService'
 import { CreateLoginUrlDTO } from '../../modules/streaming/dtos/createLoginUrlDTO'
 import { SaveStreamingTokenDTO } from '../../modules/streaming/dtos/SaveStreamingTokenDTO'
@@ -37,10 +37,16 @@ export class StreamingController {
       return respond403(ctx, { error: params.error })
     }
 
+    const payload = await getDataFromToken<{ userId: number }>(params.state)
+
+    if (!payload || !payload.userId) {
+      return respond403(ctx, { error: 'User not found' })
+    }
+
     const saveTokenData = new SaveStreamingTokenDTO({
       streamingType,
       code: params.code,
-      userId: ctx.state.user?.userId,
+      userId: +payload.userId,
     })
 
     const result = await this.streamingService.saveToken(saveTokenData)

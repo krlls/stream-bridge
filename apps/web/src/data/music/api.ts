@@ -38,6 +38,9 @@ export const musicApi = api.injectEndpoints({
         url: musicUrl(Api.Music.Tracks.PATCH, '/', streamingType),
         params,
       }),
+      merge: (currentCache, newItems) => {
+        ;(currentCache.items || []).push(...(newItems?.items || []))
+      },
       providesTags: [EApiTags.TRACKS],
     }),
   }),

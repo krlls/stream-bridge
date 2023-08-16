@@ -6,12 +6,12 @@ import { StreamingEntity } from './StreamingEntity'
 import { Uid } from '../../../../types/common'
 
 @Entity()
-@Index(['external_id', 'streaming'], { unique: true })
+@Index(['external_id', 'streaming', 'user'], { unique: true })
 export class PlaylistEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ unique: true })
+  @Column()
   external_id: string
 
   @Column()

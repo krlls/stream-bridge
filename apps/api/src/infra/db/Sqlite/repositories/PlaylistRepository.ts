@@ -144,7 +144,7 @@ export class PlaylistRepository implements IPlaylistRepository {
       this.convertPlaylist({ user, streaming, playlistData: playlist }),
     )
 
-    const result = await this.repository.upsert(convertedPlaylists, ['external_id', 'streaming'])
+    const result = await this.repository.upsert(convertedPlaylists, ['external_id', 'streaming', 'user'])
 
     if (!result) {
       return 0

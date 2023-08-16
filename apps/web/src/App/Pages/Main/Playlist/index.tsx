@@ -1,6 +1,7 @@
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { Flex, Spinner } from '@chakra-ui/react'
+import { uniqBy } from 'lodash'
 import { Api } from 'api-types'
 
 import { PlaylistSubHeader } from '../../../../components/PlaylistSubHeader'
@@ -14,8 +15,7 @@ import { TracksList } from '../../../../components/TracksLIst'
 export const Playlist: FC = () => {
   const { type, id } = useSafeParams<{ id: string, type: Api.Streaming.EApiStreamingType }>()
   const playlistId = +id
-  const { data, isError, isLoading } = useGetPlaylistByIdQuery({ streamingType: type, id: playlistId })
-  const { data: tracksData } = useGetTracksByPlaylistQuery({ offset: 0, streamingType: type, playlistId })
+  const { data: PlaylistsData, isError, isLoading } = useGetPlaylistByIdQuery({ streamingType: type, id: playlistId })
   const [importTracks, importResult] = useImportTracksByPlaylistMutation()
   const { t, d } = useLocalization()
 
@@ -33,26 +33,49 @@ export const Playlist: FC = () => {
     },
   )
 
+  const pageSize = 50
+  const [currentPage, setCurrentPage] = useState(0)
+  const [combined, setCombined] = useState<Api.Music.Track[]>([])
+
+  const {
+    data: tracksData,
+    isFetching: isTracksFetching,
+    isLoading: isTracksLoading,
+  } = useGetTracksByPlaylistQuery(
+    { offset: currentPage * pageSize, streamingType: type, playlistId },
+    { skip: combined.length % pageSize !== 0 },
+  )
+
+  useEffect(() => {
+    setCombined((prevState) => uniqBy([...prevState, ...(tracksData?.items || [])], 'id'))
+  }, [tracksData?.items])
+
   if (isError || isLoading) {
     return <Spinner />
   }
 
-  if (!data) {
+  if (!PlaylistsData) {
     return <Navigate to='/' replace />
   }
 
-  const { name, cover } = data
+  const { name, cover } = PlaylistsData
 
   return (
     <Flex flexGrow={1} direction='column'>
       <PlaylistSubHeader
         title={name}
         cover={cover}
-        tracks={tracksData?.items.length || 0}
+        tracks={combined?.length || 0}
         isImporting={importResult.isLoading}
         onImport={() => importTracks({ playlistId })}
       />
-      <TracksList tracks={tracksData?.items || []} cover={cover} isLoading={false}/>
+      <TracksList
+        tracks={combined || []}
+        cover={cover}
+        isLoading={isTracksLoading}
+        isFetching={isTracksFetching}
+        setPage={() => setCurrentPage(currentPage + 1)}
+      />
     </Flex>
   )
 }
