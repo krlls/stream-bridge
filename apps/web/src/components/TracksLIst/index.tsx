@@ -2,7 +2,6 @@ import { Flex, Text, VStack, Image, Box, Skeleton, SkeletonText } from '@chakra-
 import { Api } from 'api-types'
 import { FC } from 'react'
 
-import { useGetRef } from '../../hooks/useGetRef.ts'
 import { variants } from '../../utils/size.ts'
 
 type TProps = {
@@ -12,25 +11,20 @@ type TProps = {
 }
 
 export const TracksList: FC<TProps> = ({ tracks, cover, isLoading }) => {
-  const ref = useGetRef<HTMLDivElement>()
-
   return (
-    <VStack
-      px={variants(2, 0)}
-      height={`calc(100vh - ${ref.current?.getBoundingClientRect().top}px)`}
-      direction='column'
-      overflowY={'auto'}
-    >
-      <Flex width='100%' position='sticky' top='0px' bg='gray.800' zIndex={1}>
+    <VStack height='100%' px={variants(2, 0)} direction='column'>
+      <Box width='100%' position='sticky' top='64px' bg='gray.800' zIndex={1}>
         <Header name={'Name'} album={'Album'} />
-      </Flex>
+      </Box>
       {isLoading
-        ? Array(10).fill(null).map((i) => (
-          <Flex key={i+'s'} width={'100%'} align='center'>
-            <Skeleton mr={4} width='40px' height={'40px'}/>
-            <SkeletonText flex={1} noOfLines={2} width={'100%'}/>
-          </Flex>
-        ))
+        ? Array(10)
+            .fill(null)
+            .map((i) => (
+              <Flex key={i + 's'} width={'100%'} align='center'>
+                <Skeleton mr={4} width='40px' height={'40px'} />
+                <SkeletonText flex={1} noOfLines={2} width={'100%'} />
+              </Flex>
+            ))
         : tracks.map(({ name, album, artist }) => (
             <TrackItem key={name + artist} name={name} album={album} artist={artist} cover={cover} />
           ))}
@@ -71,7 +65,7 @@ function TrackItem({ name, album, artist, cover }: { name: string, album: string
 
 function Header({ name, album }: { name: string, album: string }) {
   return (
-    <Flex width='100%' align='center' pb={2} borderBottom='1px' borderBottomColor='gray.750' color='gray.500'>
+    <Flex width='100%' align='center' py={2} borderBottom='1px' borderBottomColor='gray.750' color='gray.500'>
       <Flex noOfLines={1} mr={6}>
         <Box width='40px' />
       </Flex>

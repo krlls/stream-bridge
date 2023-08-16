@@ -8,11 +8,9 @@ export type TProps = {
 
 export const Page: FC<TProps> = ({ children, header }) => {
   return (
-    <Flex flex={1} direction='column' height='100vh'>
+    <Flex direction='column'>
       {header}
-      <Flex flex={1} rounded='3xl'>
-        {children}
-      </Flex>
+      <Flex rounded='3xl'>{children}</Flex>
     </Flex>
   )
 }

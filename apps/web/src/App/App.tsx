@@ -1,7 +1,7 @@
 import './App.css'
 import { ReactNode, FC } from 'react'
 import { Outlet } from 'react-router-dom'
-import { ChakraProvider, ColorModeScript, Flex } from '@chakra-ui/react'
+import { Box, ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 
 import theme from '../theme'
 
@@ -14,9 +14,9 @@ export const App: FC<TProps> = () => {
     <>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <ChakraProvider theme={theme}>
-        <Flex direction='column' height='100%'>
+        <Box height='100%'>
           <Outlet />
-        </Flex>
+        </Box>
       </ChakraProvider>
     </>
   )

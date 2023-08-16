@@ -32,6 +32,17 @@ export const checkStreamingToken = async (token: string) =>
     }),
   )
 
+export const getDataFromToken = async <T extends Record<string, string | number>>(token: string) =>
+  new Promise<T | undefined>((resolve) =>
+    jsonwebtoken.verify(token, serverConfig.jwtStreamingAuthSecret, { algorithms: [ALGORITHM] }, (err, resp) => {
+      if (err) {
+        return resolve(undefined)
+      }
+
+      return resolve(resp as T)
+    }),
+  )
+
 export const createSignedJwt = <T extends object>(payload: T) =>
   new Promise<string | null>((resolve) =>
     jsonwebtoken.sign(

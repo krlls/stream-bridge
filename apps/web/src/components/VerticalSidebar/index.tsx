@@ -13,12 +13,16 @@ export const VerticalSidebar: FC<TProps> = ({ children }) => {
 
   return (
     <Flex
+      position='sticky'
+      top={0}
+      direction={'column'}
       display={variants('none', 'flex')}
       bg={primary}
       p={4}
+      paddingTop={'64px'}
       minWidth='90px'
       maxWidth='100'
-      overflow='hidden'
+      height='100vh'
       overflowY='auto'
     >
       {children}
