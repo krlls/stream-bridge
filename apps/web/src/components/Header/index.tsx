@@ -28,11 +28,41 @@ type TProps = {
 export const Header: FC<TProps> = ({ mobileMenu }) => {
   const { data, isLoading, isError } = useGetUserQuery(undefined)
   const dispatch = useDispatch()
-  const { primary } = useThemeColors()
+  const { primary, secondary } = useThemeColors()
   const { t, d } = useLocalization()
 
   return (
-    <Box bg={primary} px={4} as={'header'} zIndex={2}>
+    <Box
+      bg={primary}
+      px={4}
+      as={'header'}
+      zIndex={2}
+      position={'relative'}
+      _after={{
+        display: variants('none', 'block'),
+        position: 'absolute',
+        content: '""',
+        margin: -4,
+        bottom: '-1.7px',
+        border: '5px solid transparent',
+        borderTop: '13px solid',
+        borderLeft: '13px solid',
+        borderTopColor: secondary,
+        borderLeftColor: secondary,
+        borderTopStartRadius: '50%',
+      }}
+      _before={{
+        display: variants('none', 'block'),
+        position: 'absolute',
+        content: '""',
+        margin: -4,
+        bottom: '3px',
+        width: '13px',
+        height: '13px',
+        bg: primary,
+        borderBottomEndRadius: '50%',
+      }}
+    >
       <Flex h={16} align='center' justify='space-between'>
         {mobileMenu && (
           <Box mr={2} display={variants('flex', 'none')}>
