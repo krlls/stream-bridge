@@ -13,6 +13,7 @@ import { SaveStreamingTokenDTO } from '../dtos/SaveStreamingTokenDTO'
 import { StreamingDTO } from '../dtos/StreamingDTO'
 import { serverConfig } from '../../../config'
 import { AvailableStreamingDTO } from '../dtos/AvailableStreamingDTO'
+import { StreamingCredentialsDTO } from '../../music/dtos/StreamingCredentialsDTO'
 
 @injectable()
 export class StreamingService implements IStreamingService {
@@ -37,7 +38,11 @@ export class StreamingService implements IStreamingService {
   }
 
   async getLoginUrl(data: CreateLoginUrlDTO) {
-    await this.streamingClient.set(data.streamingType)
+    //Todo Fix on refactoring
+    await this.streamingClient.set(
+      data.streamingType,
+      new StreamingCredentialsDTO({ token: '', refreshToken: '', expiresIn: 0, id: 0, expires: 0 }),
+    )
 
     const url = this.streamingClient.getLoginUrl(data.token)
 
@@ -49,7 +54,11 @@ export class StreamingService implements IStreamingService {
   }
 
   async saveToken(data: SaveStreamingTokenDTO) {
-    await this.streamingClient.set(data.streamingType)
+    //Todo Fix on refactoring
+    await this.streamingClient.set(
+      data.streamingType,
+      new StreamingCredentialsDTO({ token: '', refreshToken: '', expiresIn: 0, id: 0, expires: 0 }),
+    )
 
     const tokenResp = await this.streamingClient.getToken(data.code)
 

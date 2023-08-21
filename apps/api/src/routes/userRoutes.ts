@@ -7,16 +7,16 @@ import { TYPES } from '../types/const'
 
 const router = new Router()
 
-const userController = appContainer.get<UserController>(TYPES.UserController)
+const userController = () => appContainer.get<UserController>(TYPES.UserController)
 
-router.post(Api.User.Create.URL, userValidators.createUser, (ctx) => userController.createUser(ctx, ctx.request.body))
+router.post(Api.User.Create.URL, userValidators.createUser, (ctx) => userController().createUser(ctx, ctx.request.body))
 
 router.get(Api.User.GetProfile.URL, userValidators.getProfile, ...authChecker.createMiddleware(), (ctx) =>
-  userController.profile(ctx),
+  userController().profile(ctx),
 )
 
 router.patch(Api.User.Update.URL, userValidators.updateUser, ...authChecker.createMiddleware(), (ctx) =>
-  userController.updateUser(ctx, ctx.request.body),
+  userController().updateUser(ctx, ctx.request.body),
 )
 
 export const userRouter = router

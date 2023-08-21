@@ -63,7 +63,7 @@ describe('Track service tests', () => {
       userId: currentUser.id,
     })
 
-    await playlistService.importPlaylists(exportData)
+    await appContainer.get<IPlaylistService>(TYPES.PlaylistService).importPlaylists(exportData)
 
     await playlistService.importPlaylists(
       new ImportMediaDTO({
@@ -106,7 +106,7 @@ describe('Track service tests', () => {
     const streamingDTO = testStreamingDTO(currentUser.id)
     const streaming = (await streamingService.createStreaming(streamingDTO)) as any
 
-    await playlistService.importPlaylists(
+    await appContainer.get<IPlaylistService>(TYPES.PlaylistService).importPlaylists(
       new ImportMediaDTO({
         streamingType: EStreamingType.SPOTIFY,
         userId: currentUser.id,

@@ -16,12 +16,31 @@ import { StreamingPrepareResultDTO } from '../../../modules/streaming/dtos/Strea
 export class StreamingClient implements IStreamingClient {
   @inject(TYPES.ClientApiFactory) private apiFactory: Factory<IClient, [EStreamingType]>
 
+  init: boolean
+
   private client: IClient
   private credentials: StreamingCredentialsDTO
 
   set(type: EStreamingType, data: StreamingCredentialsDTO) {
+    if (this.client) {
+      throw Error('Client already set')
+    }
+
+    if (this.credentials) {
+      throw Error('Credentials already set')
+    }
+
     this.client = this.apiFactory(type)
     this.credentials = data
+    this.init = true
+  }
+
+  compareCredentials(credentials: StreamingCredentialsDTO): boolean {
+    if (!this.credentials) {
+      return false
+    }
+
+    return this.credentials.streamingId === credentials.streamingId
   }
 
   getConfig() {

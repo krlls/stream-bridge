@@ -7,8 +7,8 @@ import { AuthController, authValidators } from '../controllers/auth'
 
 const router = new Router()
 
-const authController = appContainer.get<AuthController>(TYPES.AuthController)
-router.post(Api.Auth.Login.URL, authValidators.authUser, (ctx) => authController.login(ctx, ctx.request.body))
+const authController = () => appContainer.get<AuthController>(TYPES.AuthController)
+router.post(Api.Auth.Login.URL, authValidators.authUser, (ctx) => authController().login(ctx, ctx.request.body))
 
 export const authRouter = router
 
