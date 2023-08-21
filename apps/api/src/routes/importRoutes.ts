@@ -7,16 +7,16 @@ import { importValidators } from '../controllers/import'
 import { ImportController } from '../controllers/import'
 
 const router = new Router()
-const importController = appContainer.get<ImportController>(TYPES.ImportController)
+const importController = () => appContainer.get<ImportController>(TYPES.ImportController)
 
 router.post(Api.Import.Playlists.URL, ...authChecker.createMiddleware(), importValidators.importPlaylists, (ctx) =>
-  importController.importPlaylists(ctx, ctx.request.body),
+  importController().importPlaylists(ctx, ctx.request.body),
 )
 router.post(Api.Import.Tracks.URL, ...authChecker.createMiddleware(), importValidators.importTracksByPlaylist, (ctx) =>
-  importController.importTracksByPlaylist(ctx, ctx.request.body),
+  importController().importTracksByPlaylist(ctx, ctx.request.body),
 )
 router.post(Api.Import.Lib.URL, ...authChecker.createMiddleware(), importValidators.importMedia, (ctx) =>
-  importController.importLib(ctx, ctx.request.body),
+  importController().importLib(ctx, ctx.request.body),
 )
 
 export const importRouter = router

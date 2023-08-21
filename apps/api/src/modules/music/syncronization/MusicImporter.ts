@@ -140,7 +140,14 @@ export class MusicImporter implements IMusicImporter {
 
   private async prepareClient(type: EStreamingType, credentials: StreamingCredentialsDTO) {
     ImportLogger.info('prepareClient', type)
-    this.streamingClient.set(type, credentials)
+
+    if (!this.streamingClient.init) {
+      this.streamingClient.set(type, credentials)
+    }
+
+    if (this.streamingClient.init && !this.streamingClient.compareCredentials(credentials)) {
+      throw Error('Credentials not compare')
+    }
 
     const prepareRes = await this.streamingClient.prepare()
 

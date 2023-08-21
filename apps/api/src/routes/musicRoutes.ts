@@ -7,16 +7,16 @@ import { MusicController, musicValidators } from '../controllers/music'
 
 const router = new Router()
 
-const musicController = appContainer.get<MusicController>(TYPES.MusicController)
+const musicController = () => appContainer.get<MusicController>(TYPES.MusicController)
 router.get(Api.Music.Tracks.URL, ...authChecker.createMiddleware(), musicValidators.getTracks, (ctx) =>
-  musicController.getTracks(ctx, ctx.request.query as any),
+  musicController().getTracks(ctx, ctx.request.query as any),
 )
 router.get(Api.Music.Playlists.URL, ...authChecker.createMiddleware(), musicValidators.getPlaylists, (ctx) =>
-  musicController.getPlaylists(ctx, ctx.request.query as any),
+  musicController().getPlaylists(ctx, ctx.request.query as any),
 )
 
 router.get(Api.Music.Playlist.URL, ...authChecker.createMiddleware(), musicValidators.getPlaylist, (ctx) =>
-  musicController.getPlaylist(ctx, ctx.request.query as any),
+  musicController().getPlaylist(ctx, ctx.request.query as any),
 )
 
 export const musicRouter = router

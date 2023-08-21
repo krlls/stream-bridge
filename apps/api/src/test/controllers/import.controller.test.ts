@@ -9,13 +9,16 @@ import { IStreamingService } from '../../modules/streaming/interfaces/IStreaming
 import { TYPES } from '../../types/const'
 import { IPlaylistService } from '../../modules/music/interfaces/IPlaylistService'
 
-const streamingService = appContainer.get<IStreamingService>(TYPES.StreamingService)
-const playlistsServise = appContainer.get<IPlaylistService>(TYPES.PlaylistService)
 describe('Import media controller tests', () => {
   let testToken: string = ''
   let currentUser = {} as any
+  let streamingService: IStreamingService
+  let playlistsServise: IPlaylistService
 
   beforeEach(async () => {
+    streamingService = appContainer.get<IStreamingService>(TYPES.StreamingService)
+    playlistsServise = appContainer.get<IPlaylistService>(TYPES.PlaylistService)
+
     await SqliteDB.instance.setupTestDB()
 
     const userResp = await TestApp.post(userUrl(Api.User.Create.URL)).send(testUserData)
