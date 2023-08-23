@@ -153,9 +153,9 @@ export class PlaylistService implements IPlaylistService {
       return new ErrorDTO(Errors.STREAMING_NOT_FOUND)
     }
 
-    const { expiresIn, refresh_token, token, expires } = streaming
+    const { token } = streaming
 
-    if (!every([expiresIn, refresh_token, token, expires])) {
+    if (!every([token])) {
       return new ErrorDTO(Errors.WRONG_CREDENTIALS)
     }
 
