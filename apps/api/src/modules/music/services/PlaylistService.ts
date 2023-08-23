@@ -126,7 +126,7 @@ export class PlaylistService implements IPlaylistService {
     }
 
     const playlists = await this.playlistRepository.getPlaylistsByUserId(
-      new GetUserPlaylistsDto({ userId: toImport.userId }),
+      new GetUserPlaylistsDto({ userId: toImport.userId, streamingType: toImport.streamingType }),
     )
 
     const importData = playlists.map(
