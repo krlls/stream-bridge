@@ -72,6 +72,8 @@ export class DeezerClient implements IClient {
         return []
       }
 
+      this.logger.info('getPlaylists', 'Playlists:', data?.data?.length)
+
       return (data?.data || []).map(this.playlistApiConverter.from)
     } catch {
       this.logger.error('getPlaylists')
@@ -94,6 +96,8 @@ export class DeezerClient implements IClient {
       if (!data?.data?.length) {
         return []
       }
+
+      this.logger.info('getPlaylists', 'Tracks:', data?.data?.length)
 
       return (data?.data || []).map(this.trackApiConverter.from)
     } catch {
