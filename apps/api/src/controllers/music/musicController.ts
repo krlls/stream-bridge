@@ -25,7 +25,7 @@ export class MusicController {
       return respond400(ctx, new ErrorDTO(Errors.STREAMING_NOT_FOUND))
     }
 
-    const data = new GetUserPlaylistsDto({ ...params, userId })
+    const data = new GetUserPlaylistsDto({ ...params, userId, streamingType })
     const playlists = await this.playlistService.getUserPlaylists(data)
 
     if (isServiceError(playlists)) {

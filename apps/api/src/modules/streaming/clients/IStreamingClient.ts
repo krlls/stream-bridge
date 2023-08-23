@@ -14,7 +14,6 @@ export interface IStreamingClient extends ContextStrategy<EStreamingType, Partia
   getTracksByPlaylist(data: { playlistId: string, offset: number }): Promise<ExternalTrackDTO[]>,
   getLoginUrl(state: string): string | null,
   getToken(code: string): Promise<CreateStreamingTokenDTO | null>,
-  updateToken(): Promise<CreateStreamingTokenDTO | null>,
   compareCredentials(credentials: StreamingCredentialsDTO): boolean,
 }
 

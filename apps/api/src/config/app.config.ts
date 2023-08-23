@@ -2,6 +2,8 @@ import { AvailableStreaming, ServerConfig } from '../types/TServer'
 import { E_NODE_ENV, EStreamingType } from '../types/common'
 import {
   API_URL,
+  DEEZER_CLIENT_ID,
+  DEEZER_CLIENT_SECRET,
   EXPIRES_SESSION_IN,
   JWT_SECRET,
   JWT_STREAMING_AUTH_EXPIRES,
@@ -12,7 +14,10 @@ import {
   SPOTIFY_CLIENT_SECRET,
 } from './env'
 
-export const availableStreamings: AvailableStreaming[] = [{ type: EStreamingType.SPOTIFY, name: 'Spotify' }]
+export const availableStreamings: AvailableStreaming[] = [
+  { type: EStreamingType.SPOTIFY, name: 'Spotify' },
+  { type: EStreamingType.DEEZER, name: 'Deezer' },
+]
 
 export const serverConfig: ServerConfig = {
   port: PORT || 3000,
@@ -27,6 +32,9 @@ export const serverConfig: ServerConfig = {
 
   spotifyClientId: SPOTIFY_CLIENT_ID,
   spotifyClientSecret: SPOTIFY_CLIENT_SECRET,
+  deezerClientId: DEEZER_CLIENT_ID,
+  deezerClientSecret: DEEZER_CLIENT_SECRET,
+
   swaggerPrefix: '/swagger',
 
   availableStreamings: availableStreamings,

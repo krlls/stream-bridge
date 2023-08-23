@@ -72,15 +72,6 @@ export class StreamingClient implements IStreamingClient {
   async getToken(code: string): Promise<CreateStreamingTokenDTO | null> {
     return this.client.getToken(code)
   }
-  async updateToken(): Promise<CreateStreamingTokenDTO | null> {
-    const newToken = await this.client.updateToken(this.credentials.refreshToken)
-
-    if (newToken) {
-      this.updateCredentials(newToken)
-    }
-
-    return newToken
-  }
 
   private updateCredentials(data: CreateStreamingTokenDTO) {
     this.credentials = new StreamingCredentialsDTO({

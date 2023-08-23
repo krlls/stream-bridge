@@ -14,6 +14,9 @@ export interface ServerConfig {
   spotifyClientId: string,
   spotifyClientSecret: string,
 
+  deezerClientId: string,
+  deezerClientSecret: string,
+
   swaggerPrefix: string,
 
   availableStreamings: AvailableStreaming[],
