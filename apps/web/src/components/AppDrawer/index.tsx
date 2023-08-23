@@ -25,12 +25,14 @@ export const AppDrawer: FC<TProps> = ({ children, title, trigger }) => {
       <Box ref={btnRef} onClick={onOpen} cursor='pointer'>
         {trigger}
       </Box>
-      <Drawer isOpen={isOpen} placement='left' onClose={onClose} finalFocusRef={btnRef}>
+      <Drawer isOpen={isOpen} placement='left' onClose={onClose} finalFocusRef={btnRef} size={'xs'}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>{title}</DrawerHeader>
-          <DrawerBody>{children}</DrawerBody>
+          <DrawerBody>
+            <Box onClick={onClose}>{children}</Box>
+          </DrawerBody>
         </DrawerContent>
       </Drawer>
     </>

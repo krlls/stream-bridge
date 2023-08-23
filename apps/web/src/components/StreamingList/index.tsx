@@ -1,30 +1,34 @@
-import { Center, Skeleton, SkeletonCircle, Stack, StackDivider, Text } from '@chakra-ui/react'
-import { FC, ReactNode } from 'react'
+import { Center, Skeleton, SkeletonCircle, Stack, StackDivider } from '@chakra-ui/react'
+import { FC, useMemo } from 'react'
 import { SmallAddIcon } from '@chakra-ui/icons'
 import { Api, Success } from 'api-types'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import { capitalize } from 'lodash'
+import { EStreamingType } from 'api-types/lib/common'
 
 import { useLocalization } from '../../hooks/useLocalization.ts'
 import { streamingToLogo } from '../../utils/image.ts'
-import { AppImage } from '../AppImage'
+import { StreamingItem } from './StreamingItem'
 
 type TProps = {
   data?: Success<Api.Streaming.List.Resp>,
   isLoading: boolean,
   isError: boolean,
   addButton?(): void,
-  onEnter?(streaming: Api.Streaming.List.Streaming): void,
+  onEnter?(streaming: EStreamingType): void,
 }
 
 const NUMBER_OF_LOADING = 5
 
 export const StreamingList: FC<TProps> = ({ data, isLoading, isError, onEnter }) => {
   const { t, d } = useLocalization()
+  const streamings = useMemo(() => [...(data?.items || [])].reverse(), [data?.items.length])
+  const { type: typeParam } = useParams()
 
   return (
     <Stack spacing={4} divider={<StackDivider />}>
       <Link to='/Profile?tab=1'>
-        <Streaming icon={<SmallAddIcon boxSize='2em' />} title={t(d.AddService)} />
+        <StreamingItem noHover icon={<SmallAddIcon boxSize='2em' />} title={t(d.AddService)} />
       </Link>
       {isLoading || isError
         ? Array(NUMBER_OF_LOADING)
@@ -35,35 +39,15 @@ export const StreamingList: FC<TProps> = ({ data, isLoading, isError, onEnter })
                 <Skeleton width='100%' height='20px' />
               </Center>
             ))
-        : data?.items.map((s) => (
-            <Streaming
-              key={s.id + s.type}
-              image={streamingToLogo(s.type)}
-              title={s.type[0] + s.type.slice(1).toLowerCase()}
-              onEnter={onEnter ? () => onEnter(s) : undefined}
+        : streamings.map(({ type, id }) => (
+            <StreamingItem
+              key={id + type}
+              image={streamingToLogo(type)}
+              title={capitalize(type)}
+              onEnter={onEnter ? () => onEnter(type) : undefined}
+              isActive={type.toLowerCase() === typeParam}
             />
           ))}
     </Stack>
-  )
-}
-
-function Streaming({
-  image,
-  title,
-  onEnter,
-  icon,
-}: {
-  image?: string,
-  title: string,
-  icon?: ReactNode,
-  onEnter?(): void,
-}) {
-  return (
-    <Center flexDirection='column' as={'button'} alignContent='center' onClick={onEnter}>
-      {icon ? icon : <AppImage width={'48px'} height={'48px'} src={image} mb={2} rounded='full' />}
-      <Text lineHeight={1.4} noOfLines={2} fontSize='sm' maxWidth='97px'>
-        {title}
-      </Text>
-    </Center>
   )
 }
