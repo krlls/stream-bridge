@@ -89,11 +89,11 @@ export class PlaylistRepository implements IPlaylistRepository {
     return this.entityConverter.from(playlist)
   }
 
-  async getPlaylistsByUserId({ userId, offset, limit }: GetUserPlaylistsDto): Promise<Playlist[]> {
+  async getPlaylistsByUserId({ userId, offset, limit, streamingType }: GetUserPlaylistsDto): Promise<Playlist[]> {
     const playlists =
       (await this.repository.find({
         relations: ['streaming', 'user'],
-        where: { user: { id: userId } },
+        where: { user: { id: userId }, streaming: { type: streamingType } },
         take: limit,
         skip: offset,
       })) || []
