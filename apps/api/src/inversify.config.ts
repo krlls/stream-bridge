@@ -34,6 +34,7 @@ import { StreamingController } from './controllers/streaming'
 import { ImportController } from './controllers/import'
 import { MusicController } from './controllers/music'
 import { AuthChecker } from './utils/crypto'
+import { DeezerClient } from './infra/clients/StreamingClient/Deezer/adapters/DeezerClient'
 
 const appContainer = new Container()
 
@@ -65,6 +66,7 @@ appContainer.bind<IMusicImporter>(TYPES.MusicImporter).to(MusicImporter)
 
 appContainer.bind<IStreamingClient>(TYPES.Client).to(StreamingClient)
 appContainer.bind<IClient>(TYPES.ClientApi).to(SpotifyClient).whenTargetNamed(EStreamingType.SPOTIFY)
+appContainer.bind<IClient>(TYPES.ClientApi).to(DeezerClient).whenTargetNamed(EStreamingType.DEEZER)
 appContainer
   .bind<Factory<IClient, [EStreamingType]>>(TYPES.ClientApiFactory)
   .toFactory<IClient, [EStreamingType]>(

@@ -168,7 +168,7 @@ export class SpotifyClient implements IClient {
     }
   }
 
-  async updateToken(refreshToken: string) {
+  private async updateToken(refreshToken: string) {
     try {
       const tokenData: AxiosResponse<Omit<ITokenResp, 'refresh_token'>> = await axios.request({
         method: 'POST',

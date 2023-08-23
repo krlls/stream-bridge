@@ -69,6 +69,7 @@ export namespace Api {
 
     export enum EApiStreamingType {
       SPOTIFY = 'spotify',
+      DEEZER = 'deezer',
     }
 
     export namespace Token {

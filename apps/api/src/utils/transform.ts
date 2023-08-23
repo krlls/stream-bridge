@@ -8,6 +8,7 @@ export const getUserId = (ctx: RouterContext): number => get(ctx, 'state.user.us
 export const convertStreamingName = (name: string): EStreamingType | undefined =>
   ({
     [Api.Streaming.EApiStreamingType.SPOTIFY]: EStreamingType.SPOTIFY,
+    [Api.Streaming.EApiStreamingType.DEEZER]: EStreamingType.DEEZER,
   })[name]
 
 export const calcExpires = (expiresIn: number) => Date.now() + expiresIn * 1000

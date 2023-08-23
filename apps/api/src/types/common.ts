@@ -50,6 +50,7 @@ export enum Errors {
 
 export enum EStreamingType {
   SPOTIFY = 'SPOTIFY',
+  DEEZER = 'DEEZER',
   TIDAL = 'TIDAL',
 }
 

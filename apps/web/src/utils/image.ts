@@ -6,4 +6,5 @@ export const streamingToLogo = (type: EStreamingType): string =>
   ({
     [EStreamingType.SPOTIFY]: spotifyLogo,
     [EStreamingType.TIDAL]: spotifyLogo,
+    [EStreamingType.DEEZER]: spotifyLogo,
   })[type]
