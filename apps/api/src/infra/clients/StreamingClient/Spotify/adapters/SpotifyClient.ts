@@ -81,7 +81,7 @@ export class SpotifyClient implements IClient {
 
   getConfig(): StreamingClientConfig {
     return {
-      playlistsLimit: 49,
+      playlistsLimit: 50,
     }
   }
 

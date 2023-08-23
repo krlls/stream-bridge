@@ -5,7 +5,7 @@ import { Api } from 'api-types'
 import { StreamingCredentialsDTO } from '../../../../../modules/music/dtos/StreamingCredentialsDTO'
 import { IClient } from '../../IClient'
 import { EPrepareResult, StreamingClientConfig } from '../../../../../modules/streaming/clients/IStreamingClient'
-import { ITokenResp, Paginated, Playlist } from '../interfaces/DeezerApi'
+import { ITokenResp, Paginated, Playlist, Track } from '../interfaces/DeezerApi'
 import { serverConfig } from '../../../../../config'
 import { apiLink, createPatch } from '../../../../../utils/links'
 import { StreamingLogger } from '../../../../../utils/logger'
@@ -13,6 +13,7 @@ import { TokenApiConverter } from '../converters/TokenApiConverter'
 import { PlaylistApiConverter } from '../converters/PlaylistApiConverter'
 import { EStreamingType } from '../../../../../types/common'
 import { StreamingPrepareResultDTO } from '../../../../../modules/streaming/dtos/StreamingPrepareResultDTO'
+import { TrackApiConverter } from '../converters/TrackApiConverter'
 
 import * as querystring from 'querystring'
 
@@ -20,6 +21,7 @@ import * as querystring from 'querystring'
 export class DeezerClient implements IClient {
   tokenConverter = new TokenApiConverter()
   playlistApiConverter = new PlaylistApiConverter()
+  trackApiConverter = new TrackApiConverter()
 
   private connectUrl = 'https://connect.deezer.com'
   private baseUrl = 'https://api.deezer.com'
@@ -51,7 +53,7 @@ export class DeezerClient implements IClient {
 
   getConfig(): StreamingClientConfig {
     return {
-      playlistsLimit: 10,
+      playlistsLimit: 50,
     }
   }
 
@@ -78,8 +80,27 @@ export class DeezerClient implements IClient {
     }
   }
 
-  async getTracksByPlaylist(_data: { playlistId: string, offset: number }) {
-    return []
+  async getTracksByPlaylist({ offset, playlistId }: { playlistId: string, offset: number }) {
+    const limit = this.getConfig().playlistsLimit
+
+    try {
+      const { data } = await this.client.get<Paginated<Track>>(`/playlist/${playlistId}/tracks`, {
+        params: {
+          index: offset,
+          limit,
+        },
+      })
+
+      if (!data?.data?.length) {
+        return []
+      }
+
+      return (data?.data || []).map(this.trackApiConverter.from)
+    } catch {
+      this.logger.error('getPlaylists')
+
+      return []
+    }
   }
 
   getLoginUrl(state: string): string {
