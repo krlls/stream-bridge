@@ -69,7 +69,12 @@ export const Header: FC<TProps> = ({ mobileMenu }) => {
             {mobileMenu}
           </Box>
         )}
-        <Box>
+        <Box
+          _hover={{
+            transform: 'rotate(-3deg)',
+          }}
+          transition='.05s ease-out'
+        >
           <Link to='/'>
             <Logo />
           </Link>
