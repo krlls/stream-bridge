@@ -8,12 +8,13 @@ type TProps = {
   title: string,
   isActive?: boolean,
   icon?: ReactNode,
+  noHover?: boolean,
   onEnter?(): void,
 }
 
 const ACTIVE_COLOR = 'RGBA(255, 255, 255, 0.04)'
 
-export const StreamingItem: FC<TProps> = ({ image, title, onEnter, icon, isActive }) => {
+export const StreamingItem: FC<TProps> = ({ image, noHover, title, onEnter, icon, isActive }) => {
   return (
     <Center
       flexDirection='column'
@@ -21,7 +22,7 @@ export const StreamingItem: FC<TProps> = ({ image, title, onEnter, icon, isActiv
       onClick={onEnter}
       cursor='pointer'
       background={isActive ? ACTIVE_COLOR : undefined}
-      _hover={{ bg: ACTIVE_COLOR }}
+      _hover={!noHover ? { bg: ACTIVE_COLOR } : undefined}
       transition='.2s'
       rounded='xl'
       px={1}

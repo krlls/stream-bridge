@@ -28,7 +28,7 @@ export const StreamingList: FC<TProps> = ({ data, isLoading, isError, onEnter })
   return (
     <Stack spacing={4} divider={<StackDivider />}>
       <Link to='/Profile?tab=1'>
-        <StreamingItem icon={<SmallAddIcon boxSize='2em' />} title={t(d.AddService)} />
+        <StreamingItem noHover icon={<SmallAddIcon boxSize='2em' />} title={t(d.AddService)} />
       </Link>
       {isLoading || isError
         ? Array(NUMBER_OF_LOADING)

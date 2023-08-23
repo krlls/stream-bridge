@@ -21,7 +21,7 @@ export const VerticalSidebar: FC<TProps> = ({ children }) => {
       p={4}
       paddingTop={'64px'}
       minWidth='90px'
-      maxWidth='100'
+      maxWidth='100px'
       height='100vh'
       overflowY='auto'
     >
