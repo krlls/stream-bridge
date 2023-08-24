@@ -35,17 +35,15 @@ export const ListOfPlaylists: FC<TProps> = ({ playlists = [], isError, isLoading
               rounded='md'
             />
           ))
-      : [...playlists]
-          .reverse()
-          .map(({ id, name, cover, streamingType }) => (
-            <PlaylistCard
-              key={id + name}
-              id={id}
-              name={name}
-              cover={cover}
-              onClick={(id) => navigateToPlaylistPage(streamingType, id)}
-            />
-          ))
+      : playlists.map(({ id, name, cover, streamingType }) => (
+          <PlaylistCard
+            key={id + name}
+            id={id}
+            name={name}
+            cover={cover}
+            onClick={(id) => navigateToPlaylistPage(streamingType, id)}
+          />
+        ))
 
   return (
     <Stack
