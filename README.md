@@ -6,7 +6,7 @@
 
 >⚠️ Project is currently under development and **does not have a working version yet**. However, we welcome your contributions to the development process. We appreciate any input and support as we work towards creating a functional version of the project. Stay tuned for updates and opportunities to get involved in the development of Stream Bridge. Thank you for your interest!
 
-![](https://github.com/krlls/stream-bridge/raw/main/docs/logo.png)
+![](https://github.com/krlls/stream-bridge/raw/main/docs/preview.png)
 
 Stream Bridge is a versatile and customizable music synchronization tool that allows users to sync music from various streaming services. With StreamBridge, you can create your own self-hosted solution for syncing music across multiple streaming platforms, providing a personalized and unified listening experience.
 
