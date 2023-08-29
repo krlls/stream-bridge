@@ -19,6 +19,8 @@ import { TokenApiConverter } from '../converters/TokenApiConverter'
 import { EStreamingType } from '../../../../../types/common'
 import { StreamingPrepareResultDTO } from '../../../../../modules/streaming/dtos/StreamingPrepareResultDTO'
 import { CredentialsConverter } from '../converters/CredentialsConverter'
+import { ApiCreatePlaylistDTO } from '../../../../../modules/music/dtos/ApiCreatePlaylistDTO'
+import { ExternalPlaylistDTO } from '../../../../../modules/music/dtos/ExternalPlaylistDTO'
 
 import * as querystring from 'querystring'
 
@@ -39,6 +41,8 @@ export class SpotifyClient implements IClient {
     Api.Streaming.Token.PATCH,
     '/' + Api.Streaming.EApiStreamingType.SPOTIFY,
   )
+
+  private userId: string
 
   private get authHeader() {
     const { spotifyClientId, spotifyClientSecret } = serverConfig
@@ -127,6 +131,29 @@ export class SpotifyClient implements IClient {
     }
 
     return []
+  }
+
+  async createPlaylist({ name, description }: ApiCreatePlaylistDTO): Promise<ExternalPlaylistDTO | null> {
+    try {
+      const resp = await this.client.playlists.createPlaylist(this.userId, {
+        name,
+        description,
+        public: false,
+        collaborative: false,
+      })
+
+      if (!resp) {
+        return null
+      }
+
+      this.logger.info('createPlaylist', resp.id)
+
+      return this.playlistConverter.from(resp)
+    } catch (e: any) {
+      this.logger.error('createPlaylist', e)
+
+      return null
+    }
   }
 
   getLoginUrl(state: string): string | null {
@@ -223,6 +250,8 @@ export class SpotifyClient implements IClient {
     const profile = await client.currentUser.profile()
 
     if (profile) {
+      this.userId = profile.id
+
       return client
     }
 
