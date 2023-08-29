@@ -14,6 +14,8 @@ import { PlaylistApiConverter } from '../converters/PlaylistApiConverter'
 import { EStreamingType } from '../../../../../types/common'
 import { StreamingPrepareResultDTO } from '../../../../../modules/streaming/dtos/StreamingPrepareResultDTO'
 import { TrackApiConverter } from '../converters/TrackApiConverter'
+import { ApiCreatePlaylistDTO } from '../../../../../modules/music/dtos/ApiCreatePlaylistDTO'
+import { ExternalPlaylistDTO } from '../../../../../modules/music/dtos/ExternalPlaylistDTO'
 
 import * as querystring from 'querystring'
 
@@ -28,6 +30,8 @@ export class DeezerClient implements IClient {
   private authUrl = '/oauth/auth.php?'
   private scope = ['offline_access', 'manage_library', 'basic_access', 'email'].join(',')
   private logger = new StreamingLogger(EStreamingType.DEEZER)
+
+  private userId: number
 
   private _client: AxiosInstance
 
@@ -144,11 +148,58 @@ export class DeezerClient implements IClient {
     }
   }
 
+  async createPlaylist({ name }: ApiCreatePlaylistDTO): Promise<ExternalPlaylistDTO | null> {
+    try {
+      const { data } = await this.client.get(`/user/${this.userId}/playlists`, {
+        params: {
+          request_method: 'post',
+          title: name,
+          public: false,
+        },
+      })
+
+      if (!data || !data?.id) {
+        return null
+      }
+
+      this.logger.info('createPlaylist', data?.id)
+
+      return this.getPlaylistById(data.id)
+    } catch (e: any) {
+      this.logger.error('createPlaylist', e)
+
+      return null
+    }
+  }
+
+  async getPlaylistById(id: number): Promise<ExternalPlaylistDTO | null> {
+    try {
+      const { data } = await this.client.get<Playlist>(`/playlist/${id}`)
+
+      if (!data) {
+        return null
+      }
+
+      this.logger.info('getPlaylistById', id)
+
+      return this.playlistApiConverter.from(data)
+    } catch (e) {
+      this.logger.error('getPlaylistById', id, e)
+
+      return null
+    }
+  }
+
   private async setUpClient(token: string) {
-    const client = axios.create({ baseURL: this.baseUrl, params: { access_token: token } })
+    const client = axios.create({
+      baseURL: this.baseUrl,
+      params: { access_token: token },
+    })
     const res = await client.get('/user/me')
 
     if (!res.data?.error && res.status === 200) {
+      this.userId = res.data.id
+
       return client
     }
 
