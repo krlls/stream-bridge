@@ -10,6 +10,7 @@ import { strategy } from '../../../utils/decorators'
 import { ExternalTrackDTO } from '../../../modules/music/dtos/ExternalTrackDTO'
 import { CreateStreamingTokenDTO } from '../../../modules/streaming/dtos/CreateStreamingTokenDTO'
 import { StreamingPrepareResultDTO } from '../../../modules/streaming/dtos/StreamingPrepareResultDTO'
+import { ApiCreatePlaylistDTO } from '../../../modules/music/dtos/ApiCreatePlaylistDTO'
 
 @injectable()
 @strategy('client', 'set')
@@ -63,6 +64,10 @@ export class StreamingClient implements IStreamingClient {
 
   async getTracksByPlaylist(data: { playlistId: string, offset: number }): Promise<ExternalTrackDTO[]> {
     return this.client.getTracksByPlaylist(data)
+  }
+
+  async createPlaylist(data: ApiCreatePlaylistDTO): Promise<ExternalPlaylistDTO | null> {
+    return this.client.createPlaylist(data)
   }
 
   getLoginUrl(state: string): string | null {

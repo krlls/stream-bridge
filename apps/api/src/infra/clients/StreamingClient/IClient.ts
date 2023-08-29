@@ -4,6 +4,7 @@ import { StreamingClientConfig } from '../../../modules/streaming/clients/IStrea
 import { ExternalTrackDTO } from '../../../modules/music/dtos/ExternalTrackDTO'
 import { CreateStreamingTokenDTO } from '../../../modules/streaming/dtos/CreateStreamingTokenDTO'
 import { StreamingPrepareResultDTO } from '../../../modules/streaming/dtos/StreamingPrepareResultDTO'
+import { ApiCreatePlaylistDTO } from '../../../modules/music/dtos/ApiCreatePlaylistDTO'
 
 export interface IClient {
   prepare(credentials: StreamingCredentialsDTO): Promise<StreamingPrepareResultDTO>,
@@ -11,5 +12,6 @@ export interface IClient {
   getPlaylists(offset: number): Promise<ExternalPlaylistDTO[]>,
   getTracksByPlaylist(data: { playlistId: string, offset: number }): Promise<ExternalTrackDTO[]>,
   getLoginUrl(state: string): string | null,
+  createPlaylist(data: ApiCreatePlaylistDTO): Promise<ExternalPlaylistDTO | null>,
   getToken(code: string): Promise<CreateStreamingTokenDTO | null>,
 }

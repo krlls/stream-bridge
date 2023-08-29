@@ -4,6 +4,7 @@ import { ContextStrategy, EStreamingType } from '../../../types/common'
 import { ExternalTrackDTO } from '../../music/dtos/ExternalTrackDTO'
 import { CreateStreamingTokenDTO } from '../dtos/CreateStreamingTokenDTO'
 import { StreamingPrepareResultDTO } from '../dtos/StreamingPrepareResultDTO'
+import { ApiCreatePlaylistDTO } from '../../music/dtos/ApiCreatePlaylistDTO'
 
 export interface IStreamingClient extends ContextStrategy<EStreamingType, Partial<[StreamingCredentialsDTO]>> {
   init: boolean,
@@ -12,6 +13,7 @@ export interface IStreamingClient extends ContextStrategy<EStreamingType, Partia
   getConfig(): StreamingClientConfig,
   getPlaylists(offset: number): Promise<ExternalPlaylistDTO[]>,
   getTracksByPlaylist(data: { playlistId: string, offset: number }): Promise<ExternalTrackDTO[]>,
+  createPlaylist(data: ApiCreatePlaylistDTO): Promise<ExternalPlaylistDTO | null>,
   getLoginUrl(state: string): string | null,
   getToken(code: string): Promise<CreateStreamingTokenDTO | null>,
   compareCredentials(credentials: StreamingCredentialsDTO): boolean,

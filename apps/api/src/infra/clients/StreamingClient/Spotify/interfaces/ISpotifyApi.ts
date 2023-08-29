@@ -6,5 +6,3 @@ export interface ITokenResp {
   scope: string,
   expires?: number,
 }
-
-export type IUpdateTokenResp = Omit<ITokenResp, 'refresh_token'>
