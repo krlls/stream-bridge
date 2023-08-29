@@ -35,7 +35,14 @@ export class SpotifyClient implements IClient {
   private logger = new StreamingLogger(EStreamingType.SPOTIFY)
   private baseUrl = 'https://accounts.spotify.com'
   private spotifyAuthUrl = '/authorize?'
-  private _scope: string[] = ['user-read-private', 'user-read-email', 'playlist-read-private']
+  private _scope: string[] = [
+    'user-read-private',
+    'user-read-email',
+    'playlist-read-private',
+    'playlist-read-collaborative',
+    'playlist-modify-private',
+    'playlist-modify-public',
+  ]
   private redirectLink = apiLink(
     Api.Streaming.PREFIX,
     Api.Streaming.Token.PATCH,
