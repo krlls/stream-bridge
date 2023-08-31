@@ -16,6 +16,8 @@ import { StreamingPrepareResultDTO } from '../../../../../modules/streaming/dtos
 import { TrackApiConverter } from '../converters/TrackApiConverter'
 import { ApiCreatePlaylistDTO } from '../../../../../modules/music/dtos/ApiCreatePlaylistDTO'
 import { ExternalPlaylistDTO } from '../../../../../modules/music/dtos/ExternalPlaylistDTO'
+import { ApiFindTrackDto } from '../../../../../modules/music/dtos/ApiFindTrackDto'
+import { ExternalTrackDTO } from '../../../../../modules/music/dtos/ExternalTrackDTO'
 
 import * as querystring from 'querystring'
 
@@ -187,6 +189,24 @@ export class DeezerClient implements IClient {
       this.logger.error('getPlaylistById', id, e)
 
       return null
+    }
+  }
+
+  async findTrack({ name, artist }: ApiFindTrackDto): Promise<ExternalTrackDTO[]> {
+    try {
+      const { data } = await this.client.get<Track[]>('/search', {
+        params: {
+          q: `artist:"${artist}" track:"${name}"`,
+        },
+      })
+
+      this.logger.info('findTrack', artist, name, data)
+
+      return []
+    } catch (e) {
+      this.logger.error('findTrack', e)
+
+      return []
     }
   }
 
