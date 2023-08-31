@@ -11,7 +11,7 @@ import { IClient } from '../../IClient'
 import { EPrepareResult, StreamingClientConfig } from '../../../../../modules/streaming/clients/IStreamingClient'
 import { ITokenResp } from '../interfaces/ISpotifyApi'
 import { ExternalTrackDTO } from '../../../../../modules/music/dtos/ExternalTrackDTO'
-import { TrackApiConverter } from '../converters/TrackApiConverter'
+import { PlaylistedTrackApiConverter } from '../converters/PlaylistedTrackApiConverter'
 import { serverConfig } from '../../../../../config'
 import { apiLink, createPatch } from '../../../../../utils/links'
 import { StreamingLogger } from '../../../../../utils/logger'
@@ -21,12 +21,15 @@ import { StreamingPrepareResultDTO } from '../../../../../modules/streaming/dtos
 import { CredentialsConverter } from '../converters/CredentialsConverter'
 import { ApiCreatePlaylistDTO } from '../../../../../modules/music/dtos/ApiCreatePlaylistDTO'
 import { ExternalPlaylistDTO } from '../../../../../modules/music/dtos/ExternalPlaylistDTO'
+import { ApiFindTrackDto } from '../../../../../modules/music/dtos/ApiFindTrackDto'
+import { TrackApiConverter } from '../converters/TrackApiConverter'
 
 import * as querystring from 'querystring'
 
 @injectable()
 export class SpotifyClient implements IClient {
   playlistConverter = new PlaylistApiConverter()
+  playlistedTrackConverter = new PlaylistedTrackApiConverter()
   trackConverter = new TrackApiConverter()
   tokenConverter = new TokenApiConverter()
   credentialsConverter = new CredentialsConverter()
@@ -132,7 +135,7 @@ export class SpotifyClient implements IClient {
 
       this.logger.info('getTracksByPlaylist', 'Tracks:', tracks.length)
 
-      return tracks.map(this.trackConverter.from)
+      return tracks.map(this.playlistedTrackConverter.from)
     } catch (e) {
       this.logger.error(e)
     }
@@ -160,6 +163,20 @@ export class SpotifyClient implements IClient {
       this.logger.error('createPlaylist', e)
 
       return null
+    }
+  }
+
+  async findTrack({ artist, name }: ApiFindTrackDto): Promise<ExternalTrackDTO[]> {
+    try {
+      const resp = await this.client.search(`${artist} ${name}`, ['track'])
+
+      this.logger.info('findTrack result', resp?.tracks?.items?.length)
+
+      return (resp.tracks.items || []).map(this.trackConverter.from)
+    } catch (e) {
+      this.logger.error('findTrack', e)
+
+      return []
     }
   }
 
