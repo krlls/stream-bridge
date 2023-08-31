@@ -194,15 +194,19 @@ export class DeezerClient implements IClient {
 
   async findTrack({ name, artist }: ApiFindTrackDto): Promise<ExternalTrackDTO[]> {
     try {
-      const { data } = await this.client.get<Track[]>('/search', {
+      const { data } = await this.client.get<Paginated<Track>>('/search', {
         params: {
           q: `artist:"${artist}" track:"${name}"`,
         },
       })
 
-      this.logger.info('findTrack', artist, name, data)
+      if (!data.data) {
+        return []
+      }
 
-      return []
+      this.logger.info('findTrack', artist, '–', name, '| RESULT:', data.data.length)
+
+      return data.data.filter((e) => e.type === 'track').map(this.trackApiConverter.from)
     } catch (e) {
       this.logger.error('findTrack', e)
 

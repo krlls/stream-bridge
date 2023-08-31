@@ -170,7 +170,7 @@ export class SpotifyClient implements IClient {
     try {
       const resp = await this.client.search(`${artist} ${name}`, ['track'])
 
-      this.logger.info('findTrack result', resp?.tracks?.items?.length)
+      this.logger.info('findTrack', artist, '–', name, '| RESULT:', resp?.tracks?.items?.length)
 
       return (resp.tracks.items || []).map(this.trackConverter.from)
     } catch (e) {
