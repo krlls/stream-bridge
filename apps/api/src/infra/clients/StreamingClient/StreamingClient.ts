@@ -11,6 +11,7 @@ import { ExternalTrackDTO } from '../../../modules/music/dtos/ExternalTrackDTO'
 import { CreateStreamingTokenDTO } from '../../../modules/streaming/dtos/CreateStreamingTokenDTO'
 import { StreamingPrepareResultDTO } from '../../../modules/streaming/dtos/StreamingPrepareResultDTO'
 import { ApiCreatePlaylistDTO } from '../../../modules/music/dtos/ApiCreatePlaylistDTO'
+import { ApiFindTrackDto } from '../../../modules/music/dtos/ApiFindTrackDto'
 
 @injectable()
 @strategy('client', 'set')
@@ -76,6 +77,10 @@ export class StreamingClient implements IStreamingClient {
 
   async getToken(code: string): Promise<CreateStreamingTokenDTO | null> {
     return this.client.getToken(code)
+  }
+
+  async findTrack(data: ApiFindTrackDto): Promise<ExternalTrackDTO[]> {
+    return this.client.findTrack(data)
   }
 
   private updateCredentials(data: CreateStreamingTokenDTO) {

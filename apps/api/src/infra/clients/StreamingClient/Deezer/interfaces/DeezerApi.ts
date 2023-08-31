@@ -59,7 +59,7 @@ export interface Track {
   time_add: number,
   artist: Artist,
   album: Album,
-  type: string,
+  type: 'track',
   title_version?: string,
 }
 

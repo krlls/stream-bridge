@@ -20,6 +20,6 @@ export class FakeTidalApi extends SpotifyClient {
   async getTracksByPlaylist(data: { playlistId: string, offset: number }): Promise<ExternalTrackDTO[]> {
     const tracks = await api.getTracks(data.playlistId, this.getConfig().playlistsLimit, data.offset)
 
-    return tracks.map(this.trackConverter.from)
+    return tracks.map(this.playlistedTrackConverter.from)
   }
 }
