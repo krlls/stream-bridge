@@ -35,6 +35,9 @@ import { ImportController } from './controllers/import'
 import { MusicController } from './controllers/music'
 import { AuthChecker } from './utils/crypto'
 import { DeezerClient } from './infra/clients/StreamingClient/Deezer/adapters/DeezerClient'
+import { IMusicExporter } from './modules/music/interfaces/IMusicExporter'
+import { MusicExporter } from './modules/music/syncronization/MusicExporter'
+import { ExportController } from './controllers/export'
 
 const appContainer = new Container()
 
@@ -42,6 +45,7 @@ appContainer.bind<UserController>(TYPES.UserController).to(UserController)
 appContainer.bind<AuthController>(TYPES.AuthController).to(AuthController)
 appContainer.bind<StreamingController>(TYPES.StreamingController).to(StreamingController)
 appContainer.bind<ImportController>(TYPES.ImportController).to(ImportController)
+appContainer.bind<ExportController>(TYPES.ExportController).to(ExportController)
 appContainer.bind<MusicController>(TYPES.MusicController).to(MusicController)
 
 appContainer.bind<IUserService>(TYPES.UserService).to(UserService)
@@ -63,6 +67,7 @@ appContainer.bind<StreamingEntityConverter>(TYPES.StreamingEntityConverter).to(S
 appContainer.bind<AuthChecker>(TYPES.AuthChecker).to(AuthChecker)
 
 appContainer.bind<IMusicImporter>(TYPES.MusicImporter).to(MusicImporter)
+appContainer.bind<IMusicExporter>(TYPES.MusicExporter).to(MusicExporter)
 
 appContainer.bind<IStreamingClient>(TYPES.Client).to(StreamingClient)
 appContainer.bind<IClient>(TYPES.ClientApi).to(SpotifyClient).whenTargetNamed(EStreamingType.SPOTIFY)

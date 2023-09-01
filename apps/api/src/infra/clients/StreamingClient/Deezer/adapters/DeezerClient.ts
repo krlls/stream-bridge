@@ -192,11 +192,11 @@ export class DeezerClient implements IClient {
     }
   }
 
-  async findTrack({ name, artist }: ApiFindTrackDto): Promise<ExternalTrackDTO[]> {
+  async findTrack({ name, artist, album }: ApiFindTrackDto): Promise<ExternalTrackDTO[]> {
     try {
-      const { data } = await this.client.get<Paginated<Track>>('/search', {
+      const { data } = await this.client.get<Paginated<Track>>('/search/track', {
         params: {
-          q: `artist:"${artist}" track:"${name}"`,
+          q: `artist:"${artist}" track:"${name}" album:"${album}"`,
         },
       })
 

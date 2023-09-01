@@ -2,25 +2,23 @@ import { inject, injectable } from 'inversify'
 
 import { TYPES } from '../../../types/const'
 import { IPlaylistRepository } from '../interfaces/IPlaylistRepository'
-import { EPrepareResult, IStreamingClient } from '../../streaming/clients/IStreamingClient'
+import { IStreamingClient } from '../../streaming/clients/IStreamingClient'
 import { IMusicImporter } from '../interfaces/IMusicImporter'
 import { StreamingCredentialsDTO } from '../dtos/StreamingCredentialsDTO'
-import { Errors, EStreamingType, Uid } from '../../../types/common'
+import { EStreamingType, Uid } from '../../../types/common'
 import { ImportTracksDTO } from '../dtos/ImportTracksDTO'
 import { ITracksRepository } from '../interfaces/ITracksRepository'
-import { ErrorDTO } from '../../common/dtos/errorDTO'
 import { genUid } from '../../../utils/app'
 import { IStreamingRepository } from '../../streaming/interfaces/IStreamingRepository'
-import { ImportLogger } from '../../../utils/logger'
-import { CreateStreamingTokenDTO } from '../../streaming/dtos/CreateStreamingTokenDTO'
+import { MusicSync } from './MusicSync'
 
 @injectable()
-export class MusicImporter implements IMusicImporter {
+export class MusicImporter extends MusicSync implements IMusicImporter {
+  @inject(TYPES.Client) protected streamingClient: IStreamingClient
+  @inject(TYPES.StreamingRepository) protected streamingRepository: IStreamingRepository
   @inject(TYPES.PlaylistRepository)
   private playlistRepository: IPlaylistRepository
   @inject(TYPES.TrackRepository) private trackRepository: ITracksRepository
-  @inject(TYPES.StreamingRepository) private streamingRepository: IStreamingRepository
-  @inject(TYPES.Client) private streamingClient: IStreamingClient
 
   async importPlaylists({
     userId,
@@ -128,39 +126,5 @@ export class MusicImporter implements IMusicImporter {
     const deleted = await this.trackRepository.purgeMismatchedTracksByImportId(playlistId, importId)
 
     return { ...counter, ...deleted }
-  }
-
-  private async updateStreaming(streamingId: number, data: CreateStreamingTokenDTO) {
-    const result = await this.streamingRepository.updateStreamingWithToken(streamingId, data)
-
-    result
-      ? ImportLogger.info('updateStreaming', streamingId, 'success')
-      : ImportLogger.error('updateStreaming', streamingId)
-  }
-
-  private async prepareClient(type: EStreamingType, credentials: StreamingCredentialsDTO) {
-    ImportLogger.info('prepareClient', type)
-
-    if (!this.streamingClient.init) {
-      this.streamingClient.set(type, credentials)
-    }
-
-    if (this.streamingClient.init && !this.streamingClient.compareCredentials(credentials)) {
-      throw Error('Credentials not compare')
-    }
-
-    const prepareRes = await this.streamingClient.prepare()
-
-    if (prepareRes.result === EPrepareResult.ERROR) {
-      ImportLogger.error('prepareClient', type, 'error')
-
-      return new ErrorDTO(Errors.PREPARE_CLIENT_ERROR)
-    }
-
-    if (prepareRes.data) {
-      await this.updateStreaming(credentials.streamingId, prepareRes.data)
-    }
-
-    return
   }
 }

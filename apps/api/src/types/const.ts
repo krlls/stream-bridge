@@ -3,6 +3,7 @@ export const TYPES = {
   AuthController: Symbol.for('AuthController'),
   StreamingController: Symbol.for('StreamingController'),
   ImportController: Symbol.for('ImportController'),
+  ExportController: Symbol.for('ExportController'),
   MusicController: Symbol.for('MusicController'),
 
   UserService: Symbol.for('UserService'),
@@ -20,7 +21,9 @@ export const TYPES = {
   PlaylistEntityConverter: Symbol.for('PlaylistEntityConverter'),
   TrackEntityConverter: Symbol.for('TrackEntityConverter'),
   StreamingEntityConverter: Symbol.for('StreamingEntityConverter'),
+
   MusicImporter: Symbol.for('MusicImporter'),
+  MusicExporter: Symbol.for('MusicExporter'),
 
   Client: Symbol.for('Client'),
   ClientApiFactory: Symbol.for('ClientApiFactory'),

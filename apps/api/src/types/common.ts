@@ -36,6 +36,7 @@ export enum Errors {
 
   TRACK_CREATE_ERROR = 'Track not created',
   TRACK_NOT_FOUND = 'Track not found',
+  TRACKS_NOT_FOUND = 'Tracks not found',
 
   STREAMING_CREATE_ERROR = 'Streaming create error',
   STREAMING_UPDATE_ERROR = 'Streaming update error',
