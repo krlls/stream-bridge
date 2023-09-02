@@ -10,15 +10,11 @@ export interface ITracksRepository {
   upsertTracks(tracks: CreateTrackDTO[]): Promise<number>,
 
   getTracksByPlaylistId(playlistId: number): Promise<Track[]>,
-  getTracksByUserId(id: number): Promise<Track[]>,
+  getTracksByUserId(id: number, trackIds?: number[]): Promise<Track[]>,
   getTrackById(trackId: number): Promise<Track | null>,
   getUserTracksByPlaylist(data: GetTracksByPlaylistDTO): Promise<Track[]>,
 
   purgeMismatchedTracksByImportId(playlistId: number, importId: Uid): Promise<{ deleted: number }>,
 
   countTracksByStreaming(streamingType: EStreamingType): Promise<number>,
-  // createTracks(tracks: CreateTrackDTO[]): boolean,
-  // getTracksByExternalIds(externalIds: string[]): Promise<Track[]>,
-  // getTracksByExternalId(externalId: string): Promise<Track[]>,
-  // getTracksByIds(tracksIds: number[]): Promise<Track[]>,
 }

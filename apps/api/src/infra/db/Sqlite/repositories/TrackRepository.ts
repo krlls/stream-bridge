@@ -102,10 +102,11 @@ export class TrackRepository implements ITracksRepository {
     return result.generatedMaps.length
   }
 
-  async getTracksByUserId(userId: number): Promise<Track[]> {
+  async getTracksByUserId(userId: number, trackIds?: number[]): Promise<Track[]> {
     const tracks = await this.repository.find({
-      relations: ['playlist', 'user'],
+      relations: ['playlist', 'playlist.user'],
       where: {
+        ...(trackIds && { id: In(trackIds) }),
         playlist: {
           user: { id: userId },
         },

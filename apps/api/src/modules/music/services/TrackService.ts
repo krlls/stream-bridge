@@ -21,6 +21,8 @@ import { GetTracksByPlaylistDTO } from '../dtos/GetTracksByPlaylistDTO'
 import { limits } from '../../common/const'
 import { TrackDTO } from '../dtos/TrackDto'
 import { Streaming } from '../../streaming/entities/Streaming'
+import { IMusicExporter } from '../interfaces/IMusicExporter'
+import { ExportTracksDto } from '../dtos/ExportTracksDto'
 
 @injectable()
 export class TrackService implements ITrackService {
@@ -30,6 +32,7 @@ export class TrackService implements ITrackService {
   @inject(TYPES.StreamingRepository)
   private streamingRepository: IStreamingRepository
   @inject(TYPES.MusicImporter) private musicImporter: IMusicImporter
+  @inject(TYPES.MusicExporter) private musicExporter: IMusicExporter
 
   async saveTrack(trackData: CreateTrackDTO) {
     const track = await this.trackRepository.createTrack(trackData)
@@ -155,6 +158,31 @@ export class TrackService implements ITrackService {
     }
 
     return track
+  }
+
+  async exportTracks(userId: number, { to, ids }: ExportTracksDto) {
+    const streamingResp = await this.streamingRepository.getStreaming(userId, to)
+    const streaming = this.checkStreamingAfterImport(streamingResp)
+
+    if (isServiceError(streaming)) {
+      return streaming
+    }
+
+    const credentials = new StreamingCredentialsDTO({
+      id: streaming.id,
+      token: streaming.token,
+      expiresIn: streaming.expiresIn,
+      expires: streaming.expires,
+      refreshToken: streaming.refresh_token,
+    })
+
+    const tracks = await this.trackRepository.getTracksByUserId(userId, ids)
+
+    if (!tracks.length) {
+      return new ErrorDTO(Errors.TRACKS_NOT_FOUND)
+    }
+
+    return this.musicExporter.exportTracks(to, credentials, tracks)
   }
 
   private checkStreamingAfterImport(streaming?: Streaming | null): Required<Streaming> | ErrorDTO {

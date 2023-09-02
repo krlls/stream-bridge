@@ -183,6 +183,25 @@ export namespace Api {
     }
   }
 
+  export namespace Export {
+    export const PREFIX = '/export'
+
+    export namespace Tracks {
+      export const URL = '/tracks'
+
+      export type Req = {
+        trackIds: number[],
+        to: Api.Streaming.EApiStreamingType,
+      }
+
+      export type Resp = Response<{
+        total: number,
+        exported: number,
+        notFoundIds: number[],
+      }>
+    }
+  }
+
   export namespace Music {
     export const PREFIX = '/music'
 
