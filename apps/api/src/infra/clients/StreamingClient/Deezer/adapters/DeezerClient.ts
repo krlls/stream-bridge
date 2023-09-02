@@ -192,19 +192,41 @@ export class DeezerClient implements IClient {
     }
   }
 
-  async findTrack({ name, artist, album }: ApiFindTrackDto): Promise<ExternalTrackDTO[]> {
+  async findTrack(query: ApiFindTrackDto): Promise<ExternalTrackDTO[]> {
+    let result: ExternalTrackDTO[] = []
+
+    if (query.isrc) {
+      result = await this.findTrackByIsrc(query.isrc)
+    }
+
+    if (result.length) {
+      return result
+    }
+
+    result = await this.findTrackWithOptions(query)
+
+    if (result.length) {
+      return result
+    }
+
+    result = await this.findTrackWithOptions(query, false)
+
+    if (result.length) {
+      return result
+    }
+
+    return []
+  }
+
+  private async findTrackByIsrc(isrc: string) {
     try {
-      const { data } = await this.client.get<Paginated<Track>>('/search/track', {
-        params: {
-          q: `artist:"${artist}" track:"${name}" album:"${album}"`,
-        },
-      })
+      const { data } = await this.client.get<Paginated<Track>>(`/search/track/isrc:${isrc}`)
 
       if (!data.data) {
         return []
       }
 
-      this.logger.info('findTrack', artist, '–', name, '| RESULT:', data.data.length)
+      this.logger.info('findTrack', 'ISRC:', isrc, '| result:', data.data.length)
 
       return data.data.filter((e) => e.type === 'track').map(this.trackApiConverter.from)
     } catch (e) {
@@ -214,6 +236,29 @@ export class DeezerClient implements IClient {
     }
   }
 
+  private async findTrackWithOptions({ name, artist, album }: ApiFindTrackDto, strict: boolean = true) {
+    const query = strict ? `artist:"${artist}" track:"${name}" album:"${album}"` : `${artist} ${name}`
+
+    try {
+      const { data } = await this.client.get<Paginated<Track>>('/search/track', {
+        params: {
+          q: query,
+        },
+      })
+
+      if (!data.data) {
+        return []
+      }
+
+      this.logger.info('findTrack', artist, '–', name, '| result:', data.data.length)
+
+      return data.data.filter((e) => e.type === 'track').map(this.trackApiConverter.from)
+    } catch (e) {
+      this.logger.error('findTrack', e)
+
+      return []
+    }
+  }
   private async setUpClient(token: string) {
     const client = axios.create({
       baseURL: this.baseUrl,
