@@ -11,6 +11,7 @@ import { isServiceError } from '../../../utils/errors'
 import { ApiFindTrackDto } from '../dtos/ApiFindTrackDto'
 import { ExternalTrackDTO } from '../dtos/ExternalTrackDTO'
 import { Track } from '../entities/Track'
+import { calcMatchScore } from '../../../utils/match'
 
 @injectable()
 export class MusicExporter extends MusicSync implements IMusicExporter {
@@ -39,12 +40,36 @@ export class MusicExporter extends MusicSync implements IMusicExporter {
       const request = new ApiFindTrackDto(track)
       const results = await this.streamingClient.findTrack(request)
 
-      //ToDo Match algorithm
-      const matched: ExternalTrackDTO | undefined = results[0]
+      if (!results.length) {
+        notFound.push(track)
+
+        continue
+      }
+
+      const matched: ExternalTrackDTO | undefined = this.bestMatch(track, results)
 
       matched ? resultTracks.push(matched) : notFound.push(track)
     }
 
     return { result: resultTracks, notFound }
+  }
+
+  private bestMatch(original: Track, tracks: ExternalTrackDTO[]): ExternalTrackDTO | undefined {
+    const minimumMatch = 2
+    const bestMatch: { score: number, track?: ExternalTrackDTO } = { score: 0, track: undefined }
+
+    tracks.forEach((track) => {
+      const score =
+        calcMatchScore(original.name, track.name) +
+        calcMatchScore(original.artist, track.artist) +
+        calcMatchScore(original.album, track.album)
+
+      if (score > minimumMatch && score > bestMatch.score) {
+        bestMatch.score = score
+        bestMatch.track = track
+      }
+    })
+
+    return bestMatch.track
   }
 }
