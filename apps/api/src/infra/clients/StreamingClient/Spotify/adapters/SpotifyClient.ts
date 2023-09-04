@@ -192,8 +192,18 @@ export class SpotifyClient implements IClient {
     return createPatch(this.baseUrl, this.spotifyAuthUrl, query)
   }
 
-  async addTrackToPlaylist(_trackIds: string[], _playlistId: string): Promise<boolean> {
-    return false
+  async addTrackToPlaylist(trackIds: string[], playlistId: string): Promise<boolean> {
+    try {
+      const resp = await this.client.playlists.addItemsToPlaylist(playlistId, trackIds)
+
+      this.logger.info('addTrackToPlaylist', playlistId, resp)
+
+      return true
+    } catch (e: any) {
+      this.logger.info('addTrackToPlaylist', e)
+
+      return false
+    }
   }
 
   async getToken(code: string) {
