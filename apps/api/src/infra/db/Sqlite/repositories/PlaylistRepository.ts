@@ -76,10 +76,10 @@ export class PlaylistRepository implements IPlaylistRepository {
     return this.entityConverter.from(newPlaylist)
   }
 
-  async getPlaylistById(id: number): Promise<Playlist | null> {
+  async getPlaylistById(id: number, userId?: number): Promise<Playlist | null> {
     const playlist = await this.repository.findOne({
       relations: ['streaming', 'user'],
-      where: { id },
+      where: { id, ...(userId && { user: { id: userId } }) },
     })
 
     if (!playlist) {

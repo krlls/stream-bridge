@@ -83,6 +83,10 @@ export class StreamingClient implements IStreamingClient {
     return this.client.findTrack(data)
   }
 
+  async addTrackToPlaylist(trackIds: string[], playlistId: string): Promise<boolean> {
+    return this.client.addTrackToPlaylist(trackIds, playlistId)
+  }
+
   private updateCredentials(data: CreateStreamingTokenDTO) {
     this.credentials = new StreamingCredentialsDTO({
       id: this.credentials.streamingId,

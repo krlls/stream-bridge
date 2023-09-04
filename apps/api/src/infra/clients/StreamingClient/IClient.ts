@@ -16,4 +16,5 @@ export interface IClient {
   createPlaylist(data: ApiCreatePlaylistDTO): Promise<ExternalPlaylistDTO | null>,
   getToken(code: string): Promise<CreateStreamingTokenDTO | null>,
   findTrack(data: ApiFindTrackDto): Promise<ExternalTrackDTO[]>,
+  addTrackToPlaylist(trackIds: string[], playlistId: string): Promise<boolean>,
 }

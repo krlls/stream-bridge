@@ -1,11 +1,10 @@
 import { StreamingCredentialsDTO } from '../dtos/StreamingCredentialsDTO'
-import { EStreamingType, ServiceResultDTO } from '../../../types/common'
-import { Track } from '../entities/Track'
+import { ApiExportTracksDto } from '../dtos/ApiExportTracksDto'
+import { ServiceResultDTO } from '../../../types/common'
 
 export interface IMusicExporter {
   exportTracks(
-    type: EStreamingType,
+    toExport: ApiExportTracksDto,
     credentials: StreamingCredentialsDTO,
-    tracks: Track[],
   ): Promise<ServiceResultDTO<{ total: number, exported: number, notFoundIds: number[] }>>,
 }
