@@ -1,11 +1,9 @@
-import { EStreamingType } from 'api-types'
-
 export class ExportTracksDto {
   ids: number[]
-  to: EStreamingType
+  playlistId: number
 
-  constructor({ trackIds, to }: { trackIds: number[], to: EStreamingType }) {
+  constructor({ trackIds, playlistId }: { trackIds: number[], playlistId: number }) {
     this.ids = trackIds
-    this.to = to
+    this.playlistId = playlistId
   }
 }

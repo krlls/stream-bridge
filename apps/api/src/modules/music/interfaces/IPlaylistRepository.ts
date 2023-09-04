@@ -10,7 +10,7 @@ export interface IPlaylistRepository {
   upsertPlaylists(playlistData: CreatePlaylistDTO[]): Promise<number>,
 
   getPlaylistByExternalId(externalId: string): Promise<Playlist | null>,
-  getPlaylistById(id: number): Promise<Playlist | null>,
+  getPlaylistById(id: number, userId?: number): Promise<Playlist | null>,
   getPlaylistsByUserId(data: GetUserPlaylistsDto): Promise<Playlist[]>,
 
   purgeMismatchedPlaylistsByImportId(data: {

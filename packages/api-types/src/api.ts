@@ -191,7 +191,7 @@ export namespace Api {
 
       export type Req = {
         trackIds: number[],
-        to: Api.Streaming.EApiStreamingType,
+        playlistId: number,
       }
 
       export type Resp = Response<{

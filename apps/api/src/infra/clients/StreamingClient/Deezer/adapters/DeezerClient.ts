@@ -218,6 +218,25 @@ export class DeezerClient implements IClient {
     return []
   }
 
+  async addTrackToPlaylist(trackIds: string[], playlistId: string) {
+    try {
+      const { data } = await this.client.get<Paginated<Track>>(`/playlist/${playlistId}/tracks`, {
+        params: {
+          request_method: 'post',
+          songs: trackIds.join(','),
+        },
+      })
+
+      this.logger.info('addTrackToPlaylist', data)
+
+      return !!data.data
+    } catch (e) {
+      this.logger.error('addTrackToPlaylist', e)
+
+      return false
+    }
+  }
+
   private async findTrackByIsrc(isrc: string) {
     try {
       const { data } = await this.client.get<Paginated<Track>>(`/search/track/isrc:${isrc}`)
