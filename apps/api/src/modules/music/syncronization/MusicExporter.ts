@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify'
+import { chunk } from 'lodash'
 
 import { TYPES } from '../../../types/const'
 import { IStreamingClient } from '../../streaming/clients/IStreamingClient'
@@ -12,19 +13,51 @@ import { ExternalTrackDTO } from '../dtos/ExternalTrackDTO'
 import { Track } from '../entities/Track'
 import { calcMatchScore } from '../../../utils/match'
 import { ApiExportTracksDto } from '../dtos/ApiExportTracksDto'
+import { ApiExportPlaylistDto } from '../dtos/ApiExportPlaylistDto'
+import { ApiCreatePlaylistDTO } from '../dtos/ApiCreatePlaylistDTO'
+import { ErrorDTO } from '../../common/dtos/errorDTO'
+import { Errors } from '../../../types/common'
 
 @injectable()
 export class MusicExporter extends MusicSync implements IMusicExporter {
   @inject(TYPES.StreamingRepository) protected streamingRepository: IStreamingRepository
   @inject(TYPES.Client) protected streamingClient: IStreamingClient
 
-  async exportTracks({ tracks, streamingType, playlistId }: ApiExportTracksDto, credentials: StreamingCredentialsDTO) {
-    const prepareRes = await this.prepareClient(streamingType, credentials)
+  async exportTracks(toExport: ApiExportTracksDto, credentials: StreamingCredentialsDTO) {
+    const prepareRes = await this.prepareClient(toExport.streamingType, credentials)
 
     if (isServiceError(prepareRes)) {
       return prepareRes
     }
 
+    return this.exportTracksFlow(toExport)
+  }
+
+  async exportPlaylist(toExport: ApiExportPlaylistDto, credentials: StreamingCredentialsDTO) {
+    const prepareRes = await this.prepareClient(toExport.streamingType, credentials)
+
+    if (isServiceError(prepareRes)) {
+      return prepareRes
+    }
+
+    return this.exportPlaylistFlow(toExport)
+  }
+
+  private async exportPlaylistFlow({ tracks, name, desc, streamingType }: ApiExportPlaylistDto) {
+    const newPlaylistData = new ApiCreatePlaylistDTO({ description: desc, name })
+    const playlist = await this.streamingClient.createPlaylist(newPlaylistData)
+
+    if (!playlist) {
+      return new ErrorDTO(Errors.PLAYLIST_CREATE_ERROR)
+    }
+
+    const exportTracksData = new ApiExportTracksDto({ tracks, playlistId: playlist.external_id, streamingType })
+
+    return this.exportTracksFlow(exportTracksData)
+  }
+
+  private async exportTracksFlow({ tracks, playlistId }: ApiExportTracksDto) {
+    const chunkSize = 50
     const tracksFromSearch = await this.findTracks(tracks)
 
     const { result, notFound } = tracksFromSearch
@@ -35,10 +68,14 @@ export class MusicExporter extends MusicSync implements IMusicExporter {
       return resp
     }
 
-    await this.streamingClient.addTrackToPlaylist(
+    const chunkedIds = chunk(
       tracksFromSearch.result.map((t) => String(t.id)),
-      playlistId,
+      chunkSize,
     )
+
+    for (const chunkedId of chunkedIds) {
+      await this.streamingClient.addTrackToPlaylist(chunkedId, playlistId)
+    }
 
     return resp
   }
