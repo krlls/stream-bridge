@@ -34,7 +34,7 @@ export class MusicExporter extends MusicSync implements IMusicExporter {
   }
 
   async exportPlaylist(toExport: ApiExportPlaylistDto, credentials: StreamingCredentialsDTO) {
-    const prepareRes = await this.prepareClient(toExport.streamingType, credentials)
+    const prepareRes = await this.prepareClient(toExport.targetStreamingType, credentials)
 
     if (isServiceError(prepareRes)) {
       return prepareRes
@@ -43,7 +43,7 @@ export class MusicExporter extends MusicSync implements IMusicExporter {
     return this.exportPlaylistFlow(toExport)
   }
 
-  private async exportPlaylistFlow({ tracks, name, desc, streamingType }: ApiExportPlaylistDto) {
+  private async exportPlaylistFlow({ tracks, name, desc, targetStreamingType }: ApiExportPlaylistDto) {
     const newPlaylistData = new ApiCreatePlaylistDTO({ description: desc, name })
     const playlist = await this.streamingClient.createPlaylist(newPlaylistData)
 
@@ -51,7 +51,11 @@ export class MusicExporter extends MusicSync implements IMusicExporter {
       return new ErrorDTO(Errors.PLAYLIST_CREATE_ERROR)
     }
 
-    const exportTracksData = new ApiExportTracksDto({ tracks, playlistId: playlist.external_id, streamingType })
+    const exportTracksData = new ApiExportTracksDto({
+      tracks,
+      playlistId: playlist.external_id,
+      streamingType: targetStreamingType,
+    })
 
     return this.exportTracksFlow(exportTracksData)
   }

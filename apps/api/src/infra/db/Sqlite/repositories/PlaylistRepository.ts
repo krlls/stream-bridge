@@ -89,6 +89,19 @@ export class PlaylistRepository implements IPlaylistRepository {
     return this.entityConverter.from(playlist)
   }
 
+  async getPlaylistByIds(ids: number[], userId?: number): Promise<Playlist[]> {
+    const playlists = await this.repository.find({
+      relations: ['streaming', 'user'],
+      where: { id: In(ids), ...(userId && { user: { id: userId } }) },
+    })
+
+    if (!playlists) {
+      return []
+    }
+
+    return playlists.map(this.entityConverter.from)
+  }
+
   async getPlaylistsByUserId({ userId, offset, limit, streamingType }: GetUserPlaylistsDto): Promise<Playlist[]> {
     const playlists =
       (await this.repository.find({

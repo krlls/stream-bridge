@@ -19,14 +19,21 @@ import { PlaylistDto } from '../dtos/PlaylistDto'
 import { ImportTracksDTO } from '../dtos/ImportTracksDTO'
 import { ImportLibResultDTO } from '../dtos/ImportLibResultDTO'
 import { Streaming } from '../../streaming/entities/Streaming'
+import { ExportPlaylistsDto } from '../dtos/ExportPlaylistsDto'
+import { ITracksRepository } from '../interfaces/ITracksRepository'
+import { ApiExportPlaylistDto } from '../dtos/ApiExportPlaylistDto'
+import { IMusicExporter } from '../interfaces/IMusicExporter'
 
 @injectable()
 export class PlaylistService implements IPlaylistService {
   @inject(TYPES.PlaylistRepository)
   private playlistRepository: IPlaylistRepository
+  @inject(TYPES.TrackRepository)
+  private tracksRepository: ITracksRepository
   @inject(TYPES.StreamingRepository)
   private streamingRepository: IStreamingRepository
   @inject(TYPES.MusicImporter) private musicImporter: IMusicImporter
+  @inject(TYPES.MusicExporter) private musicExporter: IMusicExporter
 
   async createPlayList(playlist: CreatePlaylistDTO) {
     const newPlaylist = await this.playlistRepository.createPlaylist(playlist)
@@ -146,6 +153,55 @@ export class PlaylistService implements IPlaylistService {
     }
 
     return new ImportLibResultDTO({ tracks: tracksResult, playlists: playlistsResult })
+  }
+
+  async exportPlaylists(toExport: ExportPlaylistsDto) {
+    const { userId, target, ids } = toExport
+
+    const streamingResp = await this.streamingRepository.getStreaming(userId, target)
+    const streaming = this.checkStreamingAfterImport(streamingResp)
+
+    if (isServiceError(streaming)) {
+      return streaming
+    }
+
+    const playlists = await this.playlistRepository.getPlaylistByIds(ids, userId)
+
+    if (playlists.length !== ids.length) {
+      return new ErrorDTO(Errors.PLAYLIST_NOT_MATCH)
+    }
+
+    const exportDtos = (
+      await Promise.all(
+        playlists.map((p) => this.tracksRepository.getUserTracksByPlaylist({ userId, playlistId: p.id })),
+      )
+    ).map((tracks, i) => new ApiExportPlaylistDto({ targetStreamingType: target, tracks, name: playlists[i].name }))
+
+    const credentials = new StreamingCredentialsDTO({
+      id: streaming.id,
+      token: streaming.token,
+      expiresIn: streaming.expiresIn,
+      expires: streaming.expires,
+      refreshToken: streaming.refresh_token,
+    })
+
+    const result = { exported: 0, total: exportDtos.length, notFoundIds: [] as number[] }
+
+    for (const exportDto of exportDtos) {
+      const resp = await this.musicExporter.exportPlaylist(exportDto, credentials)
+
+      if (isServiceError(resp)) {
+        result.notFoundIds = [...result.notFoundIds, ...exportDto.tracks.map((t) => t.id)]
+
+        continue
+      }
+
+      result.notFoundIds = [...result.notFoundIds, ...resp.notFoundIds]
+      result.total += resp.total
+      result.exported += resp.exported
+    }
+
+    return result
   }
 
   private checkStreamingAfterImport(streaming?: Streaming | null): Required<Streaming> | ErrorDTO {
