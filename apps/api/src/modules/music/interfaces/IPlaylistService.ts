@@ -6,6 +6,7 @@ import { ImportResultDTO } from '../dtos/ImportResultDTO'
 import { GetUserPlaylistsDto } from '../dtos/GetUserPlaylistsDto'
 import { PlaylistDto } from '../dtos/PlaylistDto'
 import { ImportLibResultDTO } from '../dtos/ImportLibResultDTO'
+import { ExportPlaylistsDto } from '../dtos/ExportPlaylistsDto'
 
 export interface IPlaylistService {
   createPlayList(playlist: CreatePlaylistDTO): Promise<ServiceResultDTO<Playlist>>,
@@ -15,4 +16,7 @@ export interface IPlaylistService {
   getAllUserPlaylists(getPlaylists: GetUserPlaylistsDto): Promise<ServiceResultDTO<PlaylistDto[]>>,
   importPlaylists(importDto: ImportMediaDTO): Promise<ServiceResultDTO<ImportResultDTO>>,
   importAllMedia(importDto: ImportMediaDTO): Promise<ServiceResultDTO<ImportLibResultDTO>>,
+  exportPlaylists(
+    toExport: ExportPlaylistsDto,
+  ): Promise<ServiceResultDTO<{ total: number, exported: number, notFoundIds: number[] }>>,
 }

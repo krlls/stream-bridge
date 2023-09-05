@@ -11,6 +11,7 @@ export interface IPlaylistRepository {
 
   getPlaylistByExternalId(externalId: string): Promise<Playlist | null>,
   getPlaylistById(id: number, userId?: number): Promise<Playlist | null>,
+  getPlaylistByIds(id: number[], userId?: number): Promise<Playlist[]>,
   getPlaylistsByUserId(data: GetUserPlaylistsDto): Promise<Playlist[]>,
 
   purgeMismatchedPlaylistsByImportId(data: {
