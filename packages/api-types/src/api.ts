@@ -200,6 +200,21 @@ export namespace Api {
         notFoundIds: number[],
       }>
     }
+
+    export namespace Playlists {
+      export const URL = '/playlists'
+
+      export type Req = {
+        playlistIds: number[],
+        target: Api.Streaming.EApiStreamingType,
+      }
+
+      export type Resp = Response<{
+        total: number,
+        exported: number,
+        notFoundIds: number[],
+      }>
+    }
   }
 
   export namespace Music {

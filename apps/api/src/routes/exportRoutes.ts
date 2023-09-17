@@ -13,6 +13,10 @@ router.post(Api.Export.Tracks.URL, ...authChecker.createMiddleware(), exportVali
   controller().exportTracks(ctx, ctx.request.body),
 )
 
+router.post(Api.Export.Playlists.URL, ...authChecker.createMiddleware(), exportValidators.exportPlaylists, (ctx) =>
+  controller().exportPlaylists(ctx, ctx.request.body),
+)
+
 export const exportRouter = router
 
 /**
