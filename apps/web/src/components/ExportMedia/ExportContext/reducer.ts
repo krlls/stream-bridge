@@ -23,14 +23,6 @@ export enum EActionTypes {
 export type TExportAction<T extends EActionTypes, P = undefined> = P extends undefined
   ? { type: T }
   : { type: T, payload: P }
-export type TExportActions =
-  | TExportAction<EActionTypes.setTracks, number[]>
-  | TExportAction<EActionTypes.setPlaylists, number[]>
-  | TExportAction<EActionTypes.setOriginStreaming, EStreamingType>
-  | TExportAction<EActionTypes.setTargetStreaming, EStreamingType>
-  | TExportAction<EActionTypes.setTargetPlaylist, number>
-  | TExportAction<EActionTypes.incStep>
-  | TExportAction<EActionTypes.decStep>
 
 export const defaultState: IState = {
   step: 1,
@@ -73,3 +65,14 @@ export const exportReducer = (state: IState, action: TExportActions): IState => 
     }
   }
 }
+
+export type TExportActions =
+  | TExportAction<EActionTypes.setTracks, number[]>
+  | TExportAction<EActionTypes.setPlaylists, number[]>
+  | TExportAction<EActionTypes.setOriginStreaming, EStreamingType>
+  | TExportAction<EActionTypes.setTargetStreaming, EStreamingType>
+  | TExportAction<EActionTypes.setTargetPlaylist, number>
+  | TExportAction<EActionTypes.incStep>
+  | TExportAction<EActionTypes.decStep>
+
+export const incStep = (): TExportActions => ({ type: EActionTypes.incStep })

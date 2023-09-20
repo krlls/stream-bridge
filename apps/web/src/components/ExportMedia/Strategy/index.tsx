@@ -14,7 +14,7 @@ import {
 
 import { IStrategy } from '../index.inerfaces.ts'
 import { useExportMediaState } from '../../../hooks/useExportMediaState.ts'
-import { EActionTypes } from '../ExportContext/reducer.ts'
+import { incStep } from '../ExportContext/reducer.ts'
 
 type TProps = {
   strategy: IStrategy,
@@ -37,7 +37,7 @@ export const Strategy: FC<TProps> = ({ strategy }) => {
           </Step>
         ))}
       </Stepper>
-      <Button onClick={() => dispatch({ type: EActionTypes.incStep })}>Step: {state.step}</Button>
+      <Button onClick={() => dispatch(incStep())}>Step: {state.step}</Button>
     </Container>
   )
 }

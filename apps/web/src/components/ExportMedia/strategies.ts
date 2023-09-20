@@ -1,6 +1,6 @@
-import { IStrategy, StrategyFactory } from './index.inerfaces.ts'
+import { StrategyFactory } from './index.inerfaces.ts'
 
-export const ExportAllStrategy: StrategyFactory = (t, d): IStrategy => ({
+export const ExportAllStrategy: StrategyFactory = (t, d) => ({
   name: t(d.ExportAllMedia),
   steps: [
     {
@@ -18,7 +18,7 @@ export const ExportAllStrategy: StrategyFactory = (t, d): IStrategy => ({
   ],
 })
 
-export const ExportPlaylists: StrategyFactory = (t, d): IStrategy => ({
+export const ExportPlaylists: StrategyFactory = (t, d) => ({
   name: t(d.ExportPlaylists),
   steps: [
     {
@@ -42,7 +42,7 @@ export const ExportPlaylists: StrategyFactory = (t, d): IStrategy => ({
   ],
 })
 
-export const ExportTracks: StrategyFactory = (t, d): IStrategy => ({
+export const ExportTracks: StrategyFactory = (t, d) => ({
   name: t(d.ExportTracks),
   steps: [
     {

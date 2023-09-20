@@ -1,4 +1,4 @@
-import { FC, ReactNode, useRef } from 'react'
+import { cloneElement, FC, isValidElement, ReactElement, ReactNode, useRef } from 'react'
 import {
   Box,
   Drawer,
@@ -12,7 +12,7 @@ import {
 
 export type TProps = {
   title?: string,
-  children?: ReactNode,
+  children?: ReactElement,
   trigger: ReactNode,
   size?: string,
   placement?: 'top' | 'left' | 'bottom' | 'right',
@@ -24,9 +24,7 @@ export const AppDrawer: FC<TProps> = ({ placement, children, size, title, trigge
 
   return (
     <>
-      <Box ref={btnRef} onClick={onOpen} cursor='pointer'>
-        {trigger}
-      </Box>
+      {isValidElement(trigger) && cloneElement(trigger, { onClick: onOpen, cursor: 'pointer', ref: btnRef } as any)}
       <Drawer
         isOpen={isOpen}
         placement={placement || 'left'}
