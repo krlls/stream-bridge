@@ -42,6 +42,24 @@ export const ExportPlaylists: StrategyFactory = (t, d) => ({
   ],
 })
 
+export const ExportPlaylist: StrategyFactory = (t, d) => ({
+  name: t(d.ExportPlaylist),
+  steps: [
+    {
+      index: 2,
+      title: t(d.SelectStreaming),
+      desc: 'Select target streaming for export media',
+      cmp: () => null,
+    },
+    {
+      index: 3,
+      title: t(d.Export),
+      desc: 'Export  playlists and tracks',
+      cmp: () => null,
+    },
+  ],
+})
+
 export const ExportTracks: StrategyFactory = (t, d) => ({
   name: t(d.ExportTracks),
   steps: [
@@ -78,4 +96,5 @@ export const ExportTracks: StrategyFactory = (t, d) => ({
   ],
 })
 
-export const strategies = [ExportAllStrategy, ExportPlaylists, ExportTracks]
+export const MainStrategies = [ExportAllStrategy, ExportPlaylists, ExportTracks]
+export const PlaylistStrategies = [ExportPlaylist, ExportTracks]

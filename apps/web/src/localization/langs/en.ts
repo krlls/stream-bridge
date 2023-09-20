@@ -55,6 +55,7 @@ export const en = {
   ExportAllMedia: 'Export the entire library',
   SelectStreaming: 'Select streaming',
   ExportPlaylists: 'Export playlists',
+  ExportPlaylist: 'Export playlist',
   ExportTracks: 'Export tracks',
   SelectPlaylist: 'Select playlist',
   SelectTracks: 'Select tracks',

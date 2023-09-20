@@ -68,6 +68,7 @@ export const Playlist: FC = () => {
         tracks={combined?.length || 0}
         isImporting={importResult.isLoading}
         onImport={() => importTracks({ playlistId })}
+        id={playlistId}
       />
       <TracksList
         tracks={combined || []}

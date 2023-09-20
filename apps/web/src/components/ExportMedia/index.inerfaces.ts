@@ -1,9 +1,12 @@
 import { FC } from 'react'
+import { EStreamingType } from 'api-types'
 
 import { TranslationDictionary } from '../../localization/types.ts'
 
 export interface TProps {
   strategies: StrategyFactory[],
+  streamingType: EStreamingType,
+  playlistId?: number,
 }
 
 export interface IStrategy {

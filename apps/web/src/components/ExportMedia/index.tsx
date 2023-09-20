@@ -6,7 +6,7 @@ import { Strategy } from './Strategy'
 import { ExportContextProvider } from './ExportContext'
 import { useLocalization } from '../../hooks/useLocalization.ts'
 
-export const ExportMedia: FC<TProps> = ({ strategies }) => {
+export const ExportMedia: FC<TProps> = ({ strategies, streamingType, playlistId }) => {
   const [selected, setSelected] = useState(false)
   const [strategy, setStrategy] = useState<number>(-1)
   const { t, d } = useLocalization()
@@ -14,7 +14,10 @@ export const ExportMedia: FC<TProps> = ({ strategies }) => {
 
   if (selected && strategy !== -1) {
     return (
-      <ExportContextProvider>
+      <ExportContextProvider
+        originStreamingType={streamingType}
+        playlistsIds={playlistId !== undefined ? [playlistId] : []}
+      >
         <Strategy strategy={preparedStrategies[strategy]} />
       </ExportContextProvider>
     )

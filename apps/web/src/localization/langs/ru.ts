@@ -57,6 +57,7 @@ export const ru: Dictionary = {
   ExportAllMedia: 'Экспортировать всю библиотеку',
   SelectStreaming: 'Выбрать стриминг',
   ExportPlaylists: 'Экспорт плейлистов',
+  ExportPlaylist: 'Экспорт плейлиста',
   ExportTracks: 'Экспорт треков',
   SelectPlaylist: 'Выбрать плейлист',
   SelectTracks: 'Выбрать треки',

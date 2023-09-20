@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { Button, ButtonGroup, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
 import { ArrowForwardIcon, DownloadIcon, HamburgerIcon, RepeatIcon } from '@chakra-ui/icons'
 import { useNavigate } from 'react-router-dom'
+import { EStreamingType } from 'api-types'
 
 import { SubHeader } from '../SubHeader'
 import { useLocalization } from '../../hooks/useLocalization.ts'
@@ -9,7 +10,7 @@ import { PopoverConfirmation } from '../PopoverConfirmation'
 import { NavBar } from '../NavBar'
 import { AppDrawer } from '../AppDrawer'
 import { ExportMedia } from '../ExportMedia'
-import { strategies } from '../ExportMedia/strategies.ts'
+import { MainStrategies } from '../ExportMedia/Strategies.ts'
 
 interface TProps {
   title: string,
@@ -17,6 +18,7 @@ interface TProps {
   tracks: number,
   logo?: string,
   isImporting: boolean,
+  type: EStreamingType,
   onImport(): void,
   onImportMedia(): void,
 }
@@ -29,6 +31,7 @@ export const StreamingSubHeader: FC<TProps> = ({
   onImport,
   isImporting,
   onImportMedia,
+  type,
 }) => {
   const { t, d } = useLocalization()
   const navigate = useNavigate()
@@ -68,7 +71,7 @@ export const StreamingSubHeader: FC<TProps> = ({
           placement='right'
           size='xl'
         >
-          <ExportMedia strategies={strategies} />
+          <ExportMedia strategies={MainStrategies} streamingType={type} />
         </AppDrawer>
       </ButtonGroup>
     </SubHeader>

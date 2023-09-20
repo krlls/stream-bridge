@@ -38,6 +38,8 @@ export const Strategy: FC<TProps> = ({ strategy }) => {
         ))}
       </Stepper>
       <Button onClick={() => dispatch(incStep())}>Step: {state.step}</Button>
+      Streaming: {state.originStreamingType}
+      PlayList: {state.playlistsIds[0]}
     </Container>
   )
 }

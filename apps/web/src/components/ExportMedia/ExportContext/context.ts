@@ -1,6 +1,6 @@
 import { createContext, Dispatch } from 'react'
 
-import { defaultState, IState, TExportActions } from './reducer.ts'
+import { IState, makeDefaultState, TExportActions } from './reducer.ts'
 
-export const exportDataContext = createContext<IState>(defaultState)
+export const exportDataContext = createContext<IState>(makeDefaultState())
 export const exportDataContextDispatch = createContext<Dispatch<TExportActions>>(() => null)

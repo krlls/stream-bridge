@@ -49,6 +49,7 @@ export const Streaming: FC = () => {
         playlists={streamingByType.playlists}
         tracks={streamingByType.tracks}
         logo={streamingToLogo(streamingByType.type)}
+        type={streamingByType.type}
       />
       <Playlists streaming={convertStreamingType(streamingByType.type).toApi()} />
     </Flex>

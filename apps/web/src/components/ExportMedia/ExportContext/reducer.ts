@@ -24,11 +24,12 @@ export type TExportAction<T extends EActionTypes, P = undefined> = P extends und
   ? { type: T }
   : { type: T, payload: P }
 
-export const defaultState: IState = {
+export const makeDefaultState = (override?: Partial<IState>): IState => ({
   step: 1,
   tracksIds: [],
   playlistsIds: [],
-}
+  ...override,
+})
 
 export const exportReducer = (state: IState, action: TExportActions): IState => {
   switch (action.type) {
