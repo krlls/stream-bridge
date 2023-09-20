@@ -1,4 +1,5 @@
 import { StrategyFactory } from './index.inerfaces.ts'
+import { SelectStreaming } from './steps/SelectStreaming'
 
 export const ExportAllStrategy: StrategyFactory = (t, d) => ({
   name: t(d.ExportAllMedia),
@@ -7,7 +8,7 @@ export const ExportAllStrategy: StrategyFactory = (t, d) => ({
       index: 1,
       title: t(d.SelectStreaming),
       desc: 'Select target streaming for export media',
-      cmp: () => null,
+      cmp: SelectStreaming,
     },
     {
       index: 2,
@@ -31,7 +32,7 @@ export const ExportPlaylists: StrategyFactory = (t, d) => ({
       index: 2,
       title: t(d.SelectStreaming),
       desc: 'Select target streaming for export media',
-      cmp: () => null,
+      cmp: SelectStreaming,
     },
     {
       index: 3,
@@ -49,7 +50,7 @@ export const ExportPlaylist: StrategyFactory = (t, d) => ({
       index: 2,
       title: t(d.SelectStreaming),
       desc: 'Select target streaming for export media',
-      cmp: () => null,
+      cmp: SelectStreaming,
     },
     {
       index: 3,
@@ -60,41 +61,5 @@ export const ExportPlaylist: StrategyFactory = (t, d) => ({
   ],
 })
 
-export const ExportTracks: StrategyFactory = (t, d) => ({
-  name: t(d.ExportTracks),
-  steps: [
-    {
-      index: 1,
-      title: t(d.SelectStreaming),
-      desc: 'Select playlists to export',
-      cmp: () => null,
-    },
-    {
-      index: 2,
-      title: t(d.SelectTracks),
-      desc: 'Select tracks to export',
-      cmp: () => null,
-    },
-    {
-      index: 3,
-      title: t(d.SelectStreaming),
-      desc: 'Select streaming for export media',
-      cmp: () => null,
-    },
-    {
-      index: 4,
-      title: t(d.SelectTargetPlaylist),
-      desc: 'Select target playlist for export media',
-      cmp: () => null,
-    },
-    {
-      index: 5,
-      title: t(d.Export),
-      desc: 'Export tracks',
-      cmp: () => null,
-    },
-  ],
-})
-
-export const MainStrategies = [ExportAllStrategy, ExportPlaylists, ExportTracks]
-export const PlaylistStrategies = [ExportPlaylist, ExportTracks]
+export const MainStrategies = [ExportAllStrategy, ExportPlaylists]
+export const PlaylistStrategies = [ExportPlaylist]

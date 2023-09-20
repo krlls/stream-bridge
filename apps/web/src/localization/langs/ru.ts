@@ -60,6 +60,8 @@ export const ru: Dictionary = {
   ExportPlaylist: 'Экспорт плейлиста',
   ExportTracks: 'Экспорт треков',
   SelectPlaylist: 'Выбрать плейлист',
+  SelectPlaylists: 'Выбрать плейлисты',
   SelectTracks: 'Выбрать треки',
   SelectTargetPlaylist: 'Выбрать плейлист назначения',
+  Next: 'Далее',
 }

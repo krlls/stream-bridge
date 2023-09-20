@@ -58,6 +58,8 @@ export const en = {
   ExportPlaylist: 'Export playlist',
   ExportTracks: 'Export tracks',
   SelectPlaylist: 'Select playlist',
+  SelectPlaylists: 'Select playlists',
   SelectTracks: 'Select tracks',
   SelectTargetPlaylist: 'Select target playlist',
+  Next: 'Next',
 }

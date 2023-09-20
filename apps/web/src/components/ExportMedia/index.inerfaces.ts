@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import { EStreamingType } from 'api-types'
 
 import { TranslationDictionary } from '../../localization/types.ts'
@@ -12,6 +12,10 @@ export interface TProps {
 export interface IStrategy {
   name: string,
   steps: Step<any>[],
+}
+
+export interface TStepProps {
+  children: (isNext: boolean) => ReactNode,
 }
 
 export interface Step<T> {

@@ -77,3 +77,7 @@ export type TExportActions =
   | TExportAction<EActionTypes.decStep>
 
 export const incStep = (): TExportActions => ({ type: EActionTypes.incStep })
+export const setTargetStreaming = (streamingType: EStreamingType): TExportActions => ({
+  type: EActionTypes.setTargetStreaming,
+  payload: streamingType,
+})
