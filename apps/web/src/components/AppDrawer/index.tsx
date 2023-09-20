@@ -14,9 +14,11 @@ export type TProps = {
   title?: string,
   children?: ReactNode,
   trigger: ReactNode,
+  size?: string,
+  placement?: 'top' | 'left' | 'bottom' | 'right',
 }
 
-export const AppDrawer: FC<TProps> = ({ children, title, trigger }) => {
+export const AppDrawer: FC<TProps> = ({ placement, children, size, title, trigger }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef<HTMLDivElement | null>(null)
 
@@ -25,13 +27,19 @@ export const AppDrawer: FC<TProps> = ({ children, title, trigger }) => {
       <Box ref={btnRef} onClick={onOpen} cursor='pointer'>
         {trigger}
       </Box>
-      <Drawer isOpen={isOpen} placement='left' onClose={onClose} finalFocusRef={btnRef} size={'xs'}>
+      <Drawer
+        isOpen={isOpen}
+        placement={placement || 'left'}
+        onClose={onClose}
+        finalFocusRef={btnRef}
+        size={size || 'xs'}
+      >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>{title}</DrawerHeader>
           <DrawerBody>
-            <Box onClick={onClose}>{children}</Box>
+            <Box>{children}</Box>
           </DrawerBody>
         </DrawerContent>
       </Drawer>

@@ -7,6 +7,9 @@ import { SubHeader } from '../SubHeader'
 import { useLocalization } from '../../hooks/useLocalization.ts'
 import { PopoverConfirmation } from '../PopoverConfirmation'
 import { NavBar } from '../NavBar'
+import { AppDrawer } from '../AppDrawer'
+import { ExportMedia } from '../ExportMedia'
+import { strategies } from '../ExportMedia/strategies.ts'
 
 interface TProps {
   title: string,
@@ -56,9 +59,17 @@ export const StreamingSubHeader: FC<TProps> = ({
             {playlists ? t(d.Update) : t(d.Import)}
           </Button>
         </PopoverConfirmation>
-        <Button isDisabled rightIcon={<ArrowForwardIcon />} disabled={!playlists}>
-          {t(d.Export)}
-        </Button>
+        <AppDrawer
+          trigger={
+            <Button rightIcon={<ArrowForwardIcon />} disabled={!playlists}>
+              {t(d.Export)}
+            </Button>
+          }
+          placement='right'
+          size='xl'
+        >
+          <ExportMedia strategies={strategies} />
+        </AppDrawer>
       </ButtonGroup>
     </SubHeader>
   )

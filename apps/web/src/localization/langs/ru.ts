@@ -54,4 +54,11 @@ export const ru: Dictionary = {
   UpdateProfileSuccessMessage: 'Вы успешно обновили данные своего профиля',
   UpdateProfileError: 'Возникла ошибка при обновлении профиля',
   UpdateProfileErrorMessage: 'Пожалуйста, проверьте корректность введенных данных',
+  ExportAllMedia: 'Экспортировать всю библиотеку',
+  SelectStreaming: 'Выбрать стриминг',
+  ExportPlaylists: 'Экспорт плейлистов',
+  ExportTracks: 'Экспорт треков',
+  SelectPlaylist: 'Выбрать плейлист',
+  SelectTracks: 'Выбрать треки',
+  SelectTargetPlaylist: 'Выбрать плейлист назначения',
 }
