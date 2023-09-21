@@ -1,25 +1,12 @@
 import { FC } from 'react'
-import {
-  Button,
-  Divider,
-  DrawerFooter,
-  Flex,
-  Heading,
-  Step,
-  StepIcon,
-  StepIndicator,
-  StepNumber,
-  Stepper,
-  StepSeparator,
-  StepStatus,
-} from '@chakra-ui/react'
-import { ArrowForwardIcon } from '@chakra-ui/icons'
+import { Flex, Heading } from '@chakra-ui/react'
 
 import { IStrategy } from '../index.inerfaces.ts'
 import { useExportMediaState } from '../../../hooks/useExportMediaState.ts'
 import { incStep } from '../ExportContext/reducer.ts'
 import { StepContainer } from '../steps/StepContainer'
-import { useLocalization } from '../../../hooks/useLocalization.ts'
+import { Footer } from '../generic/Footer'
+import { ExportStepper } from '../generic/ExportStepper'
 
 type TProps = {
   strategy: IStrategy,
@@ -27,8 +14,6 @@ type TProps = {
 
 export const Strategy: FC<TProps> = ({ strategy }) => {
   const { state, dispatch } = useExportMediaState()
-  const { t, d } = useLocalization()
-
   const { name, steps } = strategy
   const stepData = strategy.steps[state.step - 1]
   const StepCmp = stepData?.cmp
@@ -37,35 +22,11 @@ export const Strategy: FC<TProps> = ({ strategy }) => {
   return (
     <Flex direction='column'>
       <Heading mb={4}>{name}</Heading>
-      <Stepper index={state.step} size={'sm'}>
-        {steps.map(({ index }) => (
-          <Step key={index}>
-            <StepIndicator>
-              <StepStatus complete={<StepIcon />} incomplete={<StepNumber />} active={<StepNumber />} />
-            </StepIndicator>
-            <StepSeparator />
-          </Step>
-        ))}
-      </Stepper>
+      <ExportStepper step={state.step} steps={steps} />
       {stepData && (
         <StepContainer title={stepData.title}>
           <StepCmp>
-            {(isNext: boolean) => (
-              <>
-                <Divider mt={8} />
-                <DrawerFooter>
-                  {isFinal ? (
-                    <Button colorScheme='green' variant='solid'>
-                      {t(d.Export)}
-                    </Button>
-                  ) : (
-                    <Button onClick={() => dispatch(incStep())} isDisabled={!isNext}>
-                      {t(d.Next)} <ArrowForwardIcon ml={2} />
-                    </Button>
-                  )}
-                </DrawerFooter>
-              </>
-            )}
+            {(isNext: boolean) => <Footer isFinal={isFinal} isNext={isNext} next={() => dispatch(incStep())} />}
           </StepCmp>
         </StepContainer>
       )}
