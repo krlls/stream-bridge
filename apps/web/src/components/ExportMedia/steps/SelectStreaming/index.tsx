@@ -1,18 +1,13 @@
 import { FC } from 'react'
 import { Container, Spinner } from '@chakra-ui/react'
-import { capitalize } from 'lodash'
 
 import { useGetStreamingListQuery } from '../../../../data/streaming'
-import { CardItem } from '../../generic/CardItem'
-import { convertStreamingType } from '../../../../utils/api.ts'
-import { streamingToLogo } from '../../../../utils/image.ts'
 import { useExportMediaState } from '../../../../hooks/useExportMediaState.ts'
 import { setTargetStreaming } from '../../ExportContext/reducer.ts'
 import { TStepProps } from '../../index.inerfaces.ts'
+import { SelectStreamingList } from '../../generic/SelectStreamingList'
 
-export type TProps = TStepProps
-
-export const SelectStreaming: FC<TProps> = ({ children }) => {
+export const SelectStreaming: FC<TStepProps> = ({ children }) => {
   const { state, dispatch } = useExportMediaState()
   const { data, isLoading, isFetching } = useGetStreamingListQuery()
   const isNext = !!state.targetStreamingType
@@ -24,17 +19,11 @@ export const SelectStreaming: FC<TProps> = ({ children }) => {
   return (
     <>
       <Container>
-        {data?.items
-          .filter((s) => s.type !== state.originStreamingType)
-          .map((s) => (
-            <CardItem
-              isSelected={s.type === state.targetStreamingType}
-              title={capitalize(convertStreamingType(s.type).toApi())}
-              image={streamingToLogo(s.type)}
-              key={s.type}
-              onClick={() => dispatch(setTargetStreaming(s.type))}
-            />
-          ))}
+        <SelectStreamingList
+          streamings={(data?.items || []).filter((s) => s.type !== state.originStreamingType)}
+          targetStreaming={state.targetStreamingType}
+          onClick={(type) => dispatch(setTargetStreaming(type))}
+        />
       </Container>
       {children(isNext)}
     </>
