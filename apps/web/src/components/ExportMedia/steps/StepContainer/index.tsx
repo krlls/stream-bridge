@@ -8,7 +8,7 @@ export type TProps = {
 
 export const StepContainer: FC<TProps> = ({ children, title }) => {
   return (
-    <Container mt={8}>
+    <Container mt={8} px={0}>
       <Heading my={4} size='md'>
         {title}
       </Heading>

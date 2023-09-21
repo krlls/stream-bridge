@@ -1,5 +1,5 @@
 import { FC, useMemo, useState } from 'react'
-import { Button, Container, Divider, DrawerFooter, Heading } from '@chakra-ui/react'
+import { Box, Button, Container, Divider, DrawerFooter, Heading } from '@chakra-ui/react'
 
 import { IStrategy, TProps } from './index.inerfaces.ts'
 import { Strategy } from './Strategy'
@@ -26,19 +26,21 @@ export const ExportMedia: FC<TProps> = ({ strategies, streamingType, playlistId 
   }
 
   return (
-    <Container>
-      <Heading mb={4} size={'xl'}>
-        {t(d.Export)}
-      </Heading>
-      {preparedStrategies.map((s, i) => (
-        <CardItem title={s.name} isSelected={strategy === i} onClick={() => setStrategy(i)} />
-      ))}
+    <Box>
+      <Container>
+        <Heading mb={4} size={'xl'}>
+          {t(d.Export)}
+        </Heading>
+        {preparedStrategies.map((s, i) => (
+          <CardItem title={s.name} isSelected={strategy === i} onClick={() => setStrategy(i)} />
+        ))}
+      </Container>
       <Divider my={5} />
       <DrawerFooter>
         <Button onClick={() => setSelected(true)} isDisabled={emptyStrategy}>
           {t(d.Next)}
         </Button>
       </DrawerFooter>
-    </Container>
+    </Box>
   )
 }

@@ -1,5 +1,7 @@
 import { FC } from 'react'
-import { Box, Card, CardHeader, Image, Stack } from '@chakra-ui/react'
+import { Box, Card, CardHeader, Stack, Text } from '@chakra-ui/react'
+
+import { AppImage } from '../../../AppImage'
 
 type TProps = {
   title: string,
@@ -24,10 +26,12 @@ export const CardItem: FC<TProps> = ({ image, isSelected, onClick, title }) => {
       <Stack alignItems='center' direction='row'>
         {image && (
           <Box maxWidth='100px'>
-            <Image objectFit='cover' h={'50px'} w={'100%'} src={image} alt='Caffe Latte' />
+            <AppImage objectFit='cover' h={'50px'} w={'100%'} src={image} alt='Caffe Latte' />
           </Box>
         )}
-        <CardHeader>{title}</CardHeader>
+        <CardHeader>
+          <Text noOfLines={1}>{title}</Text>
+        </CardHeader>
       </Stack>
     </Card>
   )

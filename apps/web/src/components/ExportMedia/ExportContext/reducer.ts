@@ -12,7 +12,8 @@ export interface IState {
 
 export enum EActionTypes {
   setTracks,
-  setPlaylists,
+  setPlaylist,
+  removePlaylist,
   setOriginStreaming,
   setTargetPlaylist,
   setTargetStreaming,
@@ -37,8 +38,12 @@ export const exportReducer = (state: IState, action: TExportActions): IState => 
       return { ...state, tracksIds: action.payload }
     }
 
-    case EActionTypes.setPlaylists: {
-      return { ...state, playlistsIds: action.payload }
+    case EActionTypes.setPlaylist: {
+      return { ...state, playlistsIds: Array.from(new Set([...state.playlistsIds, action.payload])) }
+    }
+
+    case EActionTypes.removePlaylist: {
+      return { ...state, playlistsIds: [...state.playlistsIds].filter((id) => id !== action.payload) }
     }
 
     case EActionTypes.setOriginStreaming: {
@@ -69,7 +74,8 @@ export const exportReducer = (state: IState, action: TExportActions): IState => 
 
 export type TExportActions =
   | TExportAction<EActionTypes.setTracks, number[]>
-  | TExportAction<EActionTypes.setPlaylists, number[]>
+  | TExportAction<EActionTypes.setPlaylist, number>
+  | TExportAction<EActionTypes.removePlaylist, number>
   | TExportAction<EActionTypes.setOriginStreaming, EStreamingType>
   | TExportAction<EActionTypes.setTargetStreaming, EStreamingType>
   | TExportAction<EActionTypes.setTargetPlaylist, number>
@@ -80,4 +86,14 @@ export const incStep = (): TExportActions => ({ type: EActionTypes.incStep })
 export const setTargetStreaming = (streamingType: EStreamingType): TExportActions => ({
   type: EActionTypes.setTargetStreaming,
   payload: streamingType,
+})
+
+export const setPlaylist = (id: number): TExportActions => ({
+  type: EActionTypes.setPlaylist,
+  payload: id,
+})
+
+export const removePlaylist = (id: number): TExportActions => ({
+  type: EActionTypes.removePlaylist,
+  payload: id,
 })

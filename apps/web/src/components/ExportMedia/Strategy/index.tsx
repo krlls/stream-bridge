@@ -1,9 +1,9 @@
 import { FC } from 'react'
 import {
   Button,
-  Container,
   Divider,
   DrawerFooter,
+  Flex,
   Heading,
   Step,
   StepIcon,
@@ -35,7 +35,7 @@ export const Strategy: FC<TProps> = ({ strategy }) => {
   const isFinal = state.step >= steps.length
 
   return (
-    <Container>
+    <Flex direction='column'>
       <Heading mb={4}>{name}</Heading>
       <Stepper index={state.step} size={'sm'}>
         {steps.map(({ index }) => (
@@ -69,6 +69,6 @@ export const Strategy: FC<TProps> = ({ strategy }) => {
           </StepCmp>
         </StepContainer>
       )}
-    </Container>
+    </Flex>
   )
 }

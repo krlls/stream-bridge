@@ -1,5 +1,6 @@
 import { StrategyFactory } from './index.inerfaces.ts'
 import { SelectStreaming } from './steps/SelectStreaming'
+import { SelectPlaylists } from './steps/SelectPlaylists'
 
 export const ExportAllStrategy: StrategyFactory = (t, d) => ({
   name: t(d.ExportAllMedia),
@@ -26,7 +27,7 @@ export const ExportPlaylists: StrategyFactory = (t, d) => ({
       index: 1,
       title: t(d.SelectPlaylist),
       desc: 'Select playlists to export',
-      cmp: () => null,
+      cmp: SelectPlaylists,
     },
     {
       index: 2,

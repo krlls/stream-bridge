@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker'
 
 import { ListOfPlaylists } from './index.tsx'
 
-const playlistsData: Api.Music.Playlist[] = Array(30)
+export const playlistsData: Api.Music.Playlist[] = Array(30)
   .fill(null)
   .map((_, i) => ({
     id: i,
