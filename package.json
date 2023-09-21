@@ -12,26 +12,26 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "axios": "^1.4.0",
+    "axios": "^1.5.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.0.2",
-    "@turbo/gen": "^1.10.11",
-    "@types/jest": "^29.5.3",
-    "@types/lodash": "^4.14.195",
-    "concurrently": "^8.2.0",
-    "eslint": "^8.45.0",
+    "@faker-js/faker": "^8.1.0",
+    "@turbo/gen": "^1.10.14",
+    "@types/jest": "^29.5.5",
+    "@types/lodash": "^4.14.198",
+    "concurrently": "^8.2.1",
+    "eslint": "^8.49.0",
     "eslint-config-custom": "*",
     "husky": "^8.0.3",
-    "jest": "^29.6.1",
-    "lint-staged": "^13.2.3",
-    "prettier": "^3.0.0",
+    "jest": "^29.7.0",
+    "lint-staged": "^14.0.1",
+    "prettier": "^3.0.3",
     "prettier-config-custom": "*",
     "rimraf": "^5.0.1",
     "turbo": "^1.10.14",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   },
   "husky": {
     "hooks": {
