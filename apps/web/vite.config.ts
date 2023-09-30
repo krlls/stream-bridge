@@ -15,8 +15,8 @@ export default defineConfig({
       manifest: {
         name: 'Stream-Bridge',
         short_name: 'S-Bridge',
-        description: 'My Awesome Stream-Bridge description',
-        theme_color: '#ffffff',
+        description: 'Music synchronization tool that allows users to sync music from various streaming services.',
+        theme_color: '#313542',
         icons: [
           {
             src: 'assets/android-chrome-192x192.png',
