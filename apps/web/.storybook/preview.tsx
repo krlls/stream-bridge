@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import theme from '../src/theme'
 import { ChakraProvider } from '@chakra-ui/react'
 import { initialize, mswLoader } from 'msw-storybook-addon'
+import '../src/localization'
 
 // Initialize MSW
 initialize()
