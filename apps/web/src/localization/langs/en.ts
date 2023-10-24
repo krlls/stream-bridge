@@ -52,4 +52,11 @@ export const en = {
   UpdateProfileSuccessMessage: 'You have successfully updated your profile data',
   UpdateProfileError: 'An error occurred while updating the profile',
   UpdateProfileErrorMessage: 'Please check the correctness of the entered data',
+  CustomAuthWindowTitle: 'need access to your account',
+  CustomAuthWindowListAPIInfo: 'To do this, we use an unofficial API - access can disappear at any time.',
+  CustomAuthWindowListChangePassMessage:
+    'If you have registered on {{streamingName}} using a provider, use the option "I don\'t remember the password" to get a login password.',
+  CustomAuthWindowListErrorString:
+    'If you used the correct credentials and received an error with incorrect credentials, we recommend that you read this edit article.',
+  CustomAuthWindowListConnectBtn: 'Connect',
 }
