@@ -54,4 +54,11 @@ export const ru: Dictionary = {
   UpdateProfileSuccessMessage: 'Вы успешно обновили данные своего профиля',
   UpdateProfileError: 'Возникла ошибка при обновлении профиля',
   UpdateProfileErrorMessage: 'Пожалуйста, проверьте корректность введенных данных',
+  CustomAuthWindowTitle: 'требуется доступ к вашему аккаунту',
+  CustomAuthWindowListAPIInfo: 'Для этого мы используем неофициальный API - доступ может исчезнуть в любой момент.',
+  CustomAuthWindowListChangePassMessage:
+    'Если вы зарегистрировались на {{streamingName}} с помощью провайдера, используйте опцию "Не помню пароль" чтобы получить пароль для входа.',
+  CustomAuthWindowListErrorString:
+    'Если вы использовали правельные учетные данные и получили ошибку неверных учетных данных, рекомендуем ознакомится с этой правочной статьей.',
+  CustomAuthWindowListConnectBtn: 'Подключиться',
 }
