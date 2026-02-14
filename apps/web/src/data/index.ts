@@ -1,18 +1,15 @@
 import { combineReducers } from '@reduxjs/toolkit'
 
-import counterReducer, { streamingApi } from './streaming'
-import userReducer, { userApi } from './user'
-import { musicApi } from './music'
+import { api } from '../store/configureApi.ts'
+import counterReducer from './streaming'
+import userReducer from './user'
 
 const rootReducer = combineReducers({
   counter: counterReducer,
   user: userReducer,
-
-  [streamingApi.reducerPath]: streamingApi.reducer,
-  [musicApi.reducerPath]: musicApi.reducer,
-  [userApi.reducerPath]: userApi.reducer,
+  [api.reducerPath]: api.reducer,
 })
 
-const rootApiMiddleware = [streamingApi.middleware, musicApi.middleware, userApi.middleware]
+const rootApiMiddleware = [api.middleware]
 
 export { rootReducer, rootApiMiddleware }
